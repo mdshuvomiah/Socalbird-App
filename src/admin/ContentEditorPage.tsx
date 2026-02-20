@@ -1,0 +1,414 @@
+import { useState, useEffect } from 'react';
+import { 
+  ArrowLeft, Save, Eye, EyeOff, RotateCcw, Download, Upload, 
+  CheckCircle, AlertCircle, Sparkles, Edit, Type, Image as ImageIcon,
+  List, Plus, Trash2, GripVertical
+} from 'lucide-react';
+import { useContent } from './ContentContext';
+
+interface ContentEditorPageProps {
+  pageId: string;
+  pageName: string;
+  onBack: () => void;
+}
+
+export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPageProps) {
+  const { getPageContent, updateContent, saveToLocalStorage } = useContent();
+  const [pageData, setPageData] = useState<any>({});
+  const [activeSection, setActiveSection] = useState<string>('');
+  const [showPreview, setShowPreview] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [editingField, setEditingField] = useState<string>('');
+
+  useEffect(() => {
+    const data = getPageContent(pageId);
+    setPageData(data);
+    if (Object.keys(data).length > 0) {
+      setActiveSection(Object.keys(data)[0]);
+    }
+  }, [pageId]);
+
+  const handleFieldChange = (sectionId: string, fieldPath: string, value: any) => {
+    const updatedData = { ...pageData };
+    const keys = fieldPath.split('.');
+    let current = updatedData[sectionId];
+    
+    for (let i = 0; i < keys.length - 1; i++) {
+      current = current[keys[i]];
+    }
+    current[keys[keys.length - 1]] = value;
+
+    setPageData(updatedData);
+    updateContent(pageId, sectionId, updatedData[sectionId]);
+  };
+
+  const handleSave = () => {
+    Object.keys(pageData).forEach(sectionId => {
+      updateContent(pageId, sectionId, pageData[sectionId]);
+    });
+    saveToLocalStorage();
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
+
+  const handleReset = () => {
+    if (confirm('Are you sure you want to reset this page to defaults? This cannot be undone.')) {
+      const data = getPageContent(pageId);
+      setPageData(data);
+    }
+  };
+
+  const renderField = (sectionId: string, fieldKey: string, fieldValue: any, fieldPath: string) => {
+    const fullPath = `${sectionId}.${fieldPath}`;
+    const isEditing = editingField === fullPath;
+
+    // Special handling for brand logo section
+    if (pageId === 'brand' && sectionId === 'logo') {
+      if (fieldKey === 'type') {
+        return (
+          <div key={fullPath} className="space-y-2">
+            <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+              <Type className="w-4 h-4 text-cyan-400" />
+              Logo Type
+            </label>
+            <select
+              value={fieldValue}
+              onChange={(e) => handleFieldChange(sectionId, fieldPath, e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white focus:outline-none focus:border-cyan-500/50 focus:bg-white/10 transition-all"
+            >
+              <option value="text">Text Logo</option>
+              <option value="image">Image Logo</option>
+            </select>
+          </div>
+        );
+      }
+      
+      if (fieldKey === 'gradient') {
+        return (
+          <div key={fullPath} className="space-y-2">
+            <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-cyan-400" />
+              Text Gradient (Tailwind Classes)
+            </label>
+            <input
+              type="text"
+              value={fieldValue}
+              onChange={(e) => handleFieldChange(sectionId, fieldPath, e.target.value)}
+              placeholder="e.g., from-blue-500 to-cyan-400"
+              className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:bg-white/10 transition-all"
+            />
+            <div className="text-xs text-gray-500">
+              Preview: <span className={`bg-gradient-to-r ${fieldValue} bg-clip-text text-transparent font-bold`}>{pageData?.logo?.text || 'SocalBird'}</span>
+            </div>
+          </div>
+        );
+      }
+    }
+
+    if (typeof fieldValue === 'string') {
+      return (
+        <div key={fullPath} className="space-y-2">
+          <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+            <Type className="w-4 h-4 text-cyan-400" />
+            {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)}
+          </label>
+          <div className="relative">
+            {fieldValue.length > 100 || fieldKey.includes('description') || fieldKey.includes('paragraph') ? (
+              <textarea
+                value={fieldValue}
+                onChange={(e) => handleFieldChange(sectionId, fieldPath, e.target.value)}
+                onFocus={() => setEditingField(fullPath)}
+                onBlur={() => setEditingField('')}
+                rows={4}
+                className={`w-full px-4 py-3 bg-white/5 border ${isEditing ? 'border-cyan-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:bg-white/10 transition-all resize-none`}
+              />
+            ) : (
+              <input
+                type="text"
+                value={fieldValue}
+                onChange={(e) => handleFieldChange(sectionId, fieldPath, e.target.value)}
+                onFocus={() => setEditingField(fullPath)}
+                onBlur={() => setEditingField('')}
+                className={`w-full px-4 py-3 bg-white/5 border ${isEditing ? 'border-cyan-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:bg-white/10 transition-all`}
+              />
+            )}
+            {isEditing && (
+              <div className="absolute -right-2 -top-2 w-4 h-4 bg-cyan-400 rounded-full animate-pulse" />
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    if (Array.isArray(fieldValue)) {
+      return (
+        <div key={fullPath} className="space-y-3">
+          <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+            <List className="w-4 h-4 text-cyan-400" />
+            {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)}
+          </label>
+          <div className="space-y-3">
+            {fieldValue.map((item, index) => (
+              <div key={index} className="p-4 bg-white/5 border border-white/10 rounded-xl space-y-3">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2 text-sm font-medium text-gray-400">
+                    <GripVertical className="w-4 h-4" />
+                    <span>Item {index + 1}</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      const newArray = fieldValue.filter((_, i) => i !== index);
+                      handleFieldChange(sectionId, fieldPath, newArray);
+                    }}
+                    className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+                {typeof item === 'string' ? (
+                  <input
+                    type="text"
+                    value={item}
+                    onChange={(e) => {
+                      const newArray = [...fieldValue];
+                      newArray[index] = e.target.value;
+                      handleFieldChange(sectionId, fieldPath, newArray);
+                    }}
+                    className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-all"
+                  />
+                ) : (
+                  Object.entries(item).map(([key, value]) => (
+                    <div key={key}>
+                      <label className="text-xs text-gray-400 mb-1 block">{key}</label>
+                      {typeof value === 'string' && (
+                        <input
+                          type="text"
+                          value={value}
+                          onChange={(e) => {
+                            const newArray = [...fieldValue];
+                            newArray[index] = { ...newArray[index], [key]: e.target.value };
+                            handleFieldChange(sectionId, fieldPath, newArray);
+                          }}
+                          className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-all"
+                        />
+                      )}
+                      {Array.isArray(value) && (
+                        <div className="space-y-1">
+                          {value.map((subItem, subIndex) => (
+                            <input
+                              key={subIndex}
+                              type="text"
+                              value={subItem}
+                              onChange={(e) => {
+                                const newArray = [...fieldValue];
+                                newArray[index][key][subIndex] = e.target.value;
+                                handleFieldChange(sectionId, fieldPath, newArray);
+                              }}
+                              className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-all"
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    if (typeof fieldValue === 'object' && fieldValue !== null) {
+      return (
+        <div key={fullPath} className="space-y-3">
+          <label className="text-sm font-medium text-gray-300">{fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)}</label>
+          <div className="pl-4 border-l-2 border-cyan-500/30 space-y-3">
+            {Object.entries(fieldValue).map(([subKey, subValue]) => 
+              renderField(sectionId, subKey, subValue, `${fieldPath}.${subKey}`)
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
+  const sections = Object.keys(pageData);
+
+  return (
+    <div className="min-h-screen bg-[#0A0E27] text-white">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-[#0A0E27]/80 backdrop-blur-xl border-b border-white/10">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            {/* Left */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={onBack}
+                className="p-2 text-gray-400 hover:text-cyan-400 transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+              <div>
+                <h1 className="text-xl font-bold text-white">Editing: {pageName}</h1>
+                <p className="text-xs text-gray-500">{sections.length} sections available</p>
+              </div>
+            </div>
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setShowPreview(!showPreview)}
+                className={`px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2 ${
+                  showPreview
+                    ? 'bg-cyan-500 text-white'
+                    : 'bg-white/5 text-gray-400 hover:text-cyan-400 border border-white/10'
+                }`}
+              >
+                {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                <span>{showPreview ? 'Hide' : 'Show'} Preview</span>
+              </button>
+
+              <button
+                onClick={handleReset}
+                className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-red-500/30 rounded-xl text-gray-400 hover:text-red-400 transition-all flex items-center gap-2"
+              >
+                <RotateCcw className="w-4 h-4" />
+                <span>Reset</span>
+              </button>
+
+              <button
+                onClick={handleSave}
+                className="group relative px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:opacity-90 rounded-xl text-white font-medium transition-all flex items-center gap-2 shadow-lg"
+              >
+                {saved ? (
+                  <>
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Saved!</span>
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4" />
+                    <span>Save Changes</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-6 py-8">
+        <div className={`grid ${showPreview ? 'lg:grid-cols-2' : 'lg:grid-cols-12'} gap-8`}>
+          {/* Sidebar - Section Navigation */}
+          {!showPreview && (
+            <div className="lg:col-span-3 space-y-4">
+              <div className="rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 sticky top-24">
+                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                  <List className="w-5 h-5 text-cyan-400" />
+                  Sections
+                </h3>
+                <div className="space-y-2">
+                  {sections.map((section) => (
+                    <button
+                      key={section}
+                      onClick={() => setActiveSection(section)}
+                      className={`w-full px-4 py-3 rounded-xl text-left transition-all flex items-center gap-3 ${
+                        activeSection === section
+                          ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/50 text-white'
+                          : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <Edit className="w-4 h-4" />
+                      <span className="font-medium">{section.charAt(0).toUpperCase() + section.slice(1)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Editor Panel */}
+          <div className={showPreview ? '' : 'lg:col-span-9'}>
+            <div className="rounded-2xl p-8 bg-white/5 backdrop-blur-xl border border-white/10">
+              <div className="mb-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-white">
+                      {activeSection.charAt(0).toUpperCase() + activeSection.slice(1)} Section
+                    </h2>
+                    <p className="text-sm text-gray-500">Edit the content below</p>
+                  </div>
+                </div>
+              </div>
+
+              {activeSection && pageData[activeSection] && (
+                <div className="space-y-6">
+                  {Object.entries(pageData[activeSection]).map(([key, value]) =>
+                    renderField(activeSection, key, value, key)
+                  )}
+                </div>
+              )}
+
+              {!activeSection && (
+                <div className="text-center py-12 text-gray-500">
+                  <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>Select a section to start editing</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Preview Panel */}
+          {showPreview && (
+            <div className="rounded-2xl p-8 bg-white/5 backdrop-blur-xl border border-white/10">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                  <Eye className="w-6 h-6 text-cyan-400" />
+                  Live Preview
+                </h2>
+                <p className="text-sm text-gray-500">Changes appear in real-time</p>
+              </div>
+
+              {activeSection && pageData[activeSection] && (
+                <div className="space-y-6 p-6 bg-white/5 rounded-xl border border-white/10">
+                  <div className="space-y-4">
+                    {Object.entries(pageData[activeSection]).map(([key, value]) => (
+                      <div key={key} className="space-y-2">
+                        <div className="text-xs font-semibold text-cyan-400 uppercase tracking-wider">{key}</div>
+                        <div className="text-white">
+                          {typeof value === 'string' && <p className="leading-relaxed">{value}</p>}
+                          {Array.isArray(value) && (
+                            <ul className="space-y-2">
+                              {value.map((item, i) => (
+                                <li key={i} className="flex items-start gap-2">
+                                  <span className="text-cyan-400">•</span>
+                                  <span>{typeof item === 'string' ? item : JSON.stringify(item)}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                          {typeof value === 'object' && !Array.isArray(value) && (
+                            <pre className="text-xs text-gray-400 overflow-x-auto p-3 bg-black/20 rounded-lg">
+                              {JSON.stringify(value, null, 2)}
+                            </pre>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
