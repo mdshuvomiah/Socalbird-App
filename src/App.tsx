@@ -135,20 +135,20 @@ export default function App() {
             <AdminLoginPage onLogin={handleAdminLogin} />
           )}
 
-          {isAdminAuthenticated && adminView === 'dashboard' && (
+          {isAdminAuthenticated && adminView === 'dashboard' ? (
             <AdminDashboardPage
               onLogout={handleAdminLogout}
               onNavigateToEditor={handleNavigateToEditor}
             />
-          )}
+          ) : null}
 
-          {isAdminAuthenticated && adminView === 'editor' && editingPage && (
+          {isAdminAuthenticated && adminView === 'editor' && editingPage ? (
             <ContentEditorPage
               pageId={editingPage.id}
               pageName={editingPage.name}
               onBack={handleBackToDashboard}
             />
-          )}
+          ) : null}
         </>
       ) : (
         <div className="dark min-h-screen bg-[#0A0E27]">
