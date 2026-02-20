@@ -29,9 +29,7 @@ export default function App() {
         setIsAdminAuthenticated(true);
         // Only switch to dashboard if we were on the admin login page
         // or if we are navigating to /admin
-        if (currentPage === '/admin') {
-          setAdminView('dashboard');
-        }
+        setAdminView(prev => (currentPage === '/admin' && prev === 'login') ? 'dashboard' : prev);
       }
     });
 
@@ -41,9 +39,7 @@ export default function App() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
         setIsAdminAuthenticated(true);
-        if (currentPage === '/admin' && adminView === 'login') {
-          setAdminView('dashboard');
-        }
+        setAdminView(prev => (currentPage === '/admin' && prev === 'login') ? 'dashboard' : prev);
       } else {
         setIsAdminAuthenticated(false);
         setAdminView('login');
@@ -51,7 +47,7 @@ export default function App() {
     });
 
     return () => subscription.unsubscribe();
-  }, [currentPage, adminView]);
+  }, [currentPage]);
 
   // Scroll to top when page changes
   useEffect(() => {
