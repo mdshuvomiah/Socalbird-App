@@ -288,6 +288,10 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
            ...item.problem,
            icon: iconMap[i % iconMap.length],
         },
+        solution: {
+          ...item.solution,
+          features: Array.isArray(item.solution?.features) ? item.solution.features : []
+        },
         gradient: gradientMap[i % gradientMap.length]
       }))
     : defaultProblems;
