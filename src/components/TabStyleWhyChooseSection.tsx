@@ -206,7 +206,14 @@ export function TabStyleWhyChooseSection({ onNavigate }: TabStyleWhyChooseSectio
             <TabCard
               key={index}
               problem={item.problem}
-              solution={item.solution}
+              solution={{
+                ...item.solution,
+                features: Array.isArray(item.solution?.features) ? item.solution.features : [],
+                result: {
+                  label: item.solution?.result?.label || 'Typical Result',
+                  value: item.solution?.result?.value || 'High Impact'
+                }
+              }}
               accentColor={item.accentColor}
               accentGradient={item.accentGradient}
               index={index}

@@ -290,7 +290,11 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
         },
         solution: {
           ...item.solution,
-          features: Array.isArray(item.solution?.features) ? item.solution.features : []
+          features: Array.isArray(item.solution?.features) ? item.solution.features : [],
+          result: {
+            label: item.solution?.result?.label || 'Typical Result',
+            value: item.solution?.result?.value || 'High Impact'
+          }
         },
         gradient: gradientMap[i % gradientMap.length]
       }))
