@@ -164,7 +164,7 @@ export function ModernFAQSection({ onNavigate }: ModernFAQSectionProps) {
   ];
 
   const cmsItems = faqContent?.items;
-  const faqs = (cmsItems && cmsItems.length > 0)
+  const faqs = (Array.isArray(cmsItems) && cmsItems.length > 0)
     ? cmsItems.map((item: { question: string; answer: string }, i: number) => ({
         question: item.question,
         answer: item.answer,
