@@ -329,6 +329,35 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
                 )}
               </div>
             ))}
+            
+            <button
+              onClick={() => {
+                const newArray = [...(fieldValue || [])];
+                let newItem: any = '';
+                
+                if (newArray.length > 0) {
+                  const template = newArray[0];
+                  if (typeof template === 'string') {
+                    newItem = '';
+                  } else if (typeof template === 'object' && template !== null) {
+                    // Create an empty template based on the first item's keys
+                    newItem = {};
+                    Object.keys(template).forEach(k => {
+                      if (Array.isArray(template[k])) newItem[k] = [];
+                      else if (typeof template[k] === 'object') newItem[k] = {};
+                      else newItem[k] = '';
+                    });
+                  }
+                }
+                
+                newArray.push(newItem);
+                handleFieldChange(sectionId, fieldPath, newArray);
+              }}
+              className="mt-4 flex items-center justify-center gap-2 w-full px-4 py-3 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 border-dashed rounded-xl text-cyan-400 hover:text-cyan-300 transition-all font-medium"
+            >
+              <Plus className="w-4 h-4" />
+              Add New Item
+            </button>
           </div>
         </div>
       );
