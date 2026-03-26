@@ -32,6 +32,10 @@ const defaultContent: ContentData = {
       type: 'text', // 'text' or 'image'
       imageUrl: '', // Optional: URL for logo image
       gradient: 'from-blue-500 to-cyan-400' // Gradient for text logo
+    },
+    chatWidgets: {
+      whatsapp: '8801234567890',
+      messenger: 'yourpage'
     }
   },
   home: {
