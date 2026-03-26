@@ -164,16 +164,7 @@ function ModernTeamMemberCard({ name, role, expertise, bio, skills, stats, gradi
                 </div>
               </div>
 
-              {/* Expand Button */}
-              <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-xl flex items-center justify-between transition-all group/btn"
-              >
-                <span className="text-sm font-semibold text-gray-300 group-hover/btn:text-white">
-                  {isExpanded ? 'Show Less' : 'View Details'}
-                </span>
-                <ArrowUpRight className={`w-4 h-4 text-cyan-400 transition-transform ${isExpanded ? 'rotate-180' : 'group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1'}`} />
-              </button>
+
             </div>
           </div>
 

@@ -112,18 +112,7 @@ function CleanTeamCard({ name, role, expertise, bio, achievements, skills, stats
           )}
         </div>
 
-        {/* View Details Button */}
-        <button
-          onClick={() => setIsExpanded(true)}
-          className="w-full py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-300 border hover:scale-[1.02]"
-          style={{
-            background: 'transparent',
-            borderColor: `${gradient.from}40`,
-            color: gradient.accent
-          }}
-        >
-          View Details
-        </button>
+
       </div>
 
       {/* Back Side - Detailed Info with Modern Background */}
