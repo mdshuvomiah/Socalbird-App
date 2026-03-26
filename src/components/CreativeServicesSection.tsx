@@ -1,5 +1,6 @@
 import { MessageSquare, Code, Smartphone, ArrowRight, Sparkles, Zap, TrendingUp, Circle } from 'lucide-react';
 import { useState } from 'react';
+import { useContent } from '../admin/ContentContext';
 
 interface CreativeServiceCardProps {
   icon: React.ReactNode;
@@ -178,7 +179,16 @@ interface CreativeServicesSectionProps {
 }
 
 export function CreativeServicesSection({ onNavigate }: CreativeServicesSectionProps) {
-  const services = [
+  const { getSectionContent } = useContent();
+  const content = getSectionContent('home', 'services') || {};
+  
+  const iconMap = [
+    <MessageSquare className="w-8 h-8 text-cyan-400" strokeWidth={1.5} />,
+    <Code className="w-8 h-8 text-cyan-400" strokeWidth={1.5} />,
+    <Smartphone className="w-8 h-8 text-cyan-400" strokeWidth={1.5} />
+  ];
+
+  const defaultServices = [
     {
       icon: <MessageSquare className="w-8 h-8 text-cyan-400" strokeWidth={1.5} />,
       title: "AI Chatbot Solutions",
@@ -227,6 +237,18 @@ export function CreativeServicesSection({ onNavigate }: CreativeServicesSectionP
     }
   ];
 
+  const cmsServices = content?.items;
+  const paths = ["/ai-chatbot-solutions", "/web-development", "/app-development"];
+  
+  const services = (cmsServices && cmsServices.length > 0)
+    ? cmsServices.map((item: any, i: number) => ({
+        ...item,
+        icon: iconMap[i % iconMap.length],
+        popular: i === 0,
+        path: paths[i % paths.length] || '/contact'
+      }))
+    : defaultServices;
+
   return (
     <section className="relative py-32 px-4 border-t border-white/10 overflow-hidden">
       {/* Dynamic Grid Background */}
@@ -245,7 +267,7 @@ export function CreativeServicesSection({ onNavigate }: CreativeServicesSectionP
               <Zap className="w-5 h-5 text-cyan-400" />
               <div className="absolute inset-0 bg-cyan-400 blur-md opacity-50 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="font-semibold text-gray-300">Our Digital Services</span>
+            <span className="font-semibold text-gray-300">{content.badge || 'Our Digital Services'}</span>
             <div className="flex gap-1">
               <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
               <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
@@ -256,12 +278,12 @@ export function CreativeServicesSection({ onNavigate }: CreativeServicesSectionP
           {/* Title with Split Design */}
           <div className="mb-8">
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-              <span className="block mb-2">Complete Digital Solutions</span>
+              <span className="block mb-2">{content.title || 'Complete Digital Solutions'}</span>
             </h2>
             <div className="flex items-center justify-center gap-4">
               <div className="h-px w-16 bg-gradient-to-r from-transparent to-cyan-500" />
               <span className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
-                For Every Business
+                {content.titleHighlight || 'For Every Business'}
               </span>
               <div className="h-px w-16 bg-gradient-to-l from-transparent to-purple-500" />
             </div>
@@ -269,7 +291,7 @@ export function CreativeServicesSection({ onNavigate }: CreativeServicesSectionP
 
           {/* Description */}
           <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed mb-10">
-            Serving small businesses, e-commerce stores, restaurants, service providers, agencies, and startups
+            {content.subtitle || 'Serving small businesses, e-commerce stores, restaurants, service providers, agencies, and startups'}
           </p>
 
           {/* Stats Bar */}

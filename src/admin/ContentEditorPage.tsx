@@ -138,6 +138,7 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
             >
               <option value="text">Text Logo</option>
               <option value="image">Image Logo</option>
+              <option value="both">Both (Image + Text)</option>
             </select>
           </div>
         );
@@ -164,58 +165,85 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
         );
       }
 
-      if (fieldKey === 'imageUrl') {
-        return (
-          <div key={fullPath} className="space-y-2">
-            <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-              <ImageIcon className="w-4 h-4 text-cyan-400" />
-              Logo Image
+    }
+
+    // Generic handling for image fields based on fieldKey name
+    if (typeof fieldValue === 'string' && 
+        (fieldKey.toLowerCase().includes('image') || 
+         fieldKey.toLowerCase().includes('iconurl') ||
+         fieldKey.toLowerCase() === 'cover' ||
+         fieldKey.toLowerCase() === 'avatar' ||
+         (pageId === 'brand' && sectionId === 'logo' && fieldKey === 'imageUrl'))) {
+      
+      return (
+        <div key={fullPath} className="space-y-2">
+          <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+            <ImageIcon className="w-4 h-4 text-cyan-400" />
+            {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)} (Image)
+          </label>
+
+          <div className="flex flex-col gap-4">
+            {fieldValue && (
+              <div className="relative w-32 h-32 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center p-2 overflow-hidden">
+                <img src={fieldValue} alt="Preview" className="max-w-full max-h-full object-contain" />
+                <button
+                  onClick={() => handleFieldChange(sectionId, fieldPath, '')}
+                  className="absolute top-1 right-1 p-1 bg-red-500/80 hover:bg-red-500 text-white rounded-md transition-colors"
+                  title="Remove Image"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+
+            <label className={`
+              flex items-center justify-center w-full px-6 py-8 
+              bg-white/5 border-2 border-dashed border-white/20 rounded-xl 
+              hover:border-cyan-500/50 hover:bg-white/10 transition-all cursor-pointer
+              ${isUploading ? 'opacity-50 pointer-events-none' : ''}
+            `}>
+              <div className="flex flex-col items-center gap-2 text-gray-400">
+                {isUploading ? (
+                  <Loader2 className="w-8 h-8 animate-spin text-cyan-400" />
+                ) : (
+                  <Upload className="w-8 h-8 group-hover:text-cyan-400 transition-colors" />
+                )}
+                <span className="text-sm font-medium">
+                  {isUploading ? 'Uploading...' : 'Click or drop image to upload'}
+                </span>
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    uploadFile(e.target.files[0], sectionId, fieldPath);
+                  }
+                }}
+                className="hidden"
+              />
             </label>
-
-            <div className="flex flex-col gap-4">
-              {fieldValue && (
-                <div className="relative w-32 h-32 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center p-2 overflow-hidden">
-                  <img src={fieldValue} alt="Logo preview" className="max-w-full max-h-full object-contain" />
-                  <button
-                    onClick={() => handleFieldChange(sectionId, fieldPath, '')}
-                    className="absolute top-1 right-1 p-1 bg-red-500/80 hover:bg-red-500 text-white rounded-md transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-
-              <label className={`
-                flex items-center justify-center w-full px-6 py-8 
-                bg-white/5 border-2 border-dashed border-white/20 rounded-xl 
-                hover:border-cyan-500/50 hover:bg-white/10 transition-all cursor-pointer
-                ${isUploading ? 'opacity-50 pointer-events-none' : ''}
-              `}>
-                <div className="flex flex-col items-center gap-2 text-gray-400">
-                  {isUploading ? (
-                    <Loader2 className="w-8 h-8 animate-spin text-cyan-400" />
-                  ) : (
-                    <Upload className="w-8 h-8 group-hover:text-cyan-400 transition-colors" />
-                  )}
-                  <span className="text-sm font-medium">
-                    {isUploading ? 'Uploading...' : 'Click or drop image to upload'}
-                  </span>
-                </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      uploadFile(e.target.files[0], sectionId, fieldPath);
-                    }
-                  }}
-                  className="hidden"
-                />
-              </label>
-            </div>
+            {fieldValue && (
+               <input
+                type="text"
+                value={fieldValue}
+                onChange={(e) => handleFieldChange(sectionId, fieldPath, e.target.value)}
+                placeholder="Or paste image URL here..."
+                className="w-full mt-2 px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:bg-white/10 transition-all text-sm"
+              />
+            )}
+            {!fieldValue && (
+              <input
+                type="text"
+                value={fieldValue}
+                onChange={(e) => handleFieldChange(sectionId, fieldPath, e.target.value)}
+                placeholder="Or paste image URL here..."
+                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:bg-white/10 transition-all text-sm"
+              />
+            )}
           </div>
-        );
-      }
+        </div>
+      );
     }
 
     if (typeof fieldValue === 'string') {
@@ -354,8 +382,8 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
     <div className="min-h-screen bg-[#0A0E27] text-white">
       {/* Save Success Popup */}
       {showSavePopup && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-[#0A0E27] border border-cyan-500/30 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl shadow-cyan-500/20 transform transition-all duration-300 scale-100 opacity-100">
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm shadow-2xl">
+          <div className="relative z-[99999] bg-[#0A0E27] border border-cyan-500/30 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl shadow-cyan-500/40 transform transition-all duration-300 scale-100 opacity-100">
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mb-2 shadow-lg shadow-cyan-500/30">
                 <CheckCircle className="w-8 h-8 text-white" />

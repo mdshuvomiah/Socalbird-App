@@ -1,6 +1,7 @@
 import { Linkedin, Twitter, Github, Mail, ArrowLeft, Award, Code, TrendingUp } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
+import { useContent } from '../admin/ContentContext';
 
 interface TeamMemberProps {
   name: string;
@@ -335,7 +336,10 @@ interface ProfessionalTeamSectionProps {
 }
 
 export function ProfessionalTeamSection({ onNavigate }: ProfessionalTeamSectionProps) {
-  const teamMembers = [
+  const { getSectionContent } = useContent();
+  const content = getSectionContent('home', 'team') || {};
+
+  const defaultTeamMembers = [
     {
       name: 'Arif Rahman',
       role: 'Lead Developer',
@@ -459,6 +463,27 @@ export function ProfessionalTeamSection({ onNavigate }: ProfessionalTeamSectionP
     }
   ];
 
+  const teamMembers = content?.members?.length > 0 
+    ? content.members.map((member: any, i: number) => ({
+        ...member,
+        gradient: [
+          { from: '#06b6d4', to: '#3b82f6', accent: '#22d3ee' },
+          { from: '#a855f7', to: '#ec4899', accent: '#c084fc' },
+          { from: '#f97316', to: '#ef4444', accent: '#fb923c' },
+          { from: '#10b981', to: '#06b6d4', accent: '#34d399' }
+        ][i % 4],
+        social: member.social || {},
+        stats: {
+          projects: Array.isArray(member.stats) ? member.stats[0]?.value || '-' : (member.stats?.projects || '-'),
+          rating: Array.isArray(member.stats) ? member.stats[1]?.value || '-' : (member.stats?.rating || '-'),
+          experience: Array.isArray(member.stats) ? member.stats[2]?.value || '-' : (member.stats?.experience || '-')
+        },
+        skills: member.skills || [],
+        achievements: member.achievements || [],
+        imageUrl: member.imageUrl || member.image || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop'
+      }))
+    : defaultTeamMembers;
+
   return (
     <section className="relative py-24 px-4 overflow-hidden">
       {/* Modern Background Effects */}
@@ -493,11 +518,14 @@ export function ProfessionalTeamSection({ onNavigate }: ProfessionalTeamSectionP
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Header */}
         <div className="mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-cyan-500/20 rounded-full mb-4">
+            <span className="text-sm font-medium text-gray-300">{content.badge || 'Meet the Team'}</span>
+          </div>
           <h2 className="text-5xl md:text-6xl font-bold text-white mb-4">
-            Our Team
+            {content.title || 'Our Team'} <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{content.titleHighlight || ''}</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl">
-            Meet the talented professionals behind our success
+            {content.subtitle || 'Meet the talented professionals behind our success'}
           </p>
         </div>
 

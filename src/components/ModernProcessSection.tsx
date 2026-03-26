@@ -1,11 +1,23 @@
 import { Users, Code, Shield, TrendingUp, ArrowRight, CheckCircle, Zap, Clock, Calendar, Target, Rocket, Sparkles, ChevronRight, Activity } from 'lucide-react';
 import { Button } from './ui/button';
+import { useContent } from '../admin/ContentContext';
 
 interface ModernProcessSectionProps {
   onNavigate: (page: string) => void;
 }
 
 export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) {
+  const { getSectionContent } = useContent();
+  const content = getSectionContent('home', 'process') || {};
+
+  const icons = [Users, Code, Shield, TrendingUp];
+  const styles = [
+    { gradient: 'from-cyan-500 to-blue-500', glowColor: 'cyan-500', borderColor: 'border-cyan-500', bgColor: 'bg-cyan-500', stickyTop: 'top-24' },
+    { gradient: 'from-purple-500 to-pink-500', glowColor: 'purple-500', borderColor: 'border-purple-500', bgColor: 'bg-purple-500', stickyTop: 'top-32' },
+    { gradient: 'from-emerald-500 to-green-500', glowColor: 'emerald-500', borderColor: 'border-emerald-500', bgColor: 'bg-emerald-500', stickyTop: 'top-40' },
+    { gradient: 'from-orange-500 to-red-500', glowColor: 'orange-500', borderColor: 'border-orange-500', bgColor: 'bg-orange-500', stickyTop: 'top-48' }
+  ];
+
   return (
     <section className="py-24 px-4 border-t border-white/10 relative overflow-hidden">
       {/* Animated Background Elements */}
@@ -33,16 +45,16 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-full mb-6 hover:border-cyan-500/50 transition-all group">
             <Sparkles className="text-cyan-400 group-hover:scale-110 transition-transform" size={16} />
-            <span className="text-sm font-semibold text-cyan-300">AI-Powered Process</span>
+            <span className="text-sm font-semibold text-cyan-300">{content.badge || 'AI-Powered Process'}</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            From Idea to Launch
+            {content.title || 'From Idea to Launch'}
             <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent block mt-2">
-              In Just 4 Smart Steps
+              {content.titleHighlight || 'In Just 4 Smart Steps'}
             </span>
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed mb-8">
-            Our AI-enhanced workflow delivers enterprise-grade solutions at startup speed
+            {content.subtitle || 'Our AI-enhanced workflow delivers enterprise-grade solutions at startup speed'}
           </p>
 
           {/* Interactive Timeline Preview */}
@@ -98,7 +110,7 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
 
         {/* Process Steps - Enhanced Sticky Cards */}
         <div className="max-w-6xl mx-auto">
-          {[
+          {(content.steps && content.steps.length > 0 ? content.steps : [
             {
               step: 1,
               title: 'Discovery & Strategy',
@@ -107,18 +119,11 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
               duration: '1-2 Days',
               timeline: 'Day 1-2',
               deliverables: [
-                { name: 'Project brief', detail: 'Detailed scope document', icon: '📋' },
-                { name: 'Timeline & milestones', detail: 'Clear project roadmap', icon: '🗓️' },
-                { name: 'Tech stack proposal', detail: 'Best technologies for you', icon: '⚙️' },
-                { name: 'Pricing breakdown', detail: 'Transparent cost structure', icon: '💰' }
-              ],
-              metrics: { accuracy: '99%', satisfaction: '5/5' },
-              icon: Users,
-              gradient: 'from-cyan-500 to-blue-500',
-              glowColor: 'cyan-500',
-              borderColor: 'border-cyan-500',
-              bgColor: 'bg-cyan-500',
-              stickyTop: 'top-24',
+                { name: 'Project brief', detail: 'Detailed scope document' },
+                { name: 'Timeline & milestones', detail: 'Clear project roadmap' },
+                { name: 'Tech stack proposal', detail: 'Best technologies for you' },
+                { name: 'Pricing breakdown', detail: 'Transparent cost structure' }
+              ]
             },
             {
               step: 2,
@@ -128,18 +133,11 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
               duration: '7-21 Days',
               timeline: 'Day 3-23',
               deliverables: [
-                { name: 'UI/UX design mockups', detail: 'Pixel-perfect designs', icon: '🎨' },
-                { name: 'Functional prototypes', detail: 'Interactive previews', icon: '🔧' },
-                { name: 'Weekly progress reports', detail: 'Stay in the loop', icon: '📊' },
-                { name: 'Preview environment', detail: 'Test before launch', icon: '👀' }
-              ],
-              metrics: { speed: '3x faster', quality: 'A+' },
-              icon: Code,
-              gradient: 'from-purple-500 to-pink-500',
-              glowColor: 'purple-500',
-              borderColor: 'border-purple-500',
-              bgColor: 'bg-purple-500',
-              stickyTop: 'top-32',
+                { name: 'UI/UX design mockups', detail: 'Pixel-perfect designs' },
+                { name: 'Functional prototypes', detail: 'Interactive previews' },
+                { name: 'Weekly progress reports', detail: 'Stay in the loop' },
+                { name: 'Preview environment', detail: 'Test before launch' }
+              ]
             },
             {
               step: 3,
@@ -149,18 +147,11 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
               duration: '3-5 Days',
               timeline: 'Day 24-28',
               deliverables: [
-                { name: 'Bug-free code', detail: 'Zero critical issues', icon: '🐛' },
-                { name: 'Performance optimization', detail: 'Lightning-fast loading', icon: '⚡' },
-                { name: 'Security hardening', detail: 'Protected from threats', icon: '🔒' },
-                { name: 'Cross-device testing', detail: 'Works everywhere', icon: '📱' }
-              ],
-              metrics: { uptime: '99.9%', speed: '<2s load' },
-              icon: Shield,
-              gradient: 'from-emerald-500 to-green-500',
-              glowColor: 'emerald-500',
-              borderColor: 'border-emerald-500',
-              bgColor: 'bg-emerald-500',
-              stickyTop: 'top-40',
+                { name: 'Bug-free code', detail: 'Zero critical issues' },
+                { name: 'Performance optimization', detail: 'Lightning-fast loading' },
+                { name: 'Security hardening', detail: 'Protected from threats' },
+                { name: 'Cross-device testing', detail: 'Works everywhere' }
+              ]
             },
             {
               step: 4,
@@ -170,22 +161,31 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
               duration: '1-2 Days + Ongoing',
               timeline: 'Day 29+ Forever',
               deliverables: [
-                { name: 'Live deployment', detail: 'Smooth go-live process', icon: '🚀' },
-                { name: 'Training videos', detail: 'Easy-to-follow tutorials', icon: '🎬' },
-                { name: 'Documentation', detail: 'Complete user guides', icon: '📚' },
-                { name: 'Lifetime support access', detail: '24/7 help available', icon: '💬' }
-              ],
-              metrics: { support: '24/7', response: '<1 hour' },
-              icon: TrendingUp,
-              gradient: 'from-orange-500 to-red-500',
-              glowColor: 'orange-500',
-              borderColor: 'border-orange-500',
-              bgColor: 'bg-orange-500',
-              stickyTop: 'top-48',
-            },
-          ].map((phase, index) => (
+                { name: 'Live deployment', detail: 'Smooth go-live process' },
+                { name: 'Training videos', detail: 'Easy-to-follow tutorials' },
+                { name: 'Documentation', detail: 'Complete user guides' },
+                { name: 'Lifetime support access', detail: '24/7 help available' }
+              ]
+            }
+          ]).map((item: any, i: number) => {
+            const phase = {
+              ...item,
+              icon: icons[i % icons.length],
+              ...styles[i % styles.length],
+              metrics: item.metrics || [
+                { accuracy: '99%', satisfaction: '5/5' },
+                { speed: '3x faster', quality: 'A+' },
+                { uptime: '99.9%', speed: '<2s load' },
+                { support: '24/7', response: '<1 hour' }
+              ][i % 4],
+              deliverables: item.deliverables?.map((d: any, di: number) => ({
+                ...d,
+                icon: ['📋', '🗓️', '⚙️', '💰', '🎨', '🔧', '📊', '👀'][di % 8] || '✨'
+              })) || []
+            };
+            return (
             <div 
-              key={index} 
+              key={i} 
               className={`relative mb-[20vh] last:mb-12 lg:sticky ${phase.stickyTop} transition-all duration-500`}
             >
               <div className="flex flex-col lg:flex-row gap-8">
@@ -250,7 +250,7 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
                               <div className="flex items-center justify-between mb-1">
                                 <span className="text-xs text-gray-400 capitalize">{key}</span>
                                 <span className={`text-sm font-black bg-gradient-to-r ${phase.gradient} bg-clip-text text-transparent`}>
-                                  {value}
+                                  {String(value)}
                                 </span>
                               </div>
                               <div className="h-1 bg-white/10 rounded-full overflow-hidden">
@@ -363,7 +363,8 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Bottom Premium Stats Section */}

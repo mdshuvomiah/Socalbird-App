@@ -79,6 +79,13 @@ export function ModernNavigation({ currentPage, onNavigate }: ModernNavigationPr
           >
             {logoType === 'image' && logoImageUrl ? (
               <img src={logoImageUrl} alt={logoText} className="h-10 object-contain" />
+            ) : logoType === 'both' && logoImageUrl ? (
+              <>
+                <img src={logoImageUrl} alt={logoText} className="h-9 object-contain drop-shadow-lg" />
+                <span className={`text-2xl font-bold bg-gradient-to-r ${logoGradient} bg-clip-text text-transparent ml-1`}>
+                  {logoText}
+                </span>
+              </>
             ) : (
               <>
                 <div className="relative">

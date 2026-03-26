@@ -54,6 +54,46 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
     features: []
   };
 
+  const servicesContent = getSectionContent('home', 'services') || { items: [] };
+
+  const defaultCoreServices = [
+    {
+      icon: MessageSquare,
+      title: 'AI Chatbot Automation',
+      desc: 'Facebook • WhatsApp • Instagram • Web',
+      price: 'Starting ৳5,000/month',
+      stat: '24/7 Support',
+      page: '/ai-chatbot-solutions'
+    },
+    {
+      icon: Code,
+      title: 'Web Development',
+      desc: 'SEO-Optimized • Responsive • Fast',
+      price: 'Custom & CMS Solutions',
+      stat: '<100ms Load',
+      page: '/web-development'
+    },
+    {
+      icon: Smartphone,
+      title: 'Mobile Apps',
+      desc: 'iOS • Android • Cross-Platform',
+      price: 'Native & React Native',
+      stat: '4.9★ Rating',
+      page: '/app-development'
+    }
+  ];
+
+  const coreServices = servicesContent.items && servicesContent.items.length > 0 
+    ? servicesContent.items.slice(0, 3).map((s: any, i: number) => ({
+        icon: [MessageSquare, Code, Smartphone][i] || Code,
+        title: s.title,
+        desc: s.description ? s.description.substring(0, 40) + '...' : s.subtitle,
+        price: s.price || s.subtitle || '',
+        stat: s.features && s.features.length > 0 ? s.features[0] : 'Feature-Rich',
+        page: ['/ai-chatbot-solutions', '/web-development', '/app-development'][i] || '/contact'
+      }))
+    : defaultCoreServices;
+
   return (
     <div className="bg-[#0A0E27] text-white">
       {/* Hero Section - Premium & Clean */}
@@ -362,32 +402,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
                       Core Services
                     </div>
                     <div className="space-y-3">
-                      {[
-                        {
-                          icon: MessageSquare,
-                          title: 'AI Chatbot Automation',
-                          desc: 'Facebook • WhatsApp • Instagram • Web',
-                          price: 'Starting ৳5,000/month',
-                          stat: '24/7 Support',
-                          page: '/ai-chatbot-solutions'
-                        },
-                        {
-                          icon: Code,
-                          title: 'Web Development',
-                          desc: 'SEO-Optimized • Responsive • Fast',
-                          price: 'Custom & CMS Solutions',
-                          stat: '<100ms Load',
-                          page: '/web-development'
-                        },
-                        {
-                          icon: Smartphone,
-                          title: 'Mobile Apps',
-                          desc: 'iOS • Android • Cross-Platform',
-                          price: 'Native & React Native',
-                          stat: '4.9★ Rating',
-                          page: '/app-development'
-                        },
-                      ].map((service, i) => (
+                      {coreServices.map((service: any, i: number) => (
                         <button
                           key={i}
                           onClick={() => onNavigate(service.page)}
@@ -400,7 +415,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
                             <div className="flex-1 min-w-0 text-left">
                               <div className="flex items-start justify-between mb-1">
                                 <div className="font-semibold text-white text-sm">{service.title}</div>
-                                <div className="text-[10px] font-bold text-cyan-400 px-2 py-0.5 bg-cyan-500/10 rounded">
+                                <div className="text-[10px] font-bold text-cyan-400 px-2 py-0.5 bg-cyan-500/10 rounded overflow-hidden text-ellipsis whitespace-nowrap max-w-[80px]">
                                   {service.stat}
                                 </div>
                               </div>
@@ -416,11 +431,11 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
                   {/* Quick Stats */}
                   <div className="border-t border-white/10 pt-4">
                     <div className="grid grid-cols-3 gap-3">
-                      {[
+                      {(heroContent.rightCard?.stats || [
                         { label: 'Delivery', value: '7-14 Days' },
                         { label: 'Support', value: 'Lifetime' },
                         { label: 'Warranty', value: '90 Days' },
-                      ].map((stat, i) => (
+                      ]).map((stat: any, i: number) => (
                         <div key={i} className="text-center">
                           <div className="text-sm font-bold text-cyan-400">{stat.value}</div>
                           <div className="text-[10px] text-gray-500 uppercase tracking-wider">{stat.label}</div>
@@ -562,7 +577,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
               onClick={() => onNavigate('/portfolio')}
               className="bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-6"
             >
-              View More Case Studies
+              {testimonialsContent.ctaText || 'View More Case Studies'}
               <ChevronRight className="ml-2" size={20} />
             </Button>
           </div>
@@ -648,11 +663,11 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
           </div>
 
           <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-400">
-            {[
+            {(finalCtaContent.features && finalCtaContent.features.length > 0 ? finalCtaContent.features : [
               '✓ No Long-term Contracts',
               '✓ 100% Satisfaction Guaranteed',
               '✓ Fast Turnaround Time',
-            ].map((text, i) => (
+            ]).map((text: string, i: number) => (
               <div key={i} className="flex items-center gap-2">
                 <span>{text}</span>
               </div>

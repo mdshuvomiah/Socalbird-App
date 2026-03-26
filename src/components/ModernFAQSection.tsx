@@ -121,7 +121,16 @@ interface ModernFAQSectionProps {
 
 export function ModernFAQSection({ onNavigate }: ModernFAQSectionProps) {
   const { getSectionContent } = useContent();
-  const faqContent = getSectionContent('home', 'faq');
+  const rawFaqContent = getSectionContent('home', 'faq');
+  const faqContent = rawFaqContent || {
+    badge: 'Frequently Asked Questions',
+    title: 'Got Questions?',
+    titleHighlight: "We've Got Clear Answers",
+    subtitle: 'Find answers to common questions about our services, pricing, and development process',
+    ctaTitle: 'Still Have Questions?',
+    ctaSubtitle: "Our team is here to help. Get in touch and we'll respond within 24 hours with personalized answers.",
+    ctaButtonText: 'Contact Us Now'
+  };
 
   const defaultFaqs = [
     {
@@ -179,19 +188,19 @@ export function ModernFAQSection({ onNavigate }: ModernFAQSectionProps) {
               <HelpCircle className="w-5 h-5 text-cyan-400" strokeWidth={2} />
               <div className="absolute inset-0 bg-cyan-400 blur-md opacity-50 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="font-semibold text-white">Frequently Asked Questions</span>
+            <span className="font-semibold text-white">{faqContent.badge || 'Frequently Asked Questions'}</span>
           </div>
 
           {/* Title */}
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-            <span className="block mb-3 text-white">Got Questions?</span>
+            <span className="block mb-3 text-white">{faqContent.title || 'Got Questions?'}</span>
             <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
-              We've Got Clear Answers
+              {faqContent.titleHighlight || "We've Got Clear Answers"}
             </span>
           </h2>
 
           <p className="text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Find answers to common questions about our services, pricing, and development process
+            {faqContent.subtitle || 'Find answers to common questions about our services, pricing, and development process'}
           </p>
         </div>
 
@@ -229,12 +238,12 @@ export function ModernFAQSection({ onNavigate }: ModernFAQSectionProps) {
               
               {/* Title */}
               <h3 className="text-3xl lg:text-4xl font-bold mb-4 text-white">
-                Still Have Questions?
+                {faqContent.ctaTitle || 'Still Have Questions?'}
               </h3>
               
               {/* Description */}
               <p className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Our team is here to help. Get in touch and we'll respond within 24 hours with personalized answers.
+                {faqContent.ctaSubtitle || "Our team is here to help. Get in touch and we'll respond within 24 hours with personalized answers."}
               </p>
               
               {/* Features */}
@@ -260,7 +269,7 @@ export function ModernFAQSection({ onNavigate }: ModernFAQSectionProps) {
                   className="group relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 rounded-2xl font-bold text-lg shadow-2xl shadow-cyan-500/30 hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105 overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <span className="relative text-white">Contact Us Now</span>
+                  <span className="relative text-white">{faqContent.ctaButtonText || 'Contact Us Now'}</span>
                   <MessageSquare className="relative w-5 h-5 text-white group-hover:rotate-12 transition-transform duration-300" />
                 </button>
               )}

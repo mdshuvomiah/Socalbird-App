@@ -16,7 +16,11 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
     titleHighlight: 'Technology Meets Strategy',
     subtitle: 'From startups to growing businesses - we\'ve helped companies 3X their revenue, automate support, and scale faster',
     stats: [],
-    caseStudy1: {}
+    caseStudy1: {},
+    caseStudy2: {},
+    caseStudy3: {},
+    ctaText: "Your Success Story Starts Here",
+    ctaSubtext: "We've helped 50+ businesses grow. Let's write your chapter next."
   };
 
   return (
@@ -87,27 +91,27 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                 <div>
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/20 border border-cyan-500/40 rounded-full mb-6">
                     <MessageSquare className="text-cyan-400" size={16} />
-                    <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">Case Study #1</span>
+                    <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">{content.caseStudy1?.badge || 'Case Study #1'}</span>
                   </div>
                   
                   <h3 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
-                    How an E-commerce Store Got
+                    {content.caseStudy1?.title || 'How an E-commerce Store Got'}
                     <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent block">
-                      3.5X More Revenue in 6 Months
+                      {content.caseStudy1?.titleHighlight || '3.5X More Revenue in 6 Months'}
                     </span>
                   </h3>
 
                   <div className="mb-6">
                     <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">The Challenge</div>
                     <p className="text-lg text-gray-300 leading-relaxed">
-                      A growing fashion e-commerce brand was losing <span className="text-cyan-400 font-semibold">67% of customer inquiries</span> because they couldn't respond fast enough. Abandoned carts were at an all-time high.
+                      {content.caseStudy1?.challenge || 'A growing fashion e-commerce brand was losing 67% of customer inquiries because they couldn\'t respond fast enough. Abandoned carts were at an all-time high.'}
                     </p>
                   </div>
 
                   <div className="mb-8">
                     <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Our Solution</div>
                     <p className="text-lg text-gray-300 leading-relaxed">
-                      We deployed a <span className="text-cyan-400 font-semibold">Facebook Messenger + Instagram DM chatbot</span> that handled product inquiries, captured leads, and sent abandoned cart reminders - all automatically.
+                      {content.caseStudy1?.solution || 'We deployed a Facebook Messenger + Instagram DM chatbot that handled product inquiries, captured leads, and sent abandoned cart reminders - all automatically.'}
                     </p>
                   </div>
 
@@ -140,27 +144,27 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                       <TrendingUp className="text-cyan-400" size={20} />
                     </div>
                     <div className="text-6xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
-                      +385%
+                      {content.caseStudy1?.results?.main || '+385%'}
                     </div>
-                    <p className="text-gray-400 text-sm">Increase in 6 months</p>
+                    <p className="text-gray-400 text-sm">{content.caseStudy1?.results?.mainLabel || 'Increase in 6 months'}</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-                      <div className="text-3xl font-bold text-emerald-400 mb-1">95%</div>
-                      <p className="text-xs text-gray-500">Response rate</p>
+                      <div className="text-3xl font-bold text-emerald-400 mb-1">{content.caseStudy1?.results?.metrics?.[0]?.value || '95%'}</div>
+                      <p className="text-xs text-gray-500">{content.caseStudy1?.results?.metrics?.[0]?.label || 'Response rate'}</p>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-                      <div className="text-3xl font-bold text-purple-400 mb-1">3X</div>
-                      <p className="text-xs text-gray-500">More leads</p>
+                      <div className="text-3xl font-bold text-purple-400 mb-1">{content.caseStudy1?.results?.metrics?.[1]?.value || '3X'}</div>
+                      <p className="text-xs text-gray-500">{content.caseStudy1?.results?.metrics?.[1]?.label || 'More leads'}</p>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-                      <div className="text-3xl font-bold text-orange-400 mb-1">&lt;2min</div>
-                      <p className="text-xs text-gray-500">Avg response</p>
+                      <div className="text-3xl font-bold text-orange-400 mb-1">{content.caseStudy1?.results?.metrics?.[2]?.value || '<2min'}</div>
+                      <p className="text-xs text-gray-500">{content.caseStudy1?.results?.metrics?.[2]?.label || 'Avg response'}</p>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-                      <div className="text-3xl font-bold text-pink-400 mb-1">24/7</div>
-                      <p className="text-xs text-gray-500">Automated</p>
+                      <div className="text-3xl font-bold text-pink-400 mb-1">{content.caseStudy1?.results?.metrics?.[3]?.value || '24/7'}</div>
+                      <p className="text-xs text-gray-500">{content.caseStudy1?.results?.metrics?.[3]?.label || 'Automated'}</p>
                     </div>
                   </div>
 
@@ -171,11 +175,11 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                       ))}
                     </div>
                     <p className="text-gray-300 italic leading-relaxed mb-3">
-                      "Game changer. The chatbot handles 80% of customer questions automatically. Our team can finally focus on growth instead of answering the same questions all day."
+                      "{content.caseStudy1?.testimonial?.quote || 'Game changer. The chatbot handles 80% of customer questions automatically. Our team can finally focus on growth instead of answering the same questions all day.'}"
                     </p>
                     <div className="text-sm">
-                      <div className="font-semibold text-white">Sarah M.</div>
-                      <div className="text-xs text-gray-500">Founder, Fashion E-commerce</div>
+                      <div className="font-semibold text-white">{content.caseStudy1?.testimonial?.author || 'Sarah M.'}</div>
+                      <div className="text-xs text-gray-500">{content.caseStudy1?.testimonial?.role || 'Founder, Fashion E-commerce'}</div>
                     </div>
                   </div>
                 </div>
@@ -192,33 +196,33 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
               <div className="p-8">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 border border-purple-500/40 rounded-full mb-6">
                   <Code className="text-purple-400" size={16} />
-                  <span className="text-xs font-bold text-purple-300 uppercase tracking-wider">Web Development</span>
+                  <span className="text-xs font-bold text-purple-300 uppercase tracking-wider">{content.caseStudy2?.badge || 'Web Development'}</span>
                 </div>
 
                 <h3 className="text-2xl font-bold mb-4 leading-tight">
-                  SaaS Platform Scaled to
+                  {content.caseStudy2?.title || 'SaaS Platform Scaled to'}
                   <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent block">
-                    12,000+ Active Users
+                    {content.caseStudy2?.titleHighlight || '12,000+ Active Users'}
                   </span>
                 </h3>
 
                 <p className="text-gray-400 leading-relaxed mb-6">
-                  Built a high-performance web app with real-time features using Next.js + Node.js that handles thousands of concurrent users with zero downtime.
+                  {content.caseStudy2?.description || 'Built a high-performance web app with real-time features using Next.js + Node.js that handles thousands of concurrent users with zero downtime.'}
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold text-purple-400 mb-1">12K+</div>
-                    <p className="text-xs text-gray-500">Active Users</p>
+                    <div className="text-3xl font-bold text-purple-400 mb-1">{content.caseStudy2?.metrics?.[0]?.value || '12K+'}</div>
+                    <p className="text-xs text-gray-500">{content.caseStudy2?.metrics?.[0]?.label || 'Active Users'}</p>
                   </div>
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold text-pink-400 mb-1">99.9%</div>
-                    <p className="text-xs text-gray-500">Uptime</p>
+                    <div className="text-3xl font-bold text-pink-400 mb-1">{content.caseStudy2?.metrics?.[1]?.value || '99.9%'}</div>
+                    <p className="text-xs text-gray-500">{content.caseStudy2?.metrics?.[1]?.label || 'Uptime'}</p>
                   </div>
                 </div>
 
                 <div className="flex gap-2 mb-6">
-                  {['Next.js', 'Node.js', 'MongoDB'].map((tech, i) => (
+                  {(content.caseStudy2?.tags || ['Next.js', 'Node.js', 'MongoDB']).map((tech: string, i: number) => (
                     <div key={i} className="px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-lg text-xs font-medium text-purple-300">
                       {tech}
                     </div>
@@ -242,33 +246,33 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
               <div className="p-8">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/40 rounded-full mb-6">
                   <MessageCircle className="text-emerald-400" size={16} />
-                  <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">WhatsApp Automation</span>
+                  <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">{content.caseStudy3?.badge || 'WhatsApp Automation'}</span>
                 </div>
 
                 <h3 className="text-2xl font-bold mb-4 leading-tight">
-                  Restaurant Automated
+                  {content.caseStudy3?.title || 'Restaurant Automated'}
                   <span className="bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent block">
-                    1,200+ Orders/Month
+                    {content.caseStudy3?.titleHighlight || '1,200+ Orders/Month'}
                   </span>
                 </h3>
 
                 <p className="text-gray-400 leading-relaxed mb-6">
-                  WhatsApp chatbot that takes orders, sends confirmations, and provides delivery updates automatically. Never misses a message, even at 3 AM.
+                  {content.caseStudy3?.description || 'WhatsApp chatbot that takes orders, sends confirmations, and provides delivery updates automatically. Never misses a message, even at 3 AM.'}
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold text-emerald-400 mb-1">1.2K</div>
-                    <p className="text-xs text-gray-500">Orders/Month</p>
+                    <div className="text-3xl font-bold text-emerald-400 mb-1">{content.caseStudy3?.metrics?.[0]?.value || '1.2K'}</div>
+                    <p className="text-xs text-gray-500">{content.caseStudy3?.metrics?.[0]?.label || 'Orders/Month'}</p>
                   </div>
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold text-green-400 mb-1">24/7</div>
-                    <p className="text-xs text-gray-500">Availability</p>
+                    <div className="text-3xl font-bold text-green-400 mb-1">{content.caseStudy3?.metrics?.[1]?.value || '24/7'}</div>
+                    <p className="text-xs text-gray-500">{content.caseStudy3?.metrics?.[1]?.label || 'Availability'}</p>
                   </div>
                 </div>
 
                 <div className="flex gap-2 mb-6">
-                  {['WhatsApp API', 'Auto Orders', 'Delivery Track'].map((tech, i) => (
+                  {(content.caseStudy3?.tags || ['WhatsApp API', 'Auto Orders', 'Delivery Track']).map((tech: string, i: number) => (
                     <div key={i} className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-xs font-medium text-emerald-300">
                       {tech}
                     </div>
@@ -292,10 +296,10 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
           <div className="bg-gradient-to-br from-white/5 to-cyan-500/5 backdrop-blur-lg border border-white/20 rounded-3xl p-12">
             <div className="max-w-3xl mx-auto">
               <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                Your Success Story Starts Here
+                {content.ctaTitle || 'Your Success Story Starts Here'}
               </h3>
               <p className="text-xl text-gray-400 mb-8">
-                We've helped 50+ businesses grow. Let's write your chapter next.
+                {content.ctaSubtext || "We've helped 50+ businesses grow. Let's write your chapter next."}
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <Button

@@ -1,5 +1,6 @@
 import { MessageSquare, Code, Smartphone, Clock, Shield, Users, TrendingUp, Star, Zap, CircleCheckBig, ArrowRight, Target, Award, Sparkles, CheckCircle2, X, ArrowUpRight, ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import { useContent } from '../admin/ContentContext';
 
 interface InteractiveCardProps {
   problem: {
@@ -198,7 +199,22 @@ interface UniqueModernWhyChooseSectionProps {
 }
 
 export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChooseSectionProps) {
-  const problems = [
+  const { getSectionContent } = useContent();
+  const content = getSectionContent('home', 'whyChoose') || {};
+
+  const iconMap = [
+    <MessageSquare className="w-8 h-8 text-white" strokeWidth={2} />,
+    <Code className="w-8 h-8 text-white" strokeWidth={2} />,
+    <Smartphone className="w-8 h-8 text-white" strokeWidth={2} />
+  ];
+
+  const gradientMap = [
+    { from: '#06b6d4', to: '#3b82f6' },
+    { from: '#a855f7', to: '#ec4899' },
+    { from: '#f97316', to: '#ef4444' }
+  ];
+
+  const defaultProblems = [
     {
       problem: {
         title: 'Missing Customer Messages',
@@ -264,6 +280,18 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
     }
   ];
 
+  const cmsProblems = content?.problems;
+  const problems = (cmsProblems && cmsProblems.length > 0)
+    ? cmsProblems.map((item: any, i: number) => ({
+        ...item,
+        problem: {
+           ...item.problem,
+           icon: iconMap[i % iconMap.length],
+        },
+        gradient: gradientMap[i % gradientMap.length]
+      }))
+    : defaultProblems;
+
   return (
     <section className="relative py-24 px-4 border-t border-white/10 overflow-hidden">
       {/* Animated Mesh Background */}
@@ -282,20 +310,20 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
             <div className="relative inline-flex items-center gap-3 px-6 py-3 bg-[#0D1128] border border-cyan-500/30 rounded-full backdrop-blur-xl">
               <Sparkles className="w-5 h-5 text-cyan-400 animate-spin-slow" />
               <span className="text-sm font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                Why Choose SocalBird
+                {content.badge || 'Why Choose SocalBird'}
               </span>
             </div>
           </div>
           
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-            <span className="block text-white mb-2">Digital Solutions That</span>
+            <span className="block text-white mb-2">{content.title || 'Digital Solutions That'}</span>
             <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent animate-gradient">
-              Actually Solve Problems
+              {content.titleHighlight || 'Actually Solve Problems'}
             </span>
           </h2>
           
           <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Click each card to explore how we solve the 3 biggest challenges businesses face
+            {content.subtitle || 'Click each card to explore how we solve the 3 biggest challenges businesses face'}
           </p>
         </div>
 

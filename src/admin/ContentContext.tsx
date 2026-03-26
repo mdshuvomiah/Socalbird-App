@@ -41,7 +41,16 @@ const defaultContent: ContentData = {
       titleHighlight: 'AI Automation',
       subtitle: 'Expert Web Development, AI Chatbot Solutions, and Mobile Apps for small to mid-sized businesses, e-commerce, restaurants, and scaling startups.',
       cta1Text: 'Get Started - Free Consultation',
-      cta2Text: 'View Portfolio'
+      cta2Text: 'View Portfolio',
+      rightCard: {
+        badge: 'Complete Tech Stack',
+        frameworks: ['React', 'Next.js', 'Node.js', 'Tailwind', 'Supabase'],
+        stats: [
+          { value: '100+', label: 'Projects' },
+          { value: '99%', label: 'Success' },
+          { value: '24/7', label: 'Support' }
+        ]
+      }
     },
     realImpact: {
       badge: 'Real Results, Real Growth',
@@ -84,51 +93,69 @@ const defaultContent: ContentData = {
       subtitle: 'Most agencies sell features. We solve the problems keeping you up at night.',
       problems: [
         {
-          title: 'Losing Leads Overnight?',
-          description: 'Stop missing inquiries when you\'re closed. Our AI chatbots work 24/7.',
-          solution: 'AI Chatbot Solutions',
-          icon: '💬'
+          problem: {
+            title: 'Missing Customer Messages',
+            stat: '67%',
+            statLabel: 'of messages go unanswered'
+          },
+          solution: {
+            title: 'AI Chatbot Automation',
+            description: '24/7 automated responses on Facebook, WhatsApp, Instagram',
+            features: ['Instant replies', 'Lead capture', 'Order tracking', 'Multi-platform'],
+            result: { label: 'Typical Result', value: '300% more leads' }
+          }
         },
         {
-          title: 'Website Too Slow?',
-          description: 'A 1-second delay costs 7% conversion. We build lightning-fast sites.',
-          solution: 'Web Development',
-          icon: '⚡'
+          problem: {
+            title: 'Slow, Outdated Website',
+            stat: '53%',
+            statLabel: 'leave if load time > 3s'
+          },
+          solution: {
+            title: 'Modern Web Development',
+            description: 'Lightning-fast, SEO-optimized websites that rank on Google',
+            features: ['<100ms load', 'Mobile-first', 'SEO optimized', 'CMS control'],
+            result: { label: 'Typical Result', value: '2X better ranking' }
+          }
         },
         {
-          title: 'Need a Mobile App?',
-          description: 'Reach your customers on iOS & Android with beautiful native apps.',
-          solution: 'Mobile App Development',
-          icon: '📱'
+          problem: {
+            title: 'No Mobile Presence',
+            stat: '85%',
+            statLabel: 'prefer mobile apps'
+          },
+          solution: {
+            title: 'Native Mobile Apps',
+            description: 'Professional iOS & Android apps with seamless UX',
+            features: ['iOS + Android', 'Push notifications', 'Offline mode', 'Payment ready'],
+            result: { label: 'Typical Result', value: '4.9★ rating' }
+          }
         }
       ]
     },
     services: {
-      badge: 'Our Services',
-      title: 'Complete Digital',
-      titleHighlight: 'Solutions',
-      subtitle: 'From concept to launch, we handle everything',
+      badge: 'Our Digital Services',
+      title: 'Complete Digital Solutions',
+      titleHighlight: 'For Every Business',
+      subtitle: 'Serving small businesses, e-commerce stores, restaurants, service providers, agencies, and startups',
       items: [
         {
-          title: 'AI Chatbot Automation',
-          description: 'Automate customer engagement on Facebook, WhatsApp, Instagram & your website',
-          price: 'Starting ৳5,000/month',
-          features: ['24/7 Auto-Reply', 'Lead Capture', 'Multi-Platform', 'CRM Integration'],
-          icon: '🤖'
+          title: 'AI Chatbot Solutions',
+          subtitle: 'Monthly Subscriptions',
+          description: '24/7 automated customer support and engagement across all major platforms with intelligent AI responses',
+          features: ['Messenger Auto', 'WhatsApp Business', 'Instagram DMs', 'Comment Replies', 'Website Plugin', 'CRM Integration']
         },
         {
           title: 'Web Development',
-          description: 'Fast, SEO-optimized websites that convert visitors into customers',
-          price: 'Starting ৳25,000',
-          features: ['WordPress/Custom', 'Mobile Responsive', 'SEO Optimized', 'CMS Integration'],
-          icon: '🌐'
+          subtitle: 'Custom & CMS',
+          description: 'Professional websites that drive conversions, rank on Google, and deliver exceptional user experiences',
+          features: ['WordPress Sites', 'Laravel Apps', 'Next.js / React', 'MERN Stack', 'SEO Optimized', 'Mobile Ready']
         },
         {
           title: 'Mobile App Development',
-          description: 'Native iOS & Android apps that users love',
-          price: 'Starting ৳100,000',
-          features: ['iOS & Android', 'Native Code', 'App Store Launch', 'Push Notifications'],
-          icon: '📱'
+          subtitle: 'iOS & Android',
+          description: 'Native and cross-platform mobile applications designed for performance, scalability, and user engagement',
+          features: ['Native iOS', 'Native Android', 'React Native', 'UI/UX Design', 'App Store Ready', 'Full Support']
         }
       ]
     },
@@ -142,51 +169,117 @@ const defaultContent: ContentData = {
           name: 'Alex Johnson',
           role: 'Lead Developer',
           expertise: 'Full-Stack Development',
-          image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop'
+          bio: '10+ years engineering scalable web applications. MERN stack expert.',
+          imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
+          stats: [
+            { label: 'Projects Done', value: '150+' },
+            { label: 'Lines of Code', value: '2M+' }
+          ],
+          skills: ['React', 'Node.js', 'AWS', 'System Design'],
+          achievements: ['AWS Certified', 'Open Source Contributor', 'Tech Speaker']
         },
         {
           name: 'Sarah Chen',
           role: 'AI Specialist',
           expertise: 'Chatbot Development',
-          image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'
+          bio: 'Pioneer in conversational AI and NLP. Built chatbots handling 1M+ messages.',
+          imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop',
+          stats: [
+            { label: 'Bots Deployed', value: '50+' },
+            { label: 'User Interactions', value: '1M+' }
+          ],
+          skills: ['Python', 'TensorFlow', 'Dialogflow', 'NLP'],
+          achievements: ['AI Research Paper', 'Hackathon Winner', 'Bot Dev Award']
         },
         {
           name: 'Michael Torres',
           role: 'Mobile Expert',
           expertise: 'iOS & Android',
-          image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop'
+          bio: 'Creating pixel-perfect, high-performance mobile experiences for 8 years.',
+          imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop',
+          stats: [
+            { label: 'Apps Published', value: '30+' },
+            { label: 'App Installs', value: '5M+' }
+          ],
+          skills: ['Swift', 'Kotlin', 'React Native', 'UI/UX'],
+          achievements: ['Featured on App Store', 'Design Award', 'Top Developer']
+        },
+        {
+          name: 'Emily Davis',
+          role: 'UI/UX Lead',
+          expertise: 'Product Design',
+          bio: 'Crafting intuitive and beautiful interfaces that drive user engagement and conversion.',
+          imageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop',
+          stats: [
+            { label: 'Designs Live', value: '200+' },
+            { label: 'Conversion Lift', value: '45%' }
+          ],
+          skills: ['Figma', 'Prototyping', 'User Research', 'Design Systems'],
+          achievements: ['Awwwards Winner', 'Design Mentor', 'UX Speaker']
         }
       ]
     },
     process: {
-      badge: 'How We Work',
-      title: 'Simple, Transparent',
-      titleHighlight: 'Process',
-      subtitle: 'From first call to final launch - here\'s exactly what happens',
+      badge: 'AI-Powered Process',
+      title: 'From Idea to Launch',
+      titleHighlight: 'In Just 4 Smart Steps',
+      subtitle: 'Our AI-enhanced workflow delivers enterprise-grade solutions at startup speed',
       steps: [
         {
-          number: '01',
-          title: 'Discovery Call',
-          description: 'We learn about your business, challenges, and goals',
-          duration: '30 minutes'
+          step: 1,
+          title: 'Discovery & Strategy',
+          subtitle: 'Understanding Your Vision',
+          description: 'We deep-dive into your business goals, target audience, and competition. A free 30-minute consultation to map out exactly what you need.',
+          duration: '1-2 Days',
+          timeline: 'Day 1-2',
+          deliverables: [
+            { name: 'Project brief', detail: 'Detailed scope document' },
+            { name: 'Timeline & milestones', detail: 'Clear project roadmap' },
+            { name: 'Tech stack proposal', detail: 'Best technologies for you' },
+            { name: 'Pricing breakdown', detail: 'Transparent cost structure' }
+          ]
         },
         {
-          number: '02',
-          title: 'Strategy & Quote',
-          description: 'Custom proposal with timeline and transparent pricing',
-          duration: '1-2 days'
-        },
-        {
-          number: '03',
+          step: 2,
           title: 'Design & Development',
-          description: 'We build your solution with regular updates',
-          duration: '2-6 weeks'
+          subtitle: 'Building Your Solution',
+          description: 'Our expert team designs and codes your solution using modern technologies. You get regular updates and preview links to track progress.',
+          duration: '7-21 Days',
+          timeline: 'Day 3-23',
+          deliverables: [
+            { name: 'UI/UX design mockups', detail: 'Pixel-perfect designs' },
+            { name: 'Functional prototypes', detail: 'Interactive previews' },
+            { name: 'Weekly progress reports', detail: 'Stay in the loop' },
+            { name: 'Preview environment', detail: 'Test before launch' }
+          ]
         },
         {
-          number: '04',
-          title: 'Launch & Support',
-          description: 'Go live with ongoing support and training',
-          duration: 'Ongoing'
+          step: 3,
+          title: 'Testing & Quality Assurance',
+          subtitle: 'Ensuring Perfection',
+          description: 'Rigorous testing across devices, browsers, and real-world scenarios. We fix bugs, optimize performance, and ensure everything works flawlessly.',
+          duration: '3-5 Days',
+          timeline: 'Day 24-28',
+          deliverables: [
+            { name: 'Bug-free code', detail: 'Zero critical issues' },
+            { name: 'Performance optimization', detail: 'Lightning-fast loading' },
+            { name: 'Security hardening', detail: 'Protected from threats' },
+            { name: 'Cross-device testing', detail: 'Works everywhere' }
+          ]
+        },
+        {
+          step: 4,
+          title: 'Launch & Growth Support',
+          subtitle: 'Going Live & Beyond',
+          description: 'We handle deployment, DNS setup, and provide training. Plus, lifetime support to ensure your solution grows with your business.',
+          duration: '1-2 Days + Ongoing',
+          timeline: 'Day 29+ Forever',
+          deliverables: [
+            { name: 'Live deployment', detail: 'Smooth go-live process' },
+            { name: 'Training videos', detail: 'Easy-to-follow tutorials' },
+            { name: 'Documentation', detail: 'Complete user guides' },
+            { name: 'Lifetime support access', detail: '24/7 help available' }
+          ]
         }
       ]
     },
