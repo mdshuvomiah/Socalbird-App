@@ -718,6 +718,30 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const deepMerge = (target: any, source: any) => {
+    const output = { ...target };
+    if (isObject(target) && isObject(source)) {
+      Object.keys(source).forEach(key => {
+        if (isObject(source[key])) {
+          if (!(key in target)) {
+            Object.assign(output, { [key]: source[key] });
+          } else {
+            output[key] = deepMerge(target[key], source[key]);
+          }
+        } else {
+          if (!(key in target)) {
+            Object.assign(output, { [key]: source[key] });
+          }
+        }
+      });
+    }
+    return output;
+  };
+
+  const isObject = (item: any) => {
+    return (item && typeof item === 'object' && !Array.isArray(item));
+  };
+
   const loadFromDatabase = async () => {
     try {
       setIsLoading(true);
@@ -728,14 +752,15 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         .single();
 
       if (error) {
-        // If error or no data found (e.g. first run), we keep default content
         console.log('Using default content (Supabase load failed or empty):', error.message);
         setIsLoading(false);
         return false;
       }
 
       if (data && data.content) {
-        setContent(data.content);
+        // Merge database content with defaultContent so new sections appear
+        const mergedContent = deepMerge(data.content, defaultContent);
+        setContent(mergedContent);
         setIsLoading(false);
         return true;
       }
