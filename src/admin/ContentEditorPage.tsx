@@ -319,40 +319,13 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
                     className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-all"
                   />
                 ) : (
-                  Object.entries(item).map(([key, value]) => (
-                    <div key={key}>
-                      <label className="text-xs text-gray-400 mb-1 block">{key}</label>
-                      {typeof value === 'string' && (
-                        <input
-                          type="text"
-                          value={value}
-                          onChange={(e) => {
-                            const newArray = [...fieldValue];
-                            newArray[index] = { ...newArray[index], [key]: e.target.value };
-                            handleFieldChange(sectionId, fieldPath, newArray);
-                          }}
-                          className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-all"
-                        />
-                      )}
-                      {Array.isArray(value) && (
-                        <div className="space-y-1">
-                          {value.map((subItem, subIndex) => (
-                            <input
-                              key={subIndex}
-                              type="text"
-                              value={subItem}
-                              onChange={(e) => {
-                                const newArray = [...fieldValue];
-                                newArray[index][key][subIndex] = e.target.value;
-                                handleFieldChange(sectionId, fieldPath, newArray);
-                              }}
-                              className="w-full px-3 py-2 bg-white/5 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-cyan-500/50 transition-all"
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))
+                  <div className="space-y-4">
+                    {Object.entries(item).map(([key, value]) => (
+                      <div key={key} className="pl-4 border-l-2 border-white/10">
+                        {renderField(sectionId, key, value, `${fieldPath}.${index}.${key}`)}
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             ))}
