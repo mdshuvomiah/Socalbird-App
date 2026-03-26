@@ -281,7 +281,7 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
   ];
 
   const cmsProblems = content?.problems;
-  const problems = (cmsProblems && cmsProblems.length > 0)
+  const problems = (Array.isArray(cmsProblems) && cmsProblems.length > 0)
     ? cmsProblems.map((item: any, i: number) => ({
         ...item,
         problem: {

@@ -83,13 +83,13 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
     }
   ];
 
-  const coreServices = servicesContent.items && servicesContent.items.length > 0 
+  const coreServices = Array.isArray(servicesContent.items) && servicesContent.items.length > 0 
     ? servicesContent.items.slice(0, 3).map((s: any, i: number) => ({
         icon: [MessageSquare, Code, Smartphone][i] || Code,
         title: s.title,
         desc: s.description ? s.description.substring(0, 40) + '...' : s.subtitle,
         price: s.price || s.subtitle || '',
-        stat: s.features && s.features.length > 0 ? s.features[0] : 'Feature-Rich',
+        stat: Array.isArray(s.features) && s.features.length > 0 ? s.features[0] : 'Feature-Rich',
         page: ['/ai-chatbot-solutions', '/web-development', '/app-development'][i] || '/contact'
       }))
     : defaultCoreServices;
@@ -431,7 +431,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
                   {/* Quick Stats */}
                   <div className="border-t border-white/10 pt-4">
                     <div className="grid grid-cols-3 gap-3">
-                      {(heroContent.rightCard?.stats || [
+                      {(Array.isArray(heroContent.rightCard?.stats) ? heroContent.rightCard.stats : [
                         { label: 'Delivery', value: '7-14 Days' },
                         { label: 'Support', value: 'Lifetime' },
                         { label: 'Warranty', value: '90 Days' },
@@ -516,7 +516,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {(testimonialsContent.items && testimonialsContent.items.length > 0 ? testimonialsContent.items : [
+            {(Array.isArray(testimonialsContent.items) && testimonialsContent.items.length > 0 ? testimonialsContent.items : [
               {
                 quote: 'The AI chatbot increased our response rate by 300% and we\'re capturing 3X more leads. Best investment we\'ve made!',
                 author: 'Sarah Mitchell',
@@ -598,7 +598,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
           </div>
 
           <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {(targetAudienceContent.industries && targetAudienceContent.industries.length > 0 ? targetAudienceContent.industries : [
+            {(Array.isArray(targetAudienceContent.industries) && targetAudienceContent.industries.length > 0 ? targetAudienceContent.industries : [
               { name: 'Small Businesses', icon: '🏪' },
               { name: 'E-commerce', icon: '🛒' },
               { name: 'Restaurants', icon: '🍽️' },
@@ -663,7 +663,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
           </div>
 
           <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-400">
-            {(finalCtaContent.features && finalCtaContent.features.length > 0 ? finalCtaContent.features : [
+            {(Array.isArray(finalCtaContent.features) && finalCtaContent.features.length > 0 ? finalCtaContent.features : [
               '✓ No Long-term Contracts',
               '✓ 100% Satisfaction Guaranteed',
               '✓ Fast Turnaround Time',

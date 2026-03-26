@@ -240,7 +240,7 @@ export function CreativeServicesSection({ onNavigate }: CreativeServicesSectionP
   const cmsServices = content?.items;
   const paths = ["/ai-chatbot-solutions", "/web-development", "/app-development"];
   
-  const services = (cmsServices && cmsServices.length > 0)
+  const services = (Array.isArray(cmsServices) && cmsServices.length > 0)
     ? cmsServices.map((item: any, i: number) => ({
         ...item,
         icon: iconMap[i % iconMap.length],

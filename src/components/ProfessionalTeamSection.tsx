@@ -463,7 +463,7 @@ export function ProfessionalTeamSection({ onNavigate }: ProfessionalTeamSectionP
     }
   ];
 
-  const teamMembers = content?.members?.length > 0 
+  const teamMembers = (Array.isArray(content.members) && content.members.length > 0)
     ? content.members.map((member: any, i: number) => ({
         ...member,
         gradient: [
@@ -478,8 +478,8 @@ export function ProfessionalTeamSection({ onNavigate }: ProfessionalTeamSectionP
           rating: Array.isArray(member.stats) ? member.stats[1]?.value || '-' : (member.stats?.rating || '-'),
           experience: Array.isArray(member.stats) ? member.stats[2]?.value || '-' : (member.stats?.experience || '-')
         },
-        skills: member.skills || [],
-        achievements: member.achievements || [],
+        skills: Array.isArray(member.skills) ? member.skills : [],
+        achievements: Array.isArray(member.achievements) ? member.achievements : [],
         imageUrl: member.imageUrl || member.image || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop'
       }))
     : defaultTeamMembers;

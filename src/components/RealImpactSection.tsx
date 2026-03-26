@@ -51,7 +51,7 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
 
         {/* Stats Counter - Animated */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
-          {(content.stats && content.stats.length > 0 ? content.stats : [
+          {(Array.isArray(content.stats) && content.stats.length > 0 ? content.stats : [
             { value: '100+', label: 'Projects Delivered', sublabel: 'Across 6 industries', icon: Award, bgColor: 'from-cyan-500/20 to-blue-500/20', color: 'from-cyan-400 to-blue-500' },
             { value: '50+', label: 'Active Clients', sublabel: 'Still working with us', icon: Users, bgColor: 'from-blue-500/20 to-purple-500/20', color: 'from-blue-400 to-purple-500' },
             { value: '98%', label: 'Client Retention', sublabel: 'They come back', icon: Star, bgColor: 'from-purple-500/20 to-pink-500/20', color: 'from-purple-400 to-pink-500' },

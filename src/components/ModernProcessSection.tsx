@@ -2,6 +2,65 @@ import { Users, Code, Shield, TrendingUp, ArrowRight, CheckCircle, Zap, Clock, C
 import { Button } from './ui/button';
 import { useContent } from '../admin/ContentContext';
 
+const defaultSteps = [
+  {
+    step: 1,
+    title: 'Discovery & Strategy',
+    subtitle: 'Understanding Your Vision',
+    description: 'We deep-dive into your business goals, target audience, and competition. A free 30-minute consultation to map out exactly what you need.',
+    duration: '1-2 Days',
+    timeline: 'Day 1-2',
+    deliverables: [
+      { name: 'Project brief', detail: 'Detailed scope document' },
+      { name: 'Timeline & milestones', detail: 'Clear project roadmap' },
+      { name: 'Tech stack proposal', detail: 'Best technologies for you' },
+      { name: 'Pricing breakdown', detail: 'Transparent cost structure' }
+    ]
+  },
+  {
+    step: 2,
+    title: 'Design & Development',
+    subtitle: 'Building Your Solution',
+    description: 'Our expert team designs and codes your solution using modern technologies. You get regular updates and preview links to track progress.',
+    duration: '7-21 Days',
+    timeline: 'Day 3-23',
+    deliverables: [
+      { name: 'UI/UX design mockups', detail: 'Pixel-perfect designs' },
+      { name: 'Functional prototypes', detail: 'Interactive previews' },
+      { name: 'Weekly progress reports', detail: 'Stay in the loop' },
+      { name: 'Preview environment', detail: 'Test before launch' }
+    ]
+  },
+  {
+    step: 3,
+    title: 'Testing & Quality Assurance',
+    subtitle: 'Ensuring Perfection',
+    description: 'Rigorous testing across devices, browsers, and real-world scenarios. We fix bugs, optimize performance, and ensure everything works flawlessly.',
+    duration: '3-5 Days',
+    timeline: 'Day 24-28',
+    deliverables: [
+      { name: 'Bug-free code', detail: 'Zero critical issues' },
+      { name: 'Performance optimization', detail: 'Lightning-fast loading' },
+      { name: 'Security hardening', detail: 'Protected from threats' },
+      { name: 'Cross-device testing', detail: 'Works everywhere' }
+    ]
+  },
+  {
+    step: 4,
+    title: 'Launch & Growth Support',
+    subtitle: 'Going Live & Beyond',
+    description: 'We handle deployment, DNS setup, and provide training. Plus, lifetime support to ensure your solution grows with your business.',
+    duration: '1-2 Days + Ongoing',
+    timeline: 'Day 29+ Forever',
+    deliverables: [
+      { name: 'Live deployment', detail: 'Smooth go-live process' },
+      { name: 'Training videos', detail: 'Easy-to-follow tutorials' },
+      { name: 'Documentation', detail: 'Complete user guides' },
+      { name: 'Lifetime support access', detail: '24/7 help available' }
+    ]
+  }
+];
+
 interface ModernProcessSectionProps {
   onNavigate: (page: string) => void;
 }
@@ -110,64 +169,7 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
 
         {/* Process Steps - Enhanced Sticky Cards */}
         <div className="max-w-6xl mx-auto">
-          {(content.steps && content.steps.length > 0 ? content.steps : [
-            {
-              step: 1,
-              title: 'Discovery & Strategy',
-              subtitle: 'Understanding Your Vision',
-              description: 'We deep-dive into your business goals, target audience, and competition. A free 30-minute consultation to map out exactly what you need.',
-              duration: '1-2 Days',
-              timeline: 'Day 1-2',
-              deliverables: [
-                { name: 'Project brief', detail: 'Detailed scope document' },
-                { name: 'Timeline & milestones', detail: 'Clear project roadmap' },
-                { name: 'Tech stack proposal', detail: 'Best technologies for you' },
-                { name: 'Pricing breakdown', detail: 'Transparent cost structure' }
-              ]
-            },
-            {
-              step: 2,
-              title: 'Design & Development',
-              subtitle: 'Building Your Solution',
-              description: 'Our expert team designs and codes your solution using modern technologies. You get regular updates and preview links to track progress.',
-              duration: '7-21 Days',
-              timeline: 'Day 3-23',
-              deliverables: [
-                { name: 'UI/UX design mockups', detail: 'Pixel-perfect designs' },
-                { name: 'Functional prototypes', detail: 'Interactive previews' },
-                { name: 'Weekly progress reports', detail: 'Stay in the loop' },
-                { name: 'Preview environment', detail: 'Test before launch' }
-              ]
-            },
-            {
-              step: 3,
-              title: 'Testing & Quality Assurance',
-              subtitle: 'Ensuring Perfection',
-              description: 'Rigorous testing across devices, browsers, and real-world scenarios. We fix bugs, optimize performance, and ensure everything works flawlessly.',
-              duration: '3-5 Days',
-              timeline: 'Day 24-28',
-              deliverables: [
-                { name: 'Bug-free code', detail: 'Zero critical issues' },
-                { name: 'Performance optimization', detail: 'Lightning-fast loading' },
-                { name: 'Security hardening', detail: 'Protected from threats' },
-                { name: 'Cross-device testing', detail: 'Works everywhere' }
-              ]
-            },
-            {
-              step: 4,
-              title: 'Launch & Growth Support',
-              subtitle: 'Going Live & Beyond',
-              description: 'We handle deployment, DNS setup, and provide training. Plus, lifetime support to ensure your solution grows with your business.',
-              duration: '1-2 Days + Ongoing',
-              timeline: 'Day 29+ Forever',
-              deliverables: [
-                { name: 'Live deployment', detail: 'Smooth go-live process' },
-                { name: 'Training videos', detail: 'Easy-to-follow tutorials' },
-                { name: 'Documentation', detail: 'Complete user guides' },
-                { name: 'Lifetime support access', detail: '24/7 help available' }
-              ]
-            }
-          ]).map((item: any, i: number) => {
+          {(Array.isArray(content.steps) && content.steps.length > 0 ? content.steps : defaultSteps).map((item: any, i: number) => {
             const phase = {
               ...item,
               icon: icons[i % icons.length],
@@ -178,10 +180,10 @@ export function ModernProcessSection({ onNavigate }: ModernProcessSectionProps) 
                 { uptime: '99.9%', speed: '<2s load' },
                 { support: '24/7', response: '<1 hour' }
               ][i % 4],
-              deliverables: item.deliverables?.map((d: any, di: number) => ({
+              deliverables: Array.isArray(item.deliverables) ? item.deliverables.map((d: any, di: number) => ({
                 ...d,
                 icon: ['📋', '🗓️', '⚙️', '💰', '🎨', '🔧', '📊', '👀'][di % 8] || '✨'
-              })) || []
+              })) : []
             };
             return (
             <div 
