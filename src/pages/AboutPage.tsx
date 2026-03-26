@@ -1,6 +1,7 @@
 import { Target, Zap, Heart, Shield, Users, Code, Smartphone, Bot, ArrowRight, Sparkles, Award, TrendingUp, Clock, Star, CheckCircle, Rocket, Globe, Brain, Layers, Lightbulb, Trophy, Zap as Lightning, ChevronRight, Play } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useState } from 'react';
+import { useContent } from '../admin/ContentContext';
 
 interface AboutPageProps {
   onNavigate: (page: string) => void;
@@ -8,6 +9,9 @@ interface AboutPageProps {
 
 export function AboutPage({ onNavigate }: AboutPageProps) {
   const [activeValue, setActiveValue] = useState(0);
+  const { getSectionContent } = useContent();
+  const heroContent = getSectionContent('about', 'hero');
+  const storyContent = getSectionContent('about', 'story');
 
   const values = [
     {

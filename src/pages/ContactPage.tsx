@@ -12,12 +12,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/select';
+import { useContent } from '../admin/ContentContext';
 
 interface ContactPageProps {
   onNavigate: (page: string) => void;
 }
 
 export function ContactPage({ onNavigate }: ContactPageProps) {
+  const { getSectionContent } = useContent();
+  const contactInfo = getSectionContent('contact', 'info');
+  const heroContent = getSectionContent('contact', 'hero');
+
+  const email = contactInfo?.email || 'hello@socalbird.com';
+  const phone = contactInfo?.phone || '+880 123 456 7890';
+  const address = contactInfo?.address || 'Dhaka, Bangladesh';
   const [formData, setFormData] = useState({
     name: '',
     business: '',

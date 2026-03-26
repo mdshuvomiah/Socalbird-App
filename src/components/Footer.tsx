@@ -1,29 +1,37 @@
 import { Facebook, Instagram, Linkedin, Twitter, Mail, Phone, MapPin, ArrowRight, Sparkles, Send, Zap, Star, Award, Users } from 'lucide-react';
+import { useContent } from '../admin/ContentContext';
 
 interface FooterProps {
   onNavigate: (page: string) => void;
 }
 
 export function Footer({ onNavigate }: FooterProps) {
+  const { getPageContent } = useContent();
+  const brandData = getPageContent('brand');
+  const logoText = brandData?.logo?.text || 'SocalBird';
+  const logoType = brandData?.logo?.type || 'text';
+  const logoImageUrl = brandData?.logo?.imageUrl || '';
+  const logoGradient = brandData?.logo?.gradient || 'from-cyan-400 via-blue-500 to-purple-500';
+
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="relative bg-[#0A0E27] overflow-hidden">
       {/* Dramatic Wave Shape Top */}
       <div className="absolute top-0 left-0 right-0 h-40 -mt-40">
-        <svg 
-          viewBox="0 0 1440 160" 
-          fill="none" 
+        <svg
+          viewBox="0 0 1440 160"
+          fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className="w-full h-full"
           preserveAspectRatio="none"
         >
-          <path 
-            d="M0,80 Q360,20 720,80 T1440,80 L1440,160 L0,160 Z" 
+          <path
+            d="M0,80 Q360,20 720,80 T1440,80 L1440,160 L0,160 Z"
             fill="#0A0E27"
           />
-          <path 
-            d="M0,90 Q360,30 720,90 T1440,90 L1440,160 L0,160 Z" 
+          <path
+            d="M0,90 Q360,30 720,90 T1440,90 L1440,160 L0,160 Z"
             fill="url(#waveGradient)"
             opacity="0.5"
           />
@@ -42,9 +50,9 @@ export function Footer({ onNavigate }: FooterProps) {
         {/* Large Animated Orbs */}
         <div className="absolute -top-20 left-0 w-[600px] h-[600px] bg-gradient-to-br from-cyan-500/10 via-blue-500/5 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
         <div className="absolute -bottom-20 right-0 w-[500px] h-[500px] bg-gradient-to-br from-purple-500/10 via-pink-500/5 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDuration: '10s' }} />
-        
+
         {/* Mesh Gradient Pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `
@@ -56,7 +64,7 @@ export function Footer({ onNavigate }: FooterProps) {
         />
 
         {/* Dot Grid Pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.15]"
           style={{
             backgroundImage: 'radial-gradient(circle, rgba(6, 182, 212, 0.15) 1px, transparent 1px)',
@@ -75,7 +83,7 @@ export function Footer({ onNavigate }: FooterProps) {
           <div className="grid md:grid-cols-12 gap-6 max-w-7xl mx-auto">
             {/* Large CTA Card - Spans 8 columns */}
             <div className="md:col-span-8 relative group">
-              <div 
+              <div
                 className="relative h-full rounded-3xl p-10 md:p-12 overflow-hidden border border-white/10 hover:border-cyan-500/30 transition-all duration-500"
                 style={{
                   background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(59, 130, 246, 0.08) 50%, rgba(139, 92, 246, 0.08) 100%)',
@@ -130,7 +138,7 @@ export function Footer({ onNavigate }: FooterProps) {
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </button>
-                    
+
                     <button
                       onClick={() => onNavigate('/portfolio')}
                       className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl border border-white/20 hover:border-cyan-500/50 transition-all duration-300"
@@ -149,7 +157,7 @@ export function Footer({ onNavigate }: FooterProps) {
             {/* Stats Cards - 4 columns */}
             <div className="md:col-span-4 flex flex-col gap-6">
               {/* Stat 1 */}
-              <div 
+              <div
                 className="relative rounded-2xl p-6 border border-white/10 hover:border-cyan-500/30 transition-all duration-300 group overflow-hidden"
                 style={{
                   background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%)',
@@ -167,7 +175,7 @@ export function Footer({ onNavigate }: FooterProps) {
               </div>
 
               {/* Stat 2 */}
-              <div 
+              <div
                 className="relative rounded-2xl p-6 border border-white/10 hover:border-blue-500/30 transition-all duration-300 group overflow-hidden"
                 style={{
                   background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%)',
@@ -192,7 +200,7 @@ export function Footer({ onNavigate }: FooterProps) {
           <div className="grid md:grid-cols-12 gap-6 max-w-7xl mx-auto">
             {/* Company Info - Large Card */}
             <div className="md:col-span-5">
-              <div 
+              <div
                 className="h-full rounded-2xl p-8 border border-white/10 hover:border-cyan-500/20 transition-all duration-300"
                 style={{
                   background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.03) 0%, rgba(59, 130, 246, 0.03) 100%)',
@@ -201,9 +209,13 @@ export function Footer({ onNavigate }: FooterProps) {
               >
                 <div className="mb-6">
                   <h3 className="text-5xl font-bold mb-2">
-                    <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
-                      SocalBird
-                    </span>
+                    {logoType === 'image' && logoImageUrl ? (
+                      <img src={logoImageUrl} alt={logoText} className="h-16 object-contain" />
+                    ) : (
+                      <span className={`bg-gradient-to-r ${logoGradient} bg-clip-text text-transparent`}>
+                        {logoText}
+                      </span>
+                    )}
                   </h3>
                   <div className="flex items-center gap-2 mb-4">
                     <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
@@ -214,12 +226,12 @@ export function Footer({ onNavigate }: FooterProps) {
                     <span className="text-xs text-gray-500 ml-2">5.0 Rating</span>
                   </div>
                 </div>
-                
+
                 <p className="text-gray-400 mb-8 leading-relaxed">
-                  We craft exceptional digital experiences through innovative web development, mobile apps, and AI-powered solutions. 
+                  We craft exceptional digital experiences through innovative web development, mobile apps, and AI-powered solutions.
                   Your success is our mission.
                 </p>
-                
+
                 {/* Social Links - Modern Pills */}
                 <div className="grid grid-cols-2 gap-3">
                   {[
@@ -246,7 +258,7 @@ export function Footer({ onNavigate }: FooterProps) {
             {/* Quick Links - Compact Grid */}
             <div className="md:col-span-3 space-y-6">
               {/* Services */}
-              <div 
+              <div
                 className="rounded-2xl p-6 border border-white/10"
                 style={{
                   background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.02) 0%, transparent 100%)',
@@ -277,7 +289,7 @@ export function Footer({ onNavigate }: FooterProps) {
               </div>
 
               {/* Company */}
-              <div 
+              <div
                 className="rounded-2xl p-6 border border-white/10"
                 style={{
                   background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, transparent 100%)',
@@ -311,7 +323,7 @@ export function Footer({ onNavigate }: FooterProps) {
             {/* Contact - Vertical Cards */}
             <div className="md:col-span-4 space-y-4">
               <h4 className="text-white font-bold text-lg mb-4">Contact Us</h4>
-              
+
               {/* Email */}
               <a
                 href="mailto:info@socalbird.com"
@@ -355,7 +367,7 @@ export function Footer({ onNavigate }: FooterProps) {
               </a>
 
               {/* Location */}
-              <div 
+              <div
                 className="relative rounded-2xl p-5 border border-white/10"
                 style={{ background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, transparent 100%)', backdropFilter: 'blur(10px)' }}
               >
@@ -382,7 +394,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 <div className="absolute inset-0 w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
               </div>
               <p className="text-gray-500 text-sm">
-                © {currentYear} <span className="text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text font-bold">SocalBird</span> • Crafted with passion
+                © {currentYear} <span className="text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text font-bold">{logoText}</span> • Crafted with passion
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-6">

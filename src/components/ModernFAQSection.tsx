@@ -120,8 +120,10 @@ interface ModernFAQSectionProps {
 }
 
 export function ModernFAQSection({ onNavigate }: ModernFAQSectionProps) {
-  const { content } = useContent();
-  const faqs = [
+  const { getSectionContent } = useContent();
+  const faqContent = getSectionContent('home', 'faq');
+
+  const defaultFaqs = [
     {
       question: 'What is your typical project timeline?',
       answer: 'Most projects take 2-8 weeks depending on complexity. AI chatbot setup can be done in 1-2 weeks, while custom web/app development takes 4-8 weeks.',
@@ -143,6 +145,23 @@ export function ModernFAQSection({ onNavigate }: ModernFAQSectionProps) {
       icon: <Headphones className="w-7 h-7 text-cyan-400" strokeWidth={1.5} />
     }
   ];
+
+  const iconMap = [
+    <Clock className="w-7 h-7 text-cyan-400" strokeWidth={1.5} />,
+    <CreditCard className="w-7 h-7 text-cyan-400" strokeWidth={1.5} />,
+    <MessageSquare className="w-7 h-7 text-cyan-400" strokeWidth={1.5} />,
+    <Headphones className="w-7 h-7 text-cyan-400" strokeWidth={1.5} />,
+    <Sparkles className="w-7 h-7 text-cyan-400" strokeWidth={1.5} />,
+  ];
+
+  const cmsItems = faqContent?.items;
+  const faqs = (cmsItems && cmsItems.length > 0)
+    ? cmsItems.map((item: { question: string; answer: string }, i: number) => ({
+        question: item.question,
+        answer: item.answer,
+        icon: iconMap[i % iconMap.length],
+      }))
+    : defaultFaqs;
 
   return (
     <section className="relative py-32 px-4 border-t border-white/10 overflow-hidden">

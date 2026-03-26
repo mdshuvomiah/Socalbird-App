@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Menu, X, Sparkles, Shield } from 'lucide-react';
 import { Button } from './ui/button';
+import { useContent } from '../admin/ContentContext';
 
 interface ModernNavigationProps {
   currentPage: string;
@@ -8,6 +9,13 @@ interface ModernNavigationProps {
 }
 
 export function ModernNavigation({ currentPage, onNavigate }: ModernNavigationProps) {
+  const { getPageContent } = useContent();
+  const brandData = getPageContent('brand');
+  const logoText = brandData?.logo?.text || 'SocalBird';
+  const logoType = brandData?.logo?.type || 'text';
+  const logoImageUrl = brandData?.logo?.imageUrl || '';
+  const logoGradient = brandData?.logo?.gradient || 'from-blue-500 to-cyan-400';
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
@@ -27,11 +35,11 @@ export function ModernNavigation({ currentPage, onNavigate }: ModernNavigationPr
     const updateIndicator = () => {
       const activeButton = buttonRefs.current[currentPage];
       const navContainer = navRef.current;
-      
+
       if (activeButton && navContainer) {
         const navRect = navContainer.getBoundingClientRect();
         const buttonRect = activeButton.getBoundingClientRect();
-        
+
         setIndicatorStyle({
           left: buttonRect.left - navRect.left,
           width: buttonRect.width,
@@ -57,30 +65,33 @@ export function ModernNavigation({ currentPage, onNavigate }: ModernNavigationPr
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled 
-          ? 'bg-[#0A0E27]/80 backdrop-blur-xl shadow-2xl' 
-          : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
+        ? 'bg-[#0A0E27]/80 backdrop-blur-xl shadow-2xl'
+        : 'bg-transparent'
+        }`}
     >
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo with Sparkle Effect */}
+          {/* Logo */}
           <button
             onClick={() => onNavigate('/')}
-            className="relative group"
+            className="relative group flex items-center gap-2"
           >
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg blur-lg opacity-75 group-hover:opacity-100 transition-opacity" />
-                <div className="relative bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-2 rounded-lg">
-                  <Sparkles className="text-white" size={20} />
+            {logoType === 'image' && logoImageUrl ? (
+              <img src={logoImageUrl} alt={logoText} className="h-10 object-contain" />
+            ) : (
+              <>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg blur-lg opacity-75 group-hover:opacity-100 transition-opacity" />
+                  <div className="relative bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-2 rounded-lg">
+                    <Sparkles className="text-white" size={20} />
+                  </div>
                 </div>
-              </div>
-              <span className="text-2xl font-bold text-gradient-rainbow">
-                SocalBird
-              </span>
-            </div>
+                <span className={`text-2xl font-bold bg-gradient-to-r ${logoGradient} bg-clip-text text-transparent`}>
+                  {logoText}
+                </span>
+              </>
+            )}
           </button>
 
           {/* Desktop Navigation with Animated Indicator */}
@@ -105,13 +116,12 @@ export function ModernNavigation({ currentPage, onNavigate }: ModernNavigationPr
               {navLinks.map((link) => (
                 <button
                   key={link.path}
-                  ref={(el) => (buttonRefs.current[link.path] = el)}
+                  ref={(el) => { if (el) buttonRefs.current[link.path] = el; }}
                   onClick={() => onNavigate(link.path)}
-                  className={`relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
-                    currentPage === link.path
-                      ? 'text-white'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
+                  className={`relative px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${currentPage === link.path
+                    ? 'text-white'
+                    : 'text-gray-400 hover:text-white'
+                    }`}
                 >
                   <span className="relative z-10">{link.name}</span>
                 </button>
@@ -161,16 +171,15 @@ export function ModernNavigation({ currentPage, onNavigate }: ModernNavigationPr
                   onNavigate(link.path);
                   setIsMobileMenuOpen(false);
                 }}
-                className={`block w-full text-left py-3 px-4 rounded-lg transition-all duration-300 ${
-                  currentPage === link.path
-                    ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 text-white'
-                    : 'text-gray-300 hover:bg-white/5'
-                }`}
+                className={`block w-full text-left py-3 px-4 rounded-lg transition-all duration-300 ${currentPage === link.path
+                  ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 text-white'
+                  : 'text-gray-300 hover:bg-white/5'
+                  }`}
               >
                 {link.name}
               </button>
             ))}
-            
+
             {/* Admin Login Button - Mobile */}
             <button
               onClick={() => {

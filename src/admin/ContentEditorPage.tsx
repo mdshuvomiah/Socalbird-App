@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { 
-  ArrowLeft, Save, Eye, EyeOff, RotateCcw, Download, Upload, 
+import { useState, useEffect, useRef } from 'react';
+import {
+  ArrowLeft, Save, Eye, EyeOff, RotateCcw, Download, Upload,
   CheckCircle, AlertCircle, Sparkles, Edit, Type, Image as ImageIcon,
-  List, Plus, Trash2, GripVertical
+  List, Plus, Trash2, GripVertical, Loader2
 } from 'lucide-react';
 import { useContent } from './ContentContext';
+import { supabase } from '../lib/supabase';
 
 interface ContentEditorPageProps {
   pageId: string;
@@ -13,27 +14,43 @@ interface ContentEditorPageProps {
 }
 
 export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPageProps) {
-  const { getPageContent, updateContent, saveToLocalStorage } = useContent();
+  const { getPageContent, updateContent, saveToDatabase, isLoading } = useContent();
   const [pageData, setPageData] = useState<any>({});
   const [activeSection, setActiveSection] = useState<string>('');
   const [showPreview, setShowPreview] = useState(false);
   const [saved, setSaved] = useState(false);
   const [editingField, setEditingField] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSavePopup, setShowSavePopup] = useState(false);
+
+  // Keep track of initialized page to avoid overwriting edits when content updates
+  const initializedPageId = useRef<string | null>(null);
 
   useEffect(() => {
-    const data = getPageContent(pageId);
-    setPageData(data);
-    if (Object.keys(data).length > 0) {
-      setActiveSection(Object.keys(data)[0]);
+    if (isLoading) return;
+
+    if (initializedPageId.current !== pageId) {
+      // Deep clone to prevent mutating global context directly
+      const data = JSON.parse(JSON.stringify(getPageContent(pageId)));
+      setPageData(data);
+      if (Object.keys(data).length > 0) {
+        setActiveSection(Object.keys(data)[0]);
+      }
+      initializedPageId.current = pageId;
     }
-  }, [pageId]);
+  }, [pageId, isLoading, getPageContent]);
 
   const handleFieldChange = (sectionId: string, fieldPath: string, value: any) => {
     const updatedData = { ...pageData };
+    // Deep clone the section so we don't mutate context state directly
+    updatedData[sectionId] = JSON.parse(JSON.stringify(updatedData[sectionId] || {}));
+
     const keys = fieldPath.split('.');
     let current = updatedData[sectionId];
-    
+
     for (let i = 0; i < keys.length - 1; i++) {
+      if (!current[keys[i]]) current[keys[i]] = {}; // protect against undefined
       current = current[keys[i]];
     }
     current[keys[keys.length - 1]] = value;
@@ -42,19 +59,62 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
     updateContent(pageId, sectionId, updatedData[sectionId]);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setIsSaving(true);
     Object.keys(pageData).forEach(sectionId => {
       updateContent(pageId, sectionId, pageData[sectionId]);
     });
-    saveToLocalStorage();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    
+    // Explicitly call saveToDatabase
+    const success = await saveToDatabase();
+    setIsSaving(false);
+    
+    if (success) {
+      setSaved(true);
+      setShowSavePopup(true);
+      setTimeout(() => {
+        setSaved(false);
+        setShowSavePopup(false);
+      }, 3000);
+    } else {
+      alert('Failed to save content. Please try again.');
+    }
   };
 
   const handleReset = () => {
     if (confirm('Are you sure you want to reset this page to defaults? This cannot be undone.')) {
       const data = getPageContent(pageId);
       setPageData(data);
+    }
+  };
+
+  const uploadFile = async (file: File, sectionId: string, fieldPath: string) => {
+    try {
+      setIsUploading(true);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+      const filePath = `logos/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('public-assets')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage
+        .from('public-assets')
+        .getPublicUrl(filePath);
+
+      if (data?.publicUrl) {
+        handleFieldChange(sectionId, fieldPath, data.publicUrl);
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Failed to upload image. Please make sure the public-assets bucket exists in Supabase.');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -82,7 +142,7 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
           </div>
         );
       }
-      
+
       if (fieldKey === 'gradient') {
         return (
           <div key={fullPath} className="space-y-2">
@@ -99,6 +159,59 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
             />
             <div className="text-xs text-gray-500">
               Preview: <span className={`bg-gradient-to-r ${fieldValue} bg-clip-text text-transparent font-bold`}>{pageData?.logo?.text || 'SocalBird'}</span>
+            </div>
+          </div>
+        );
+      }
+
+      if (fieldKey === 'imageUrl') {
+        return (
+          <div key={fullPath} className="space-y-2">
+            <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+              <ImageIcon className="w-4 h-4 text-cyan-400" />
+              Logo Image
+            </label>
+
+            <div className="flex flex-col gap-4">
+              {fieldValue && (
+                <div className="relative w-32 h-32 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center p-2 overflow-hidden">
+                  <img src={fieldValue} alt="Logo preview" className="max-w-full max-h-full object-contain" />
+                  <button
+                    onClick={() => handleFieldChange(sectionId, fieldPath, '')}
+                    className="absolute top-1 right-1 p-1 bg-red-500/80 hover:bg-red-500 text-white rounded-md transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              <label className={`
+                flex items-center justify-center w-full px-6 py-8 
+                bg-white/5 border-2 border-dashed border-white/20 rounded-xl 
+                hover:border-cyan-500/50 hover:bg-white/10 transition-all cursor-pointer
+                ${isUploading ? 'opacity-50 pointer-events-none' : ''}
+              `}>
+                <div className="flex flex-col items-center gap-2 text-gray-400">
+                  {isUploading ? (
+                    <Loader2 className="w-8 h-8 animate-spin text-cyan-400" />
+                  ) : (
+                    <Upload className="w-8 h-8 group-hover:text-cyan-400 transition-colors" />
+                  )}
+                  <span className="text-sm font-medium">
+                    {isUploading ? 'Uploading...' : 'Click or drop image to upload'}
+                  </span>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      uploadFile(e.target.files[0], sectionId, fieldPath);
+                    }
+                  }}
+                  className="hidden"
+                />
+              </label>
             </div>
           </div>
         );
@@ -224,7 +337,7 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
         <div key={fullPath} className="space-y-3">
           <label className="text-sm font-medium text-gray-300">{fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)}</label>
           <div className="pl-4 border-l-2 border-cyan-500/30 space-y-3">
-            {Object.entries(fieldValue).map(([subKey, subValue]) => 
+            {Object.entries(fieldValue).map(([subKey, subValue]) =>
               renderField(sectionId, subKey, subValue, `${fieldPath}.${subKey}`)
             )}
           </div>
@@ -239,6 +352,27 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
 
   return (
     <div className="min-h-screen bg-[#0A0E27] text-white">
+      {/* Save Success Popup */}
+      {showSavePopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-[#0A0E27] border border-cyan-500/30 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl shadow-cyan-500/20 transform transition-all duration-300 scale-100 opacity-100">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mb-2 shadow-lg shadow-cyan-500/30">
+                <CheckCircle className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white">Success!</h3>
+              <p className="text-gray-400">Your changes to "{pageName}" have been successfully saved and published.</p>
+              <button 
+                onClick={() => setShowSavePopup(false)}
+                className="w-full mt-4 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-cyan-500/30 rounded-xl text-white transition-all font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-[#0A0E27]/80 backdrop-blur-xl border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
@@ -261,11 +395,10 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowPreview(!showPreview)}
-                className={`px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2 ${
-                  showPreview
-                    ? 'bg-cyan-500 text-white'
-                    : 'bg-white/5 text-gray-400 hover:text-cyan-400 border border-white/10'
-                }`}
+                className={`px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2 ${showPreview
+                  ? 'bg-cyan-500 text-white'
+                  : 'bg-white/5 text-gray-400 hover:text-cyan-400 border border-white/10'
+                  }`}
               >
                 {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 <span>{showPreview ? 'Hide' : 'Show'} Preview</span>
@@ -316,11 +449,10 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
                     <button
                       key={section}
                       onClick={() => setActiveSection(section)}
-                      className={`w-full px-4 py-3 rounded-xl text-left transition-all flex items-center gap-3 ${
-                        activeSection === section
-                          ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/50 text-white'
-                          : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
-                      }`}
+                      className={`w-full px-4 py-3 rounded-xl text-left transition-all flex items-center gap-3 ${activeSection === section
+                        ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/50 text-white'
+                        : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+                        }`}
                     >
                       <Edit className="w-4 h-4" />
                       <span className="font-medium">{section.charAt(0).toUpperCase() + section.slice(1)}</span>

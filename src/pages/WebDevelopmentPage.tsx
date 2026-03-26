@@ -7,12 +7,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../components/ui/accordion';
+import { useContent } from '../admin/ContentContext';
 
 interface WebDevelopmentPageProps {
   onNavigate: (page: string) => void;
 }
 
 export function WebDevelopmentPage({ onNavigate }: WebDevelopmentPageProps) {
+  const { getSectionContent } = useContent();
+  const heroContent = getSectionContent('web-development', 'hero');
   const techStacks = [
     {
       name: 'WordPress',
