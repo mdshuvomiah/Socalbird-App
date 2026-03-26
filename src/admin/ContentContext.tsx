@@ -767,17 +767,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     setContent(defaultContent);
   };
 
-  // Auto-save to Database whenever content changes
-  // Debounced to avoid too many requests
-  useEffect(() => {
-    if (isLoading) return; // Don't save if we are still loading initial state
-
-    const timeoutId = setTimeout(() => {
-      saveToDatabase();
-    }, 2000); // Debounce 2 seconds for network requests
-
-    return () => clearTimeout(timeoutId);
-  }, [content, isLoading]);
+  // Auto-save removed: Saving is now strictly manual via the ContentEditorPage "Save Changes" button.
 
   return (
     <ContentContext.Provider

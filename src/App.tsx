@@ -16,20 +16,30 @@ import { ContentProvider } from './admin/ContentContext';
 import { supabase } from './lib/supabase';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState('/');
+  const [currentPage, setCurrentPage] = useState(() => {
+    const path = window.location.pathname;
+    // Don't default sub-pages to admin if they are just loading
+    return path === '/' ? '/' : path;
+  });
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [adminView, setAdminView] = useState<'login' | 'dashboard' | 'editor'>('login');
   const [editingPage, setEditingPage] = useState<{ id: string; name: string } | null>(null);
 
   // Check admin authentication on mount and listen for changes
   useEffect(() => {
+    // Handle browser back button
+    const handlePopState = () => {
+      setCurrentPage(window.location.pathname || '/');
+    };
+    window.addEventListener('popstate', handlePopState);
+
     // Check initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setIsAdminAuthenticated(true);
         // Only switch to dashboard if we were on the admin login page
         // or if we are navigating to /admin
-        setAdminView(prev => (currentPage === '/admin' && prev === 'login') ? 'dashboard' : prev);
+        setAdminView(prev => (window.location.pathname === '/admin' && prev === 'login') ? 'dashboard' : prev);
       }
     });
 
@@ -46,7 +56,10 @@ export default function App() {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, [currentPage]);
 
   // Scroll to top when page changes
@@ -55,6 +68,9 @@ export default function App() {
   }, [currentPage]);
 
   const handleNavigate = (page: string) => {
+    if (window.location.pathname !== page) {
+      window.history.pushState({}, '', page);
+    }
     // Check if navigating to admin
     if (page === '/admin') {
       if (isAdminAuthenticated) {
