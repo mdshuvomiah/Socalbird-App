@@ -243,6 +243,7 @@ export function CreativeServicesSection({ onNavigate }: CreativeServicesSectionP
   const services = (Array.isArray(cmsServices) && cmsServices.length > 0)
     ? cmsServices.map((item: any, i: number) => ({
         ...item,
+        features: Array.isArray(item.features) ? item.features : [],
         icon: iconMap[i % iconMap.length],
         popular: i === 0,
         path: paths[i % paths.length] || '/contact'
