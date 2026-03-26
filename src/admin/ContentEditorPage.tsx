@@ -173,6 +173,7 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
          fieldKey.toLowerCase().includes('iconurl') ||
          fieldKey.toLowerCase() === 'cover' ||
          fieldKey.toLowerCase() === 'avatar' ||
+         fieldKey.toLowerCase() === 'photo' ||
          (pageId === 'brand' && sectionId === 'logo' && fieldKey === 'imageUrl'))) {
       
       return (
@@ -380,27 +381,6 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
 
   return (
     <div className="min-h-screen bg-[#0A0E27] text-white">
-      {/* Save Success Popup */}
-      {showSavePopup && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm shadow-2xl">
-          <div className="relative z-[99999] bg-[#0A0E27] border border-cyan-500/30 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl shadow-cyan-500/40 transform transition-all duration-300 scale-100 opacity-100">
-            <div className="flex flex-col items-center text-center space-y-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mb-2 shadow-lg shadow-cyan-500/30">
-                <CheckCircle className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-white">Success!</h3>
-              <p className="text-gray-400">Your changes to "{pageName}" have been successfully saved and published.</p>
-              <button 
-                onClick={() => setShowSavePopup(false)}
-                className="w-full mt-4 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-cyan-500/30 rounded-xl text-white transition-all font-medium"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Header */}
       <header className="sticky top-0 z-50 bg-[#0A0E27]/80 backdrop-blur-xl border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
@@ -569,6 +549,27 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
           )}
         </div>
       </div>
+
+      {/* Save Success Popup - Placed at bottom to guarantee top z-index */}
+      {showSavePopup && (
+        <div className="fixed inset-0 z-[999999] flex items-center justify-center bg-black/60 backdrop-blur-md shadow-2xl">
+          <div className="relative z-[999999] bg-[#0A0E27] border border-cyan-500/30 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl shadow-cyan-500/40 transform transition-all duration-300 scale-100 opacity-100">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mb-2 shadow-lg shadow-cyan-500/30">
+                <CheckCircle className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white">Success!</h3>
+              <p className="text-gray-400">Your changes to "{pageName}" have been successfully saved and published.</p>
+              <button 
+                onClick={() => setShowSavePopup(false)}
+                className="w-full mt-4 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-cyan-500/30 rounded-xl text-white transition-all font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
