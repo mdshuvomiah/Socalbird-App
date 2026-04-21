@@ -1,22 +1,10 @@
 import { Button } from './ui/button';
 import { TrendingUp, Award, Users, Star, MessageSquare, ChevronRight, Code, MessageCircle, ArrowRight, ExternalLink } from 'lucide-react';
-import { useContent } from '../admin/ContentContext';
+import { useContent, ensureString, getIconComponent } from '../admin/ContentContext';
 
 interface RealImpactSectionProps {
   onNavigate: (page: string) => void;
 }
-
-const ensureString = (val: any) => {
-  if (val === null || val === undefined) return '';
-  if (typeof val === 'object') return '';
-  return String(val);
-};
-
-const getIconComponent = (iconName: any) => {
-  if (typeof iconName !== 'string') return iconName || Award;
-  const icons: any = { TrendingUp, Award, Users, Star, MessageSquare, Code, MessageCircle };
-  return icons[iconName] || Award;
-};
 
 export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
   const { getSectionContent } = useContent();

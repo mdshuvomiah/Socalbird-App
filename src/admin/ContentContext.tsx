@@ -1,6 +1,27 @@
-// Content Management Context - Stores all editable content
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
+import { 
+  TrendingUp, Award, Target, Zap, CheckCircle, Star, 
+  Code, Smartphone, Bot, Layers, Users, MessageSquare, 
+  MessageCircle, ArrowRight, ExternalLink 
+} from 'lucide-react';
+
+export const ensureString = (val: any) => {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'object') return '';
+  return String(val);
+};
+
+export const getIconComponent = (iconName: any) => {
+  const icons: any = { 
+    TrendingUp, Award, Target, Zap, CheckCircle, Star, 
+    Code, Smartphone, Bot, Layers, Users, MessageSquare, 
+    MessageCircle, ArrowRight, ExternalLink 
+  };
+  
+  if (typeof iconName !== 'string') return iconName || Award;
+  return icons[iconName] || Award;
+};
 
 interface ContentData {
   [pageId: string]: {
@@ -772,12 +793,6 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   const isObject = (item: any) => {
     return (item && typeof item === 'object' && !Array.isArray(item));
-  };
-
-  const ensureString = (val: any) => {
-    if (val === null || val === undefined) return '';
-    if (typeof val === 'object') return '';
-    return String(val);
   };
 
   const loadFromDatabase = async (force = false) => {

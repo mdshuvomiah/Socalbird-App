@@ -1,23 +1,11 @@
 import { ArrowRight, ExternalLink, Code, Smartphone, Bot, Sparkles, TrendingUp, Award, Target, Zap, CheckCircle, Filter, X, Eye, ChevronRight, Play, Star, Layers } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useState } from 'react';
-import { useContent } from '../admin/ContentContext';
+import { useContent, ensureString, getIconComponent } from '../admin/ContentContext';
 
 interface PortfolioPageProps {
   onNavigate: (page: string) => void;
 }
-
-const ensureString = (val: any) => {
-  if (val === null || val === undefined) return '';
-  if (typeof val === 'object') return '';
-  return String(val);
-};
-
-const getIconComponent = (iconName: any) => {
-  if (typeof iconName !== 'string') return iconName || Award;
-  const icons: any = { TrendingUp, Award, Target, Zap, CheckCircle, Star, Code, Smartphone, Bot, Layers };
-  return icons[iconName] || Award;
-};
 
 export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
   const [activeFilter, setActiveFilter] = useState('All');
