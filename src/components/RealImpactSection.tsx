@@ -1,6 +1,6 @@
 import { Button } from './ui/button';
 import { TrendingUp, Award, Users, Star, MessageSquare, ChevronRight, Code, MessageCircle, ArrowRight, ExternalLink } from 'lucide-react';
-import { useContent, ensureString, getIconComponent } from '../admin/ContentContext';
+import { useContent } from '../admin/ContentContext';
 
 interface RealImpactSectionProps {
   onNavigate: (page: string) => void;
@@ -18,46 +18,11 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
     stats: [],
     caseStudy1: {},
     caseStudy2: {},
-    caseStudy3: {},
-    ctaText: "Your Success Story Starts Here",
+    ctaTitle: 'Your Success Story Starts Here',
     ctaSubtext: "We've helped 50+ businesses grow. Let's write your chapter next."
   };
 
   return (
-    <section className="py-24 px-4 border-t border-white/10 relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-500 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500 rounded-full blur-3xl animate-pulse" />
-      </div>
-
-      <div className="container mx-auto max-w-7xl relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-full mb-6">
-            <TrendingUp className="text-cyan-400" size={18} />
-            <span className="text-sm font-semibold text-cyan-300">{content.badge}</span>
-          </div>
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            {content.title}
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent block mt-2">
-              {content.titleHighlight}
-            </span>
-          </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            {content.subtitle}
-          </p>
-        </div>
-
-        {/* Stats Counter - Animated */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
-          {(Array.isArray(content.stats) && content.stats.length > 0 ? content.stats : [
-            { value: '100+', label: 'Projects Delivered', sublabel: 'Across 6 industries', icon: Award, bgColor: 'from-cyan-500/20 to-blue-500/20', color: 'from-cyan-400 to-blue-500' },
-            { value: '50+', label: 'Active Clients', sublabel: 'Still working with us', icon: Users, bgColor: 'from-blue-500/20 to-purple-500/20', color: 'from-blue-400 to-purple-500' },
-            { value: '98%', label: 'Client Retention', sublabel: 'They come back', icon: Star, bgColor: 'from-purple-500/20 to-pink-500/20', color: 'from-purple-400 to-pink-500' },
-            { value: '4.9★', label: 'Average Rating', sublabel: 'Client satisfaction', icon: TrendingUp, bgColor: 'from-pink-500/20 to-orange-500/20', color: 'from-pink-400 to-orange-500' }
-          ]).filter(Boolean).map((stat: any, i: number) => {
-            const IconComponent = getIconComponent(stat.icon);
             return (
             <div
               key={i}
