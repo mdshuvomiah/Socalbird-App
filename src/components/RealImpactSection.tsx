@@ -6,15 +6,21 @@ interface RealImpactSectionProps {
   onNavigate: (page: string) => void;
 }
 
+const ensureString = (val: any) => {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'object') return '';
+  return String(val);
+};
+
+const getIconComponent = (iconName: any) => {
+  if (typeof iconName !== 'string') return iconName || Award;
+  const icons: any = { TrendingUp, Award, Users, Star, MessageSquare, Code, MessageCircle };
+  return icons[iconName] || Award;
+};
+
 export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
   const { getSectionContent } = useContent();
 
-  const ensureString = (val: any) => {
-    if (val === null || val === undefined) return '';
-    if (typeof val === 'object') return '';
-    return String(val);
-  };
-  
   // Get content from context
   const content = getSectionContent('home', 'realImpact') || {
     badge: 'Real Results, Real Growth',
@@ -27,12 +33,6 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
     caseStudy3: {},
     ctaText: "Your Success Story Starts Here",
     ctaSubtext: "We've helped 50+ businesses grow. Let's write your chapter next."
-  };
-
-  const getIconComponent = (iconName: any) => {
-    if (typeof iconName !== 'string') return iconName || Award;
-    const icons: any = { TrendingUp, Award, Users, Star, MessageSquare, Code, MessageCircle };
-    return icons[iconName] || Award;
   };
 
   return (
