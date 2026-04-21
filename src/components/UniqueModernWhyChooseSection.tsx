@@ -300,6 +300,70 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
       }))
     : defaultProblems;
 
+  // New dynamic fields
+  const floatingStats = Array.isArray(content.floatingStats) ? content.floatingStats : [
+    { value: '7-14 Days', label: 'Lightning Fast', sublabel: 'Most projects live in 2 weeks', icon: 'Clock' },
+    { value: '100% Safe', label: 'Risk-Free', sublabel: 'Money-back guarantee', icon: 'Shield' },
+    { value: 'Scalable', label: 'Future-Proof', sublabel: 'Built to grow with you', icon: 'TrendingUp' }
+  ];
+
+  const horizontalStats = Array.isArray(content.horizontalStats) ? content.horizontalStats : [
+    { value: '100+', label: 'Projects Completed', gradient: 'from-cyan-400 to-blue-500' },
+    { value: '50+', label: 'Active Clients', gradient: 'from-purple-400 to-pink-500' },
+    { value: '4.9/5', label: 'Average Rating', gradient: 'from-orange-400 to-red-500' },
+    { value: '98%', label: 'Client Retention', gradient: 'from-emerald-400 to-green-500' },
+  ];
+
+  const ctaContent = content.cta || {
+    title: 'Ready to Transform Your Business?',
+    subtitle: 'Join 50+ successful businesses who chose SocalBird',
+    buttonText: 'Get Started - Free Consultation'
+  };
+
+  const getStatIcon = (iconName: string, index: number) => {
+    const iconProps = { className: "w-6 h-6" };
+    switch (iconName) {
+      case 'Clock': return <Clock {...iconProps} className={`${iconProps.className} text-cyan-400`} />;
+      case 'Shield': return <Shield {...iconProps} className={`${iconProps.className} text-purple-400`} />;
+      case 'TrendingUp': return <TrendingUp {...iconProps} className={`${iconProps.className} text-orange-400`} />;
+      default: 
+        const icons = [
+          <Clock {...iconProps} />,
+          <Shield {...iconProps} />,
+          <TrendingUp {...iconProps} />
+        ];
+        return icons[index % icons.length];
+    }
+  };
+
+  const getStatColorClass = (index: number) => {
+    const classes = [
+      'hover:border-cyan-500/30',
+      'hover:border-purple-500/30',
+      'hover:border-orange-500/30'
+    ];
+    return classes[index % classes.length];
+  };
+
+  const getStatBgGradient = (index: number) => {
+    const gradients = [
+      'from-cyan-500/10',
+      'from-purple-500/10',
+      'from-orange-500/10'
+    ];
+    return gradients[index % gradients.length];
+  };
+
+  const getStatTextColorClass = (index: number) => {
+    const colors = ['text-cyan-400', 'text-purple-400', 'text-orange-400'];
+    return colors[index % colors.length];
+  };
+
+  const getStatIconBgClass = (index: number) => {
+    const bgs = ['bg-cyan-500/10', 'bg-purple-500/10', 'bg-orange-500/10'];
+    return bgs[index % bgs.length];
+  };
+
   return (
     <section className="relative py-24 px-4 border-t border-white/10 overflow-hidden">
       {/* Animated Mesh Background */}
@@ -324,14 +388,14 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
           </div>
           
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight">
-            <span className="block text-white mb-2">{content.title || 'Digital Solutions That'}</span>
+            <span className="block text-white mb-2">{content.title || 'We Solve'}</span>
             <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent animate-gradient">
-              {content.titleHighlight || 'Actually Solve Problems'}
+              {content.titleHighlight || 'Real Problems'}
             </span>
           </h2>
           
           <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            {content.subtitle || 'Click each card to explore how we solve the 3 biggest challenges businesses face'}
+            {content.subtitle || 'Most agencies sell features. We solve the problems keeping you up at night.'}
           </p>
         </div>
 
@@ -350,54 +414,24 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
 
         {/* Floating Stats Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-20">
-          {/* Card 1 */}
-          <div className="group relative bg-gradient-to-br from-[#0D1128] to-[#0A0E27] border border-white/10 rounded-2xl p-8 hover:border-cyan-500/30 transition-all duration-500 hover:-translate-y-2">
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
-            <div className="relative">
-              <div className="w-12 h-12 bg-cyan-500/10 rounded-xl flex items-center justify-center mb-4">
-                <Clock className="w-6 h-6 text-cyan-400" />
+          {floatingStats.map((stat, i) => (
+            <div key={i} className={`group relative bg-gradient-to-br from-[#0D1128] to-[#0A0E27] border border-white/10 rounded-2xl p-8 ${getStatColorClass(i)} transition-all duration-500 hover:-translate-y-2`}>
+              <div className={`absolute inset-0 bg-gradient-to-br ${getStatBgGradient(i)} to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl`} />
+              <div className="relative">
+                <div className={`w-12 h-12 ${getStatIconBgClass(i)} rounded-xl flex items-center justify-center mb-4`}>
+                  {getStatIcon(stat.icon, i)}
+                </div>
+                <div className={`text-3xl font-black ${getStatTextColorClass(i)} mb-2`}>{stat.value}</div>
+                <div className="text-lg font-bold text-white mb-1">{stat.label}</div>
+                <p className="text-sm text-gray-500">{stat.sublabel}</p>
               </div>
-              <div className="text-3xl font-black text-cyan-400 mb-2">7-14 Days</div>
-              <div className="text-lg font-bold text-white mb-1">Lightning Fast</div>
-              <p className="text-sm text-gray-500">Most projects live in 2 weeks</p>
             </div>
-          </div>
-
-          {/* Card 2 */}
-          <div className="group relative bg-gradient-to-br from-[#0D1128] to-[#0A0E27] border border-white/10 rounded-2xl p-8 hover:border-purple-500/30 transition-all duration-500 hover:-translate-y-2">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
-            <div className="relative">
-              <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-4">
-                <Shield className="w-6 h-6 text-purple-400" />
-              </div>
-              <div className="text-3xl font-black text-purple-400 mb-2">100% Safe</div>
-              <div className="text-lg font-bold text-white mb-1">Risk-Free</div>
-              <p className="text-sm text-gray-500">Money-back guarantee</p>
-            </div>
-          </div>
-
-          {/* Card 3 */}
-          <div className="group relative bg-gradient-to-br from-[#0D1128] to-[#0A0E27] border border-white/10 rounded-2xl p-8 hover:border-orange-500/30 transition-all duration-500 hover:-translate-y-2">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl" />
-            <div className="relative">
-              <div className="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center mb-4">
-                <TrendingUp className="w-6 h-6 text-orange-400" />
-              </div>
-              <div className="text-3xl font-black text-orange-400 mb-2">Scalable</div>
-              <div className="text-lg font-bold text-white mb-1">Future-Proof</div>
-              <p className="text-sm text-gray-500">Built to grow with you</p>
-            </div>
-          </div>
+          ))}
         </div>
 
         {/* Horizontal Stats Bar */}
         <div className="grid md:grid-cols-4 gap-6 mb-20">
-          {[
-            { value: '100+', label: 'Projects Completed', gradient: 'from-cyan-400 to-blue-500' },
-            { value: '50+', label: 'Active Clients', gradient: 'from-purple-400 to-pink-500' },
-            { value: '4.9/5', label: 'Average Rating', gradient: 'from-orange-400 to-red-500' },
-            { value: '98%', label: 'Client Retention', gradient: 'from-emerald-400 to-green-500' },
-          ].map((stat, i) => (
+          {horizontalStats.map((stat, i) => (
             <div key={i} className="text-center p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all">
               <div className={`text-4xl font-black mb-2 bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}>
                 {stat.value}
@@ -419,10 +453,10 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
             
             <div className="relative">
               <h3 className="text-4xl font-bold text-white mb-4">
-                Ready to Transform Your Business?
+                {ctaContent.title}
               </h3>
               <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
-                Join 50+ successful businesses who chose SocalBird
+                {ctaContent.subtitle}
               </p>
               
               {onNavigate && (
@@ -431,7 +465,7 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
                   className="group/btn relative inline-flex items-center gap-3 px-10 py-5 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-2xl font-bold text-lg text-white overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/30"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
-                  <span className="relative">Get Started - Free Consultation</span>
+                  <span className="relative">{ctaContent.buttonText}</span>
                   <ArrowRight className="relative w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
                 </button>
               )}

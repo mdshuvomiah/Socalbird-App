@@ -135,7 +135,23 @@ const defaultContent: ContentData = {
             result: { label: 'Typical Result', value: '4.9★ rating' }
           }
         }
-      ]
+      ],
+      floatingStats: [
+        { value: '7-14 Days', label: 'Lightning Fast', sublabel: 'Most projects live in 2 weeks', icon: 'Clock' },
+        { value: '100% Safe', label: 'Risk-Free', sublabel: 'Money-back guarantee', icon: 'Shield' },
+        { value: 'Scalable', label: 'Future-Proof', sublabel: 'Built to grow with you', icon: 'TrendingUp' }
+      ],
+      horizontalStats: [
+        { value: '100+', label: 'Projects Completed', gradient: 'from-cyan-400 to-blue-500' },
+        { value: '50+', label: 'Active Clients', gradient: 'from-purple-400 to-pink-500' },
+        { value: '4.9/5', label: 'Average Rating', gradient: 'from-orange-400 to-red-500' },
+        { value: '98%', label: 'Client Retention', gradient: 'from-emerald-400 to-green-500' }
+      ],
+      cta: {
+        title: 'Ready to Transform Your Business?',
+        subtitle: 'Join 50+ successful businesses who chose SocalBird',
+        buttonText: 'Get Started - Free Consultation'
+      }
     },
     services: {
       badge: 'Our Digital Services',
