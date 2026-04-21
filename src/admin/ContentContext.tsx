@@ -95,6 +95,8 @@ const defaultContent: ContentData = {
       title: 'We Solve',
       titleHighlight: 'Real Problems',
       subtitle: 'Most agencies sell features. We solve the problems keeping you up at night.',
+      solutionLabel: 'Solution',
+      resultLabel: 'Guaranteed Result',
       problems: [
         {
           problem: {
@@ -104,10 +106,11 @@ const defaultContent: ContentData = {
           },
           solution: {
             title: 'AI Chatbot Automation',
-            description: '24/7 automated responses on Facebook, WhatsApp, Instagram',
+            description: '24/7 automated responses on Facebook, WhatsApp, Instagram. Every missed lead is a missed opportunity for growth. While you sleep, potential customers are searching, comparing, and deciding.',
             features: ['Instant replies', 'Lead capture', 'Order tracking', 'Multi-platform'],
-            result: { label: 'Typical Result', value: '300% more leads' }
-          }
+            result: { label: 'Increase', value: '300% more leads' }
+          },
+          icon: 'MessageSquare'
         },
         {
           problem: {
@@ -117,10 +120,11 @@ const defaultContent: ContentData = {
           },
           solution: {
             title: 'Modern Web Development',
-            description: 'Lightning-fast, SEO-optimized websites that rank on Google',
+            description: 'Lightning-fast, SEO-optimized websites that rank on Google. We build websites that connect instantly, earn trust, and turn those quiet overnight visits into real conversations and sales.',
             features: ['<100ms load', 'Mobile-first', 'SEO optimized', 'CMS control'],
-            result: { label: 'Typical Result', value: '2X better ranking' }
-          }
+            result: { label: 'Performance', value: '2X better ranking' }
+          },
+          icon: 'Code'
         },
         {
           problem: {
@@ -130,10 +134,11 @@ const defaultContent: ContentData = {
           },
           solution: {
             title: 'Native Mobile Apps',
-            description: 'Professional iOS & Android apps with seamless UX',
+            description: 'Professional iOS & Android apps with seamless UX. In a mobile-first world, your business needs to be in your customers\' pockets, not just on their desktops.',
             features: ['iOS + Android', 'Push notifications', 'Offline mode', 'Payment ready'],
-            result: { label: 'Typical Result', value: '4.9★ rating' }
-          }
+            result: { label: 'Satisfaction', value: '4.9★ rating' }
+          },
+          icon: 'Smartphone'
         }
       ],
       floatingStats: [

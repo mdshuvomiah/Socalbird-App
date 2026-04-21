@@ -23,9 +23,11 @@ interface InteractiveCardProps {
     to: string;
   };
   index: number;
+  solutionLabel?: string;
+  resultLabel?: string;
 }
 
-function InteractiveCard({ problem, solution, gradient, index }: InteractiveCardProps) {
+function InteractiveCard({ problem, solution, gradient, index, solutionLabel, resultLabel }: InteractiveCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -129,7 +131,7 @@ function InteractiveCard({ problem, solution, gradient, index }: InteractiveCard
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
                   <CircleCheckBig className="w-4 h-4 text-emerald-400" />
-                  <span className="text-xs font-bold text-emerald-400 uppercase">Solution</span>
+                  <span className="text-xs font-bold text-emerald-400 uppercase">{solutionLabel || 'Solution'}</span>
                 </div>
                 <h4 
                   className="text-xl font-bold"
@@ -172,7 +174,7 @@ function InteractiveCard({ problem, solution, gradient, index }: InteractiveCard
                 <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-2xl uppercase tracking-widest" style={{ background: gradient.to }} />
                 <div className="relative flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Guaranteed Result</p>
+                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{solution.result?.label || resultLabel || 'Guaranteed Result'}</p>
                     <p className="text-3xl font-black text-white">{solution.result.value}</p>
                   </div>
                   <div className="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
@@ -204,11 +206,31 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
   const { getSectionContent } = useContent();
   const content = getSectionContent('home', 'whyChoose') || {};
 
-  const iconMap = [
-    <MessageSquare className="w-8 h-8 text-white" strokeWidth={2} />,
-    <Code className="w-8 h-8 text-white" strokeWidth={2} />,
-    <Smartphone className="w-8 h-8 text-white" strokeWidth={2} />
-  ];
+  const getProblemIcon = (iconName?: string, index?: number) => {
+    const iconProps = { className: "w-8 h-8 text-white", strokeWidth: 2 };
+    switch (iconName) {
+      case 'MessageSquare': return <MessageSquare {...iconProps} />;
+      case 'Code': return <Code {...iconProps} />;
+      case 'Smartphone': return <Smartphone {...iconProps} />;
+      case 'Clock': return <Clock {...iconProps} />;
+      case 'Shield': return <Shield {...iconProps} />;
+      case 'TrendingUp': return <TrendingUp {...iconProps} />;
+      case 'Zap': return <Zap {...iconProps} />;
+      case 'Target': return <Target {...iconProps} />;
+      case 'Award': return <Award {...iconProps} />;
+      case 'Sparkles': return <Sparkles {...iconProps} />;
+      case 'Users': return <Users {...iconProps} />;
+      case 'Star': return <Star {...iconProps} />;
+      case 'CheckCircle2': return <CheckCircle2 {...iconProps} />;
+      default:
+        const icons = [
+          <MessageSquare {...iconProps} />,
+          <Code {...iconProps} />,
+          <Smartphone {...iconProps} />
+        ];
+        return icons[(index || 0) % icons.length];
+    }
+  };
 
   const gradientMap = [
     { from: '#06b6d4', to: '#3b82f6' },
@@ -295,14 +317,14 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
             title: probObj.title || item.problem || 'Critical Issue',
             stat: probObj.stat || 'High',
             statLabel: probObj.statLabel || 'Impact',
-            icon: iconMap[i % iconMap.length],
+            icon: getProblemIcon(item.icon, i),
           },
           solution: {
             title: solObj.title || item.solution || 'Smart Solution',
             description: solObj.description || 'Efficient and reliable resolution for your business needs.',
             features: Array.isArray(solObj.features) ? solObj.features : [],
             result: {
-              label: solObj.result?.label || 'Typical Result',
+              label: solObj.result?.label || '',
               value: solObj.result?.value || solObj.result || 'Standard Success'
             }
           },
@@ -419,6 +441,8 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
               solution={item.solution}
               gradient={item.gradient}
               index={index}
+              solutionLabel={content.solutionLabel}
+              resultLabel={content.resultLabel}
             />
           ))}
         </div>
