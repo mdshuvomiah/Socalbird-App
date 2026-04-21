@@ -14,7 +14,8 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
   // Hardened local helpers
   const ensureString = (val: any) => (val === null || val === undefined || typeof val === 'object') ? '' : String(val);
   
-  const getIconComponent = (iconName: string) => {
+  const getIconComponent = (iconName: any) => {
+    if (typeof iconName !== 'string') return iconName || Bot;
     const ICON_MAP: any = { Code, Smartphone, Bot, Sparkles, TrendingUp, Award, Target, Zap, CheckCircle, Eye, Play, Star, Layers, ChevronRight, X, Filter };
     return ICON_MAP[iconName] || Bot;
   };
@@ -236,7 +237,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
       <section className="py-24 px-4">
         <div className="container mx-auto max-w-7xl">
           <div className="space-y-12">
-            {filteredProjects.map((study, index) => {
+            {filteredProjects.map((study: any, index: number) => {
               const Icon = getIconComponent(study.icon || (study.category === 'AI Chatbot' ? 'Bot' : study.category === 'Web Development' ? 'Code' : 'Smartphone'));
               const isEven = index % 2 === 0;
               const accentColorClass = study.accentColor || (study.category === 'AI Chatbot' ? 'cyan' : study.category === 'Web Development' ? 'purple' : 'teal');
