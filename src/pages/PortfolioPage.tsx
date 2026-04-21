@@ -2,6 +2,12 @@ import { ArrowRight, ExternalLink, Code, Smartphone, Bot, Sparkles, TrendingUp, 
 import { useState } from 'react';
 import { useContent } from '../admin/ContentContext';
 
+const ICON_MAP: any = { 
+  TrendingUp, Award, Target, Zap, CheckCircle, Star, 
+  Code, Smartphone, Bot, Layers, Filter, X, Eye, 
+  ChevronRight, Play, ArrowRight, ExternalLink 
+};
+
 interface PortfolioProject {
   id: string | number;
   category: string;
@@ -50,7 +56,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
   
   const filteredProjects = (activeFilter === 'All' 
     ? dynamicProjects 
-    : dynamicProjects.filter((project: PortfolioProject) => __ensureString(project.category) === activeFilter)).filter(Boolean);
+    : dynamicProjects.filter((project: PortfolioProject) => (typeof project.category === 'string' ? project.category : '') === activeFilter)).filter(Boolean);
 
   return (
     <div className="bg-[#0A0E27] text-white">
@@ -147,16 +153,16 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
         <div className="container mx-auto max-w-7xl">
           <div className="space-y-12">
             {filteredProjects.map((study: PortfolioProject, index: number) => {
-              const currentCategory = __ensureString(study.category);
-              const currentIndustry = __ensureString(study.industry);
-              const Icon = __getIconComponent(study.icon || (currentCategory === 'AI Chatbot' ? 'Bot' : currentCategory === 'Web Development' ? 'Code' : 'Smartphone'));
+              const currentCategory = typeof study.category === 'string' ? study.category : '';
+              const currentIndustry = typeof study.industry === 'string' ? study.industry : '';
+              const Icon = ICON_MAP[study.icon || (currentCategory === 'AI Chatbot' ? 'Bot' : currentCategory === 'Web Development' ? 'Code' : 'Smartphone')] || Award;
               const isEven = index % 2 === 0;
-              const accentColorClass = __ensureString(study.accentColor || (currentCategory === 'AI Chatbot' ? 'cyan' : currentCategory === 'Web Development' ? 'purple' : 'teal'));
-              const gradientColorClass = __ensureString(study.color || (currentCategory === 'AI Chatbot' ? 'from-blue-600 to-cyan-500' : currentCategory === 'Web Development' ? 'from-purple-600 to-pink-500' : 'from-green-600 to-teal-500'));
+              const accentColorClass = typeof study.accentColor === 'string' ? study.accentColor : (currentCategory === 'AI Chatbot' ? 'cyan' : currentCategory === 'Web Development' ? 'purple' : 'teal');
+              const gradientColorClass = typeof study.color === 'string' ? study.color : (currentCategory === 'AI Chatbot' ? 'from-blue-600 to-cyan-500' : currentCategory === 'Web Development' ? 'from-purple-600 to-pink-500' : 'from-green-600 to-teal-500');
               
               return (
                 <div
-                  key={__ensureString(study.id || index)}
+                  key={typeof study.id === 'string' || typeof study.id === 'number' ? study.id : index}
                   className="group relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-cyan-500/30 transition-all duration-500 overflow-hidden"
                   onMouseEnter={() => setHoveredProject(Number(study.id) || index)}
                   onMouseLeave={() => setHoveredProject(null)}
@@ -177,15 +183,15 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                         <div className="space-y-4">
                           <div className="flex flex-wrap gap-2">
                             <div className={`px-4 py-1.5 bg-gradient-to-r ${gradientColorClass} bg-opacity-20 border border-${accentColorClass}-500/30 rounded-full text-${accentColorClass}-400 text-xs font-bold`}>
-                              {__ensureString(study.category)}
+                              {typeof study.category === 'string' ? study.category : ''}
                             </div>
                             <div className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-400 text-xs font-medium">
-                              {__ensureString(study.industry)}
+                              {typeof study.industry === 'string' ? study.industry : ''}
                             </div>
                           </div>
 
                           <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
-                            {__ensureString(study.title)}
+                            {typeof study.title === 'string' ? study.title : ''}
                           </h2>
 
                           {/* Highlights */}
@@ -193,7 +199,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                             {Array.isArray(study.highlights) && study.highlights.filter(Boolean).map((highlight: string, i: number) => (
                               <div key={i} className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg">
                                 <CheckCircle className="w-3 h-3 text-cyan-400" />
-                                <span className="text-xs text-gray-400">{__ensureString(highlight)}</span>
+                                <span className="text-xs text-gray-400">{typeof highlight === 'string' ? highlight : ''}</span>
                               </div>
                             ))}
                           </div>
@@ -204,13 +210,13 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                           <div className="relative pl-6 border-l-2 border-cyan-500/30">
                             <div className="absolute -left-2 top-0 w-4 h-4 bg-cyan-500 rounded-full" />
                             <h3 className="text-lg font-bold text-white mb-2">The Challenge</h3>
-                            <p className="text-gray-400 leading-relaxed">{__ensureString(study.problem || study.description)}</p>
+                            <p className="text-gray-400 leading-relaxed">{typeof study.problem === 'string' ? study.problem : typeof study.description === 'string' ? study.description : ''}</p>
                           </div>
                           
                           <div className="relative pl-6 border-l-2 border-blue-500/30">
                             <div className="absolute -left-2 top-0 w-4 h-4 bg-blue-500 rounded-full" />
                             <h3 className="text-lg font-bold text-white mb-2">Our Solution</h3>
-                            <p className="text-gray-400 leading-relaxed">{__ensureString(study.solution || study.description)}</p>
+                            <p className="text-gray-400 leading-relaxed">{typeof study.solution === 'string' ? study.solution : typeof study.description === 'string' ? study.description : ''}</p>
                           </div>
                         </div>
 
@@ -226,7 +232,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                                 key={i}
                                 className="px-4 py-2 bg-gradient-to-r from-white/5 to-white/[0.02] border border-white/20 rounded-xl text-sm text-gray-300 hover:border-cyan-500/30 transition-colors"
                               >
-                                {__ensureString(tech)}
+                                {typeof tech === 'string' ? tech : ''}
                               </span>
                             ))}
                           </div>
@@ -244,9 +250,9 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                             </div>
                           </button>
 
-                          {study.visitUrl && __ensureString(study.visitUrl) !== '' && (
+                          {study.visitUrl && (typeof study.visitUrl === 'string') && study.visitUrl !== '' && (
                             <a
-                              href={__ensureString(study.visitUrl)}
+                              href={typeof study.visitUrl === 'string' ? study.visitUrl : '#'}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="group/visit px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/20 rounded-xl font-bold text-white transition-all flex items-center gap-3 hover:border-cyan-500/50"
@@ -292,7 +298,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                           </h3>
                           <div className="grid grid-cols-2 gap-4">
                             {Array.isArray(study.results) && study.results.filter(Boolean).map((result: any, i: number) => {
-                              const ResultIcon = __getIconComponent(result.icon);
+                              const ResultIcon = ICON_MAP[result.icon] || Award;
                               return (
                                 <div
                                   key={i}
@@ -304,9 +310,9 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                                     </div>
                                     <div>
                                       <div className={`text-2xl font-bold bg-gradient-to-r ${gradientColorClass} bg-clip-text text-transparent`}>
-                                        {__ensureString(result.metric || result.value)}
+                                        {typeof result.metric === 'string' ? result.metric : typeof result.value === 'string' ? result.value : ''}
                                       </div>
-                                      <div className="text-xs text-gray-500 mt-1">{__ensureString(result.label)}</div>
+                                      <div className="text-xs text-gray-500 mt-1">{typeof result.label === 'string' ? result.label : ''}</div>
                                     </div>
                                   </div>
                                 </div>
@@ -374,7 +380,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                 className="relative rounded-3xl p-8 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-cyan-500/30 transition-all duration-300 group"
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${__ensureString(testimonial.color || 'from-cyan-500 to-blue-500')} opacity-5`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${typeof testimonial.color === 'string' ? testimonial.color : 'from-cyan-500 to-blue-500'} opacity-5`} />
                 </div>
 
                 <div className="relative space-y-6">
@@ -387,13 +393,13 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
 
                   {/* Quote */}
                   <p className="text-lg text-gray-300 leading-relaxed italic">
-                    "{__ensureString(testimonial.quote)}"
+                    "{typeof testimonial.quote === 'string' ? testimonial.quote : ''}"
                   </p>
 
                   {/* Author */}
                   <div className="pt-4 border-t border-white/10">
-                    <div className="font-bold text-white">{__ensureString(testimonial.author)}</div>
-                    <div className="text-sm text-gray-500">{__ensureString(testimonial.role)}</div>
+                    <div className="font-bold text-white">{typeof testimonial.author === 'string' ? testimonial.author : ''}</div>
+                    <div className="text-sm text-gray-500">{typeof testimonial.role === 'string' ? testimonial.role : ''}</div>
                   </div>
                 </div>
               </div>
@@ -458,21 +464,4 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
       </section>
     </div>
   );
-}
-
-function __ensureString(val: any): string {
-  if (val === null || val === undefined) return '';
-  if (typeof val === 'object') return '';
-  return String(val);
-}
-
-function __getIconComponent(iconName: any) {
-  const icons: any = { 
-    TrendingUp, Award, Target, Zap, CheckCircle, Star, 
-    Code, Smartphone, Bot, Layers, Filter, X, Eye, 
-    ChevronRight, Play, ArrowRight, ExternalLink 
-  };
-  
-  if (typeof iconName !== 'string') return iconName || Award;
-  return icons[iconName] || Award;
 }
