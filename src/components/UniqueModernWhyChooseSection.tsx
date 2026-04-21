@@ -174,7 +174,7 @@ function InteractiveCard({ problem, solution, gradient, index, solutionLabel, re
                 <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-2xl uppercase tracking-widest" style={{ background: gradient.to }} />
                 <div className="relative flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">{solution.result?.label || resultLabel || 'Guaranteed Result'}</p>
+                    <p className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-1">{solution.result?.label || resultLabel || 'Guaranteed Result'}</p>
                     <p className="text-3xl font-black text-white">{solution.result.value}</p>
                   </div>
                   <div className="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
