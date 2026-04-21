@@ -832,6 +832,35 @@ export function ContentProvider({ children }: { children: ReactNode }) {
             });
         }
 
+        // Migrate Portfolio Projects to ensure new fields (imageUrl, visitUrl) are visible
+        if (mergedContent.portfolio?.projects && Array.isArray(mergedContent.portfolio.projects)) {
+          mergedContent.portfolio.projects = mergedContent.portfolio.projects.map((p: any) => {
+            const defaults = defaultContent.portfolio?.projects?.[0] || {}; // Use first project as template for defaults
+            return {
+              ...p,
+              imageUrl: ensureString(p.imageUrl || ''),
+              visitUrl: ensureString(p.visitUrl || p.liveUrl || ''),
+              problem: ensureString(p.problem || p.description || ''),
+              solution: ensureString(p.solution || p.description || ''),
+              techStack: Array.isArray(p.techStack) ? p.techStack : (Array.isArray(p.technologies) ? p.technologies : []),
+              results: Array.isArray(p.results) ? p.results : [
+                { metric: ensureString(p.result || ''), label: 'Outcome', icon: 'TrendingUp' }
+              ],
+              highlights: Array.isArray(p.highlights) ? p.highlights : []
+            };
+          });
+        }
+
+        // Migrate Home Real Impact Case Studies
+        if (mergedContent.home?.realImpact) {
+          ['caseStudy1', 'caseStudy2', 'caseStudy3'].forEach(key => {
+            if (mergedContent.home.realImpact[key]) {
+              mergedContent.home.realImpact[key].imageUrl = ensureString(mergedContent.home.realImpact[key].imageUrl || '');
+              mergedContent.home.realImpact[key].visitUrl = ensureString(mergedContent.home.realImpact[key].visitUrl || '');
+            }
+          });
+        }
+
         setContent(mergedContent);
         setIsLoading(false);
         return true;
