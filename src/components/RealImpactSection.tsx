@@ -163,20 +163,20 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-                      <div className="text-3xl font-bold text-emerald-400 mb-1">{content.caseStudy1?.results?.metrics?.[0]?.value || '95%'}</div>
-                      <p className="text-xs text-gray-500">{content.caseStudy1?.results?.metrics?.[0]?.label || 'Response rate'}</p>
+                      <div className="text-3xl font-bold text-emerald-400 mb-1">{ensureString(content.caseStudy1?.results?.metrics?.[0]?.value || '95%')}</div>
+                      <p className="text-xs text-gray-500">{ensureString(content.caseStudy1?.results?.metrics?.[0]?.label || 'Response rate')}</p>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-                      <div className="text-3xl font-bold text-purple-400 mb-1">{content.caseStudy1?.results?.metrics?.[1]?.value || '3X'}</div>
-                      <p className="text-xs text-gray-500">{content.caseStudy1?.results?.metrics?.[1]?.label || 'More leads'}</p>
+                      <div className="text-3xl font-bold text-purple-400 mb-1">{ensureString(content.caseStudy1?.results?.metrics?.[1]?.value || '3X')}</div>
+                      <p className="text-xs text-gray-500">{ensureString(content.caseStudy1?.results?.metrics?.[1]?.label || 'More leads')}</p>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-                      <div className="text-3xl font-bold text-orange-400 mb-1">{content.caseStudy1?.results?.metrics?.[2]?.value || '<2min'}</div>
-                      <p className="text-xs text-gray-500">{content.caseStudy1?.results?.metrics?.[2]?.label || 'Avg response'}</p>
+                      <div className="text-3xl font-bold text-orange-400 mb-1">{ensureString(content.caseStudy1?.results?.metrics?.[2]?.value || '<2min')}</div>
+                      <p className="text-xs text-gray-500">{ensureString(content.caseStudy1?.results?.metrics?.[2]?.label || 'Avg response')}</p>
                     </div>
                     <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-                      <div className="text-3xl font-bold text-pink-400 mb-1">{content.caseStudy1?.results?.metrics?.[3]?.value || '24/7'}</div>
-                      <p className="text-xs text-gray-500">{content.caseStudy1?.results?.metrics?.[3]?.label || 'Automated'}</p>
+                      <div className="text-3xl font-bold text-pink-400 mb-1">{ensureString(content.caseStudy1?.results?.metrics?.[3]?.value || '24/7')}</div>
+                      <p className="text-xs text-gray-500">{ensureString(content.caseStudy1?.results?.metrics?.[3]?.label || 'Automated')}</p>
                     </div>
                   </div>
 
@@ -187,11 +187,11 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                       ))}
                     </div>
                     <p className="text-gray-300 italic leading-relaxed mb-3">
-                      "{content.caseStudy1?.testimonial?.quote || 'Game changer. The chatbot handles 80% of customer questions automatically. Our team can finally focus on growth instead of answering the same questions all day.'}"
+                      "{ensureString(content.caseStudy1?.testimonial?.quote || 'Game changer. The chatbot handles 80% of customer questions automatically. Our team can finally focus on growth instead of answering the same questions all day.')}"
                     </p>
                     <div className="text-sm">
-                      <div className="font-semibold text-white">{content.caseStudy1?.testimonial?.author || 'Sarah M.'}</div>
-                      <div className="text-xs text-gray-500">{content.caseStudy1?.testimonial?.role || 'Founder, Fashion E-commerce'}</div>
+                      <div className="font-semibold text-white">{ensureString(content.caseStudy1?.testimonial?.author || 'Sarah M.')}</div>
+                      <div className="text-xs text-gray-500">{ensureString(content.caseStudy1?.testimonial?.role || 'Founder, Fashion E-commerce')}</div>
                     </div>
                   </div>
                 </div>
@@ -224,12 +224,12 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold text-purple-400 mb-1">{content.caseStudy2?.metrics?.[0]?.value || '12K+'}</div>
-                    <p className="text-xs text-gray-500">{content.caseStudy2?.metrics?.[0]?.label || 'Active Users'}</p>
+                    <div className="text-3xl font-bold text-purple-400 mb-1">{ensureString(content.caseStudy2?.metrics?.[0]?.value || '12K+')}</div>
+                    <p className="text-xs text-gray-500">{ensureString(content.caseStudy2?.metrics?.[0]?.label || 'Active Users')}</p>
                   </div>
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold text-pink-400 mb-1">{content.caseStudy2?.metrics?.[1]?.value || '99.9%'}</div>
-                    <p className="text-xs text-gray-500">{content.caseStudy2?.metrics?.[1]?.label || 'Uptime'}</p>
+                    <div className="text-3xl font-bold text-pink-400 mb-1">{ensureString(content.caseStudy2?.metrics?.[1]?.value || '99.9%')}</div>
+                    <p className="text-xs text-gray-500">{ensureString(content.caseStudy2?.metrics?.[1]?.label || 'Uptime')}</p>
                   </div>
                 </div>
 
@@ -274,12 +274,12 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold text-emerald-400 mb-1">{content.caseStudy3?.metrics?.[0]?.value || '1.2K'}</div>
-                    <p className="text-xs text-gray-500">{content.caseStudy3?.metrics?.[0]?.label || 'Orders/Month'}</p>
+                    <div className="text-3xl font-bold text-emerald-400 mb-1">{ensureString(content.caseStudy3?.metrics?.[0]?.value || '1.2K')}</div>
+                    <p className="text-xs text-gray-500">{ensureString(content.caseStudy3?.metrics?.[0]?.label || 'Orders/Month')}</p>
                   </div>
                   <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
-                    <div className="text-3xl font-bold text-green-400 mb-1">{content.caseStudy3?.metrics?.[1]?.value || '24/7'}</div>
-                    <p className="text-xs text-gray-500">{content.caseStudy3?.metrics?.[1]?.label || 'Availability'}</p>
+                    <div className="text-3xl font-bold text-green-400 mb-1">{ensureString(content.caseStudy3?.metrics?.[1]?.value || '24/7')}</div>
+                    <p className="text-xs text-gray-500">{ensureString(content.caseStudy3?.metrics?.[1]?.label || 'Availability')}</p>
                   </div>
                 </div>
 
