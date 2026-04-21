@@ -306,32 +306,35 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
 
   const cmsProblems = content?.problems;
   const problems = (Array.isArray(cmsProblems) && cmsProblems.length > 0)
-    ? cmsProblems.map((item: any, i: number) => {
-        const features = Array.isArray(item.solutionFeatures) 
-          ? item.solutionFeatures 
-          : (Array.isArray(item.features) ? item.features : []);
+    ? cmsProblems
+        .filter((item: any) => item !== null && typeof item === 'object')
+        .map((item: any, i: number) => {
+          const features = Array.isArray(item.solutionFeatures) 
+            ? item.solutionFeatures 
+            : (Array.isArray(item.features) ? item.features : []);
 
-        return {
-          problem: {
-            title: item.problemTitle || item.title || item.problem || 'Critical Issue',
-            stat: item.problemStat || item.stat || 'High',
-            statLabel: item.problemStatLabel || item.statLabel || 'Impact',
-            icon: getProblemIcon(item.icon, i),
-          },
-          solutionLabel: item.solutionLabel || content.solutionLabel || 'Solution',
-          resultLabel: item.resultLabel || content.resultLabel || 'Guaranteed Result',
-          solution: {
-            title: item.solutionTitle || item.solution || 'Smart Solution',
-            description: item.solutionDescription || item.description || 'Efficient and reliable resolution for your business needs.',
-            features: features,
-            result: {
-              label: '',
-              value: item.resultValue || (item.result && typeof item.result === 'object' ? item.result.value : (typeof item.result === 'string' ? item.result : 'Standard Success'))
-            }
-          },
-          gradient: gradientMap[i % gradientMap.length]
-        };
-      })
+          return {
+            problem: {
+              title: item.problemTitle || item.title || item.problem || 'Critical Issue',
+              stat: item.problemStat || item.stat || 'High',
+              statLabel: item.problemStatLabel || item.statLabel || 'Impact',
+              icon: getProblemIcon(item.icon, i),
+            },
+            solutionLabel: item.solutionLabel || content.solutionLabel || 'Solution',
+            resultLabel: item.resultLabel || content.resultLabel || 'Guaranteed Result',
+            solution: {
+              title: item.solutionTitle || item.solution || 'Smart Solution',
+              description: item.solutionDescription || item.description || 'Efficient and reliable resolution for your business needs.',
+              features: features,
+              result: {
+                label: '',
+                value: item.resultValue || (item.result && typeof item.result === 'object' ? item.result.value : (typeof item.result === 'string' ? item.result : 'Standard Success'))
+              }
+            },
+            gradient: gradientMap[i % gradientMap.length]
+          };
+        })
+        .filter(Boolean)
     : defaultProblems;
 
   // New dynamic fields

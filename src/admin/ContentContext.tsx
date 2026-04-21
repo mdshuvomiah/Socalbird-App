@@ -777,29 +777,31 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         const mergedContent = deepMerge(data.content, defaultContent);
 
         // Perform migrations for Why Choose problems to ensure all fields are visible in the admin panel
-        if (mergedContent.home?.whyChoose?.problems) {
-          mergedContent.home.whyChoose.problems = mergedContent.home.whyChoose.problems.map((p: any) => {
-            // Already flat format? return as is
-            if (p.problemTitle) return p;
+        if (mergedContent.home?.whyChoose?.problems && Array.isArray(mergedContent.home.whyChoose.problems)) {
+          mergedContent.home.whyChoose.problems = mergedContent.home.whyChoose.problems
+            .filter((p: any) => p !== null && typeof p === 'object')
+            .map((p: any) => {
+              // Already flat format? return as is
+              if (p.problemTitle) return p;
 
-            // Otherwise, migrate from various old structures
-            const problem = p.problem || {};
-            const solution = p.solution || {};
-            const result = solution.result || {};
+              // Otherwise, migrate from various old structures
+              const problem = p.problem || {};
+              const solution = p.solution || {};
+              const result = solution.result || {};
 
-            return {
-              icon: p.icon || 'MessageSquare',
-              problemTitle: problem.title || p.title || p.problem || '',
-              problemStat: problem.stat || '',
-              problemStatLabel: problem.statLabel || '',
-              solutionLabel: p.solutionLabel || mergedContent.home?.whyChoose?.solutionLabel || 'Solution',
-              solutionTitle: solution.title || p.solution || '',
-              solutionDescription: solution.description || p.description || '',
-              solutionFeatures: Array.isArray(solution.features) ? solution.features : (Array.isArray(p.features) ? p.features : []),
-              resultLabel: p.resultLabel || result.label || mergedContent.home?.whyChoose?.resultLabel || 'Guaranteed Result',
-              resultValue: result.value || result || ''
-            };
-          });
+              return {
+                icon: p.icon || 'MessageSquare',
+                problemTitle: problem.title || p.title || p.problem || '',
+                problemStat: problem.stat || '',
+                problemStatLabel: problem.statLabel || '',
+                solutionLabel: p.solutionLabel || mergedContent.home?.whyChoose?.solutionLabel || 'Solution',
+                solutionTitle: solution.title || p.solution || '',
+                solutionDescription: solution.description || p.description || '',
+                solutionFeatures: Array.isArray(solution.features) ? solution.features : (Array.isArray(p.features) ? p.features : []),
+                resultLabel: p.resultLabel || result.label || mergedContent.home?.whyChoose?.resultLabel || 'Guaranteed Result',
+                resultValue: result.value || result || ''
+              };
+            });
         }
 
         setContent(mergedContent);

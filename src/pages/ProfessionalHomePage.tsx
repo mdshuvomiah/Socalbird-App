@@ -84,10 +84,13 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
   ];
 
   const coreServices = Array.isArray(servicesContent.items) && servicesContent.items.length > 0 
-    ? servicesContent.items.slice(0, 3).map((s: any, i: number) => ({
+    ? servicesContent.items
+        .filter(Boolean)
+        .slice(0, 3)
+        .map((s: any, i: number) => ({
         icon: [MessageSquare, Code, Smartphone][i] || Code,
         title: s.title,
-        desc: s.description ? s.description.substring(0, 40) + '...' : s.subtitle,
+        desc: s.description ? s.description.substring(0, 40) + '...' : (s.subtitle || ''),
         price: s.price || s.subtitle || '',
         stat: Array.isArray(s.features) && s.features.length > 0 ? s.features[0] : 'Feature-Rich',
         page: ['/ai-chatbot-solutions', '/web-development', '/app-development'][i] || '/contact'
@@ -541,7 +544,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
                 rating: 5,
                 result: '4.9★ Rating',
               },
-            ]).map((testimonial, index) => (
+            ]).filter(Boolean).map((testimonial, index) => (
               <div
                 key={index}
                 className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-cyan-500/30 transition-all"
@@ -605,7 +608,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
               { name: 'Service Businesses', icon: '⚙️' },
               { name: 'Agencies', icon: '🎯' },
               { name: 'Startups', icon: '🚀' },
-            ]).map((audience, i) => (
+            ]).filter(Boolean).map((audience, i) => (
               <div
                 key={i}
                 className="bg-white/5 backdrop-blur-sm border border-white/10 hover:border-cyan-500/30 p-6 rounded-2xl text-center transition-all cursor-pointer hover:scale-105"
@@ -667,7 +670,7 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
               '✓ No Long-term Contracts',
               '✓ 100% Satisfaction Guaranteed',
               '✓ Fast Turnaround Time',
-            ]).map((text: string, i: number) => (
+            ]).filter(Boolean).map((text: string, i: number) => (
               <div key={i} className="flex items-center gap-2">
                 <span>{text}</span>
               </div>
