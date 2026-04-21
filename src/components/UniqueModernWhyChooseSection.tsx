@@ -53,63 +53,43 @@ function InteractiveCard({ problem, solution, gradient, index }: InteractiveCard
           className="p-8 cursor-pointer"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <div className="flex items-start justify-between mb-6">
-            {/* Icon with Animated Gradient */}
-            <div 
-              className="relative w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden transition-transform duration-500"
-              style={{
-                background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
-                transform: isExpanded ? 'scale(1.1) rotate(5deg)' : 'scale(1)'
-              }}
-            >
-              <div className="absolute inset-0 opacity-50 blur-2xl" style={{ background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})` }} />
-              <div className="relative z-10">
-                {problem.icon}
+          <div className="flex items-center justify-between gap-6">
+            <div className="flex items-center gap-6">
+              {/* Icon with Animated Gradient */}
+              <div 
+                className="relative w-16 h-16 rounded-2xl flex items-center justify-center overflow-hidden transition-transform duration-500 flex-shrink-0"
+                style={{
+                  background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
+                  transform: isExpanded ? 'scale(1.1) rotate(5deg)' : 'scale(1)'
+                }}
+              >
+                <div className="absolute inset-0 opacity-50 blur-2xl" style={{ background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})` }} />
+                <div className="relative z-10">
+                  {problem.icon}
+                </div>
               </div>
+
+              {/* Title - Always Visible */}
+              <h3 className="text-2xl font-bold text-white leading-tight">
+                {problem.title}
+              </h3>
             </div>
 
             {/* Toggle Button */}
             <button 
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${isExpanded ? 'bg-white/20 rotate-180' : 'bg-white/5 hover:bg-white/10'}`}
+              className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 flex-shrink-0 ${isExpanded ? 'bg-white/20 rotate-180' : 'bg-white/5 hover:bg-white/10'}`}
             >
-              <ChevronDown className="w-5 h-5 text-white" />
+              <ChevronDown className="w-6 h-6 text-white" />
             </button>
           </div>
-
-          {/* Title & Stat Row */}
-          <div className="mb-4">
-            <h3 className="text-2xl font-bold text-white mb-3 leading-tight">
-              {problem.title}
-            </h3>
-            
-            {/* Inline Stat Badge */}
-            <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-xl">
-              <div 
-                className="text-3xl font-black"
-                style={{
-                  background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}
-              >
-                {problem.stat}
-              </div>
-              <div className="text-sm text-gray-400">{problem.statLabel}</div>
-            </div>
-          </div>
-
-          {/* Quick Preview */}
-          <p className="text-gray-400 text-sm">
-            {solution.description}
-          </p>
         </div>
 
         {/* Expanded View (Slides Down) */}
         <div 
-          className={`overflow-hidden transition-all duration-500 ease-out ${isExpanded ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'}`}
+          className={`overflow-hidden transition-all duration-500 ease-out ${isExpanded ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}
         >
           {/* Gradient Divider with Animation */}
-          <div className="px-8 mb-6">
+          <div className="px-8 mb-8">
             <div className="relative h-px overflow-hidden">
               <div className="absolute inset-0 bg-white/5" />
               <div 
@@ -122,60 +102,82 @@ function InteractiveCard({ problem, solution, gradient, index }: InteractiveCard
             </div>
           </div>
 
-          <div className="px-8 pb-8 space-y-6">
-            {/* Solution Header */}
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
-                <CircleCheckBig className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs font-bold text-emerald-400 uppercase">Solution</span>
-              </div>
-              <h4 
-                className="text-xl font-bold"
-                style={{
-                  background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}
-              >
-                {solution.title}
-              </h4>
-            </div>
-
-            {/* Features Grid with Stagger Animation */}
-            <div className="grid grid-cols-2 gap-3">
-              {solution.features.map((feature, i) => (
+          <div className="px-8 pb-8 space-y-10">
+            {/* Problem Insight - Expanded Only */}
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-4 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl">
                 <div 
-                  key={i} 
-                  className="flex items-center gap-2.5 p-3 bg-white/5 border border-white/10 rounded-lg transition-all duration-300 hover:bg-white/10"
+                  className="text-4xl font-black"
                   style={{
-                    animationDelay: `${i * 50}ms`,
-                    opacity: isExpanded ? 1 : 0,
-                    transform: isExpanded ? 'translateY(0)' : 'translateY(10px)',
-                    transition: `all 0.3s ease-out ${i * 50}ms`
+                    background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
                   }}
                 >
-                  <CheckCircle2 className="w-4 h-4" style={{ color: gradient.from }} />
-                  <span className="text-sm text-gray-300">{feature}</span>
+                  {problem.stat}
                 </div>
-              ))}
+                <div className="text-sm text-gray-400 font-bold uppercase tracking-widest">{problem.statLabel}</div>
+              </div>
+
+              <p className="text-xl text-gray-300 leading-relaxed font-medium italic">
+                "{solution.description}"
+              </p>
             </div>
 
-            {/* Result Card with Highlight */}
-            <div 
-              className="relative p-5 rounded-2xl border-2 overflow-hidden"
-              style={{
-                background: `linear-gradient(135deg, ${gradient.from}15, ${gradient.to}15)`,
-                borderColor: `${gradient.from}40`
-              }}
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-2xl" style={{ background: gradient.to }} />
-              <div className="relative flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Typical Result</p>
-                  <p className="text-2xl font-bold text-white">{solution.result.value}</p>
+            {/* Solution Section */}
+            <div className="space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
+                  <CircleCheckBig className="w-4 h-4 text-emerald-400" />
+                  <span className="text-xs font-bold text-emerald-400 uppercase">Solution</span>
                 </div>
-                <div className="w-14 h-14 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
-                  <Zap className="w-7 h-7 text-yellow-400" fill="currentColor" />
+                <h4 
+                  className="text-xl font-bold"
+                  style={{
+                    background: `linear-gradient(135deg, ${gradient.from}, ${gradient.to})`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}
+                >
+                  {solution.title}
+                </h4>
+              </div>
+
+              {/* Features Grid with Stagger Animation */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {solution.features.map((feature, i) => (
+                  <div 
+                    key={i} 
+                    className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-xl transition-all duration-300 hover:bg-white/10"
+                    style={{
+                      opacity: isExpanded ? 1 : 0,
+                      transform: isExpanded ? 'translateY(0)' : 'translateY(10px)',
+                      transition: `all 0.3s ease-out ${i * 50}ms`
+                    }}
+                  >
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0" style={{ color: gradient.from }} />
+                    <span className="text-sm text-gray-300">{feature}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Result Card with Highlight */}
+              <div 
+                className="relative p-6 rounded-2xl border-2 overflow-hidden"
+                style={{
+                  background: `linear-gradient(135deg, ${gradient.from}15, ${gradient.to}15)`,
+                  borderColor: `${gradient.from}40`
+                }}
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-2xl uppercase tracking-widest" style={{ background: gradient.to }} />
+                <div className="relative flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Guaranteed Result</p>
+                    <p className="text-3xl font-black text-white">{solution.result.value}</p>
+                  </div>
+                  <div className="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
+                    <Zap className="w-8 h-8 text-yellow-400" fill="currentColor" />
+                  </div>
                 </div>
               </div>
             </div>
