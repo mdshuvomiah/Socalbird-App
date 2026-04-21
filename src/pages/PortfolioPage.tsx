@@ -137,11 +137,17 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
     },
   ];
 
+  const { getSectionContent } = useContent();
+  const cmsProjects = getSectionContent('portfolio', 'projects');
+  
+  // Use CMS data if available and valid, otherwise fallback to initial hardcoded layout
+  const activeProjects = (Array.isArray(cmsProjects) && cmsProjects.length > 0) ? cmsProjects : caseStudies;
+
   const filters = ['All', 'Web Development', 'App Development', 'AI Chatbot'];
   
   const filteredProjects = activeFilter === 'All' 
-    ? caseStudies 
-    : caseStudies.filter(study => study.category === activeFilter);
+    ? activeProjects 
+    : activeProjects.filter((study: any) => study.category === activeFilter);
 
   return (
     <div className="bg-[#0A0E27] text-white">
@@ -340,7 +346,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                               rel="noopener noreferrer"
                               className="group/visit px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/20 rounded-xl font-bold text-white transition-all flex items-center gap-3 hover:border-cyan-500/50"
                             >
-                              <span>Visit URL</span>
+                              <span>{ensureString(study.buttonText || 'Visit URL')}</span>
                               <ExternalLink className="w-5 h-5 group-hover/visit:translate-y-[-2px] group-hover/visit:translate-x-[2px] transition-transform text-cyan-400" />
                             </a>
                           )}
