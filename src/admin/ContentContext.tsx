@@ -757,6 +757,12 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     return (item && typeof item === 'object' && !Array.isArray(item));
   };
 
+  const ensureString = (val: any) => {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'object') return '';
+    return String(val);
+  };
+
   const loadFromDatabase = async (force = false) => {
     // Prevent double loading or loops
     if (isLoading && !force && Object.keys(content || {}).length > Object.keys(defaultContent || {}).length) {
@@ -787,7 +793,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
             .filter((p: any) => p !== null && typeof p === 'object')
             .map((p: any) => {
               // Already flat format? return as is
-              if (p.problemTitle) return p;
+              if (p.problemTitle && typeof p.problemTitle === 'string') return p;
 
               // Otherwise, migrate from various old structures
               const problem = p.problem || {};
@@ -795,16 +801,16 @@ export function ContentProvider({ children }: { children: ReactNode }) {
               const result = solution.result || {};
 
               return {
-                icon: p.icon || 'MessageSquare',
-                problemTitle: problem.title || p.title || p.problem || '',
-                problemStat: problem.stat || '',
-                problemStatLabel: problem.statLabel || '',
-                solutionLabel: p.solutionLabel || mergedContent.home?.whyChoose?.solutionLabel || 'Solution',
-                solutionTitle: solution.title || p.solution || '',
-                solutionDescription: solution.description || p.description || '',
+                icon: ensureString(p.icon || 'MessageSquare'),
+                problemTitle: ensureString(problem.title || p.title || p.problem || ''),
+                problemStat: ensureString(problem.stat || ''),
+                problemStatLabel: ensureString(problem.statLabel || ''),
+                solutionLabel: ensureString(p.solutionLabel || mergedContent.home?.whyChoose?.solutionLabel || 'Solution'),
+                solutionTitle: ensureString(solution.title || p.solution || ''),
+                solutionDescription: ensureString(solution.description || p.description || ''),
                 solutionFeatures: Array.isArray(solution.features) ? solution.features : (Array.isArray(p.features) ? p.features : []),
-                resultLabel: p.resultLabel || result.label || mergedContent.home?.whyChoose?.resultLabel || 'Guaranteed Result',
-                resultValue: result.value || result || ''
+                resultLabel: ensureString(p.resultLabel || result.label || mergedContent.home?.whyChoose?.resultLabel || 'Guaranteed Result'),
+                resultValue: ensureString(result.value || result || '')
               };
             });
         }

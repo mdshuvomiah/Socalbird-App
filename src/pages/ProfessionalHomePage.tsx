@@ -18,6 +18,12 @@ interface ProfessionalHomePageProps {
 
 export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) {
   const { getSectionContent } = useContent();
+
+  const ensureString = (val: any) => {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'object') return '';
+    return String(val);
+  };
   
   // Get content from context
   const heroContent = getSectionContent('home', 'hero') || {
@@ -507,14 +513,14 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-cyan-500/20 rounded-full mb-6">
-              <span className="text-sm font-medium text-gray-300">{testimonialsContent.sectionBadge}</span>
+              <span className="text-sm font-medium text-gray-300">{ensureString(testimonialsContent.sectionBadge)}</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              {testimonialsContent.sectionTitle}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{testimonialsContent.sectionTitleHighlight}</span>
+              {ensureString(testimonialsContent.sectionTitle)}
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{ensureString(testimonialsContent.sectionTitleHighlight)}</span>
             </h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              {testimonialsContent.sectionSubtitle}
+              {ensureString(testimonialsContent.sectionSubtitle)}
             </p>
           </div>
 
@@ -544,30 +550,30 @@ export function ProfessionalHomePage({ onNavigate }: ProfessionalHomePageProps) 
                 rating: 5,
                 result: '4.9★ Rating',
               },
-            ]).filter(Boolean).map((testimonial, index) => (
+            ]).filter(Boolean).map((testimonial: any, index) => (
               <div
                 key={index}
                 className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:border-cyan-500/30 transition-all"
               >
                 <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
+                  {[...Array(typeof testimonial.rating === 'number' ? testimonial.rating : 5)].map((_, i) => (
                     <Star key={i} size={16} className="fill-cyan-400 text-cyan-400" />
                   ))}
                 </div>
 
                 <p className="text-lg text-gray-300 leading-relaxed mb-6">
-                  "{testimonial.quote}"
+                  "{ensureString(testimonial.quote)}"
                 </p>
 
                 <div className="flex items-center justify-between pt-6 border-t border-white/10">
                   <div>
-                    <div className="font-semibold text-white">{testimonial.author}</div>
-                    <div className="text-sm text-gray-400">{testimonial.role}</div>
-                    <div className="text-xs text-cyan-400 mt-1">{testimonial.industry}</div>
+                    <div className="font-semibold text-white">{ensureString(testimonial.author)}</div>
+                    <div className="text-sm text-gray-400">{ensureString(testimonial.role)}</div>
+                    <div className="text-xs text-cyan-400 mt-1">{ensureString(testimonial.industry)}</div>
                   </div>
                   
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-cyan-400">{testimonial.result}</div>
+                    <div className="text-2xl font-bold text-cyan-400">{ensureString(testimonial.result)}</div>
                   </div>
                 </div>
               </div>

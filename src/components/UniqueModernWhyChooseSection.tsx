@@ -206,6 +206,12 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
   const { getSectionContent } = useContent();
   const content = getSectionContent('home', 'whyChoose') || {};
 
+  const ensureString = (val: any) => {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'object') return '';
+    return String(val);
+  };
+
   const getProblemIcon = (iconName?: string, index?: number) => {
     const iconProps = { className: "w-8 h-8 text-white", strokeWidth: 2 };
     switch (iconName) {
@@ -309,26 +315,26 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
     ? cmsProblems
         .filter((item: any) => item !== null && typeof item === 'object')
         .map((item: any, i: number) => {
-          const features = Array.isArray(item.solutionFeatures) 
+          const features = (Array.isArray(item.solutionFeatures) 
             ? item.solutionFeatures 
-            : (Array.isArray(item.features) ? item.features : []);
+            : (Array.isArray(item.features) ? item.features : [])).filter((f: any) => typeof f === 'string');
 
           return {
             problem: {
-              title: item.problemTitle || item.title || item.problem || 'Critical Issue',
-              stat: item.problemStat || item.stat || 'High',
-              statLabel: item.problemStatLabel || item.statLabel || 'Impact',
+              title: ensureString(item.problemTitle || item.title || item.problem || 'Critical Issue'),
+              stat: ensureString(item.problemStat || item.stat || 'High'),
+              statLabel: ensureString(item.problemStatLabel || item.statLabel || 'Impact'),
               icon: getProblemIcon(item.icon, i),
             },
-            solutionLabel: item.solutionLabel || content.solutionLabel || 'Solution',
-            resultLabel: item.resultLabel || content.resultLabel || 'Guaranteed Result',
+            solutionLabel: ensureString(item.solutionLabel || content.solutionLabel || 'Solution'),
+            resultLabel: ensureString(item.resultLabel || content.resultLabel || 'Guaranteed Result'),
             solution: {
-              title: item.solutionTitle || item.solution || 'Smart Solution',
-              description: item.solutionDescription || item.description || 'Efficient and reliable resolution for your business needs.',
+              title: ensureString(item.solutionTitle || item.solution || 'Smart Solution'),
+              description: ensureString(item.solutionDescription || item.description || 'Efficient and reliable resolution for your business needs.'),
               features: features,
               result: {
                 label: '',
-                value: item.resultValue || (item.result && typeof item.result === 'object' ? item.result.value : (typeof item.result === 'string' ? item.result : 'Standard Success'))
+                value: ensureString(item.resultValue || (item.result && typeof item.result === 'object' ? item.result.value : (typeof item.result === 'string' ? item.result : 'Standard Success')))
               }
             },
             gradient: gradientMap[i % gradientMap.length]

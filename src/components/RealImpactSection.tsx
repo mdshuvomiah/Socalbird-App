@@ -8,6 +8,12 @@ interface RealImpactSectionProps {
 
 export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
   const { getSectionContent } = useContent();
+
+  const ensureString = (val: any) => {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'object') return '';
+    return String(val);
+  };
   
   // Get content from context
   const content = getSectionContent('home', 'realImpact') || {
@@ -77,10 +83,10 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
               </div>
 
               <div className={`text-5xl font-black bg-gradient-to-r ${stat.color || 'from-cyan-400 to-blue-500'} bg-clip-text text-transparent mb-3 tracking-tight`}>
-                {stat.value}
+                {ensureString(stat.value)}
               </div>
-              <div className="text-base font-bold text-white mb-1">{stat.label}</div>
-              <div className="text-xs text-gray-500">{stat.sublabel}</div>
+              <div className="text-base font-bold text-white mb-1">{ensureString(stat.label)}</div>
+              <div className="text-xs text-gray-500">{ensureString(stat.sublabel)}</div>
             </div>
           );
           })}
@@ -101,23 +107,23 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                   </div>
                   
                   <h3 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
-                    {content.caseStudy1?.title || 'How an E-commerce Store Got'}
+                    {ensureString(content.caseStudy1?.title || 'How an E-commerce Store Got')}
                     <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent block">
-                      {content.caseStudy1?.titleHighlight || '3.5X More Revenue in 6 Months'}
+                      {ensureString(content.caseStudy1?.titleHighlight || '3.5X More Revenue in 6 Months')}
                     </span>
                   </h3>
 
                   <div className="mb-6">
                     <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">The Challenge</div>
                     <p className="text-lg text-gray-300 leading-relaxed">
-                      {content.caseStudy1?.challenge || 'A growing fashion e-commerce brand was losing 67% of customer inquiries because they couldn\'t respond fast enough. Abandoned carts were at an all-time high.'}
+                      {ensureString(content.caseStudy1?.challenge || 'A growing fashion e-commerce brand was losing 67% of customer inquiries because they couldn\'t respond fast enough. Abandoned carts were at an all-time high.')}
                     </p>
                   </div>
 
                   <div className="mb-8">
                     <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Our Solution</div>
                     <p className="text-lg text-gray-300 leading-relaxed">
-                      {content.caseStudy1?.solution || 'We deployed a Facebook Messenger + Instagram DM chatbot that handled product inquiries, captured leads, and sent abandoned cart reminders - all automatically.'}
+                      {ensureString(content.caseStudy1?.solution || 'We deployed a Facebook Messenger + Instagram DM chatbot that handled product inquiries, captured leads, and sent abandoned cart reminders - all automatically.')}
                     </p>
                   </div>
 
