@@ -715,13 +715,13 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     return content[pageId]?.[sectionId] || defaultContent[pageId]?.[sectionId] || {};
   };
 
-  const saveToDatabase = async () => {
+  const saveToDatabase = async (manualContent?: any) => {
     try {
       // Upsert the content to the database
       // We assume a singleton row or a specific ID = 1 for simplicity of this CMS
       const { error } = await supabase
         .from('site_content')
-        .upsert({ id: 1, content: content });
+        .upsert({ id: 1, content: manualContent || content });
 
       if (error) {
         console.error('Error saving to Supabase:', error);

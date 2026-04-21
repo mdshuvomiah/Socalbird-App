@@ -14,7 +14,7 @@ interface ContentEditorPageProps {
 }
 
 export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPageProps) {
-  const { getPageContent, updateContent, saveToDatabase, isLoading } = useContent();
+  const { content, getPageContent, updateContent, saveToDatabase, isLoading } = useContent();
   const [pageData, setPageData] = useState<any>({});
   const [activeSection, setActiveSection] = useState<string>('');
   const [showPreview, setShowPreview] = useState(false);
@@ -61,12 +61,24 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
 
   const handleSave = async () => {
     setIsSaving(true);
+    
+    // Create the latest content object by merging current pageData into the existing content context
+    // This bypasses the stale closure issue of React state during the same render turn.
+    const fullUpdatedContent = {
+      ...content,
+      [pageId]: {
+        ...(content[pageId] || {}),
+        ...pageData
+      }
+    };
+
+    // Update context state for UI consistency
     Object.keys(pageData).forEach(sectionId => {
       updateContent(pageId, sectionId, pageData[sectionId]);
     });
     
-    // Explicitly call saveToDatabase
-    const success = await saveToDatabase();
+    // Explicitly call saveToDatabase with the computed latest state
+    const success = await saveToDatabase(fullUpdatedContent);
     setIsSaving(false);
     
     if (success) {

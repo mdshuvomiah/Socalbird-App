@@ -282,22 +282,31 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
 
   const cmsProblems = content?.problems;
   const problems = (Array.isArray(cmsProblems) && cmsProblems.length > 0)
-    ? cmsProblems.map((item: any, i: number) => ({
-        ...item,
-        problem: {
-           ...item.problem,
-           icon: iconMap[i % iconMap.length],
-        },
-        solution: {
-          ...item.solution,
-          features: Array.isArray(item.solution?.features) ? item.solution.features : [],
-          result: {
-            label: item.solution?.result?.label || 'Typical Result',
-            value: item.solution?.result?.value || 'High Impact'
-          }
-        },
-        gradient: gradientMap[i % gradientMap.length]
-      }))
+    ? cmsProblems.map((item: any, i: number) => {
+        // Normalize the item structure: handle both nested and flat formats
+        const probObj = (item.problem && typeof item.problem === 'object') ? item.problem : item;
+        const solObj = (item.solution && typeof item.solution === 'object') ? item.solution : item;
+
+        return {
+          ...item,
+          problem: {
+            title: probObj.title || item.problem || 'Critical Issue',
+            stat: probObj.stat || 'High',
+            statLabel: probObj.statLabel || 'Impact',
+            icon: iconMap[i % iconMap.length],
+          },
+          solution: {
+            title: solObj.title || item.solution || 'Smart Solution',
+            description: solObj.description || 'Efficient and reliable resolution for your business needs.',
+            features: Array.isArray(solObj.features) ? solObj.features : [],
+            result: {
+              label: solObj.result?.label || 'Typical Result',
+              value: solObj.result?.value || solObj.result || 'Standard Success'
+            }
+          },
+          gradient: gradientMap[i % gradientMap.length]
+        };
+      })
     : defaultProblems;
 
   // New dynamic fields
