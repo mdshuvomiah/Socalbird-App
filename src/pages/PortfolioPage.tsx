@@ -184,6 +184,11 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                         </div>
 
                         {/* Tech Stack */}
+                        <div>
+                          <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                            <Code className="w-5 h-5 text-cyan-400" />
+                            Tech Stack
+                          </h3>
                           <div className="flex flex-wrap gap-2">
                             {(Array.isArray(study.techStack) ? study.techStack : Array.isArray(study.technologies) ? study.technologies : []).filter(Boolean).map((tech: any, i: number) => (
                               <span
