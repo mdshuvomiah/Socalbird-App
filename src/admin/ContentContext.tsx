@@ -99,46 +99,40 @@ const defaultContent: ContentData = {
       resultLabel: 'Guaranteed Result',
       problems: [
         {
-          problem: {
-            title: 'Missing Customer Messages',
-            stat: '67%',
-            statLabel: 'of messages go unanswered'
-          },
-          solution: {
-            title: 'AI Chatbot Automation',
-            description: '24/7 automated responses on Facebook, WhatsApp, Instagram. Every missed lead is a missed opportunity for growth. While you sleep, potential customers are searching, comparing, and deciding.',
-            features: ['Instant replies', 'Lead capture', 'Order tracking', 'Multi-platform'],
-            result: { label: 'Increase', value: '300% more leads' }
-          },
-          icon: 'MessageSquare'
+          icon: 'MessageSquare',
+          problemTitle: 'Missing Customer Messages',
+          problemStat: '67%',
+          problemStatLabel: 'of messages go unanswered',
+          solutionLabel: 'Solution',
+          solutionTitle: 'AI Chatbot Automation',
+          solutionDescription: '24/7 automated responses on Facebook, WhatsApp, Instagram. Every missed lead is a missed opportunity for growth.',
+          solutionFeatures: ['Instant replies', 'Lead capture', 'Order tracking', 'Multi-platform'],
+          resultLabel: 'Guaranteed Result',
+          resultValue: '300% more leads'
         },
         {
-          problem: {
-            title: 'Slow, Outdated Website',
-            stat: '53%',
-            statLabel: 'leave if load time > 3s'
-          },
-          solution: {
-            title: 'Modern Web Development',
-            description: 'Lightning-fast, SEO-optimized websites that rank on Google. We build websites that connect instantly, earn trust, and turn those quiet overnight visits into real conversations and sales.',
-            features: ['<100ms load', 'Mobile-first', 'SEO optimized', 'CMS control'],
-            result: { label: 'Performance', value: '2X better ranking' }
-          },
-          icon: 'Code'
+          icon: 'Code',
+          problemTitle: 'Slow, Outdated Website',
+          problemStat: '53%',
+          problemStatLabel: 'leave if load time > 3s',
+          solutionLabel: 'Solution',
+          solutionTitle: 'Modern Web Development',
+          solutionDescription: 'Lightning-fast, SEO-optimized websites that rank on Google. We build websites that connect instantly.',
+          solutionFeatures: ['<100ms load', 'Mobile-first', 'SEO optimized', 'CMS control'],
+          resultLabel: 'Guaranteed Result',
+          resultValue: '2X better ranking'
         },
         {
-          problem: {
-            title: 'No Mobile Presence',
-            stat: '85%',
-            statLabel: 'prefer mobile apps'
-          },
-          solution: {
-            title: 'Native Mobile Apps',
-            description: 'Professional iOS & Android apps with seamless UX. In a mobile-first world, your business needs to be in your customers\' pockets, not just on their desktops.',
-            features: ['iOS + Android', 'Push notifications', 'Offline mode', 'Payment ready'],
-            result: { label: 'Satisfaction', value: '4.9★ rating' }
-          },
-          icon: 'Smartphone'
+          icon: 'Smartphone',
+          problemTitle: 'No Mobile Presence',
+          problemStat: '85%',
+          problemStatLabel: 'prefer mobile apps',
+          solutionLabel: 'Solution',
+          solutionTitle: 'Native Mobile Apps',
+          solutionDescription: 'Professional iOS & Android apps with seamless UX. In a mobile-first world, your business needs to be in your pockets.',
+          solutionFeatures: ['iOS + Android', 'Push notifications', 'Offline mode', 'Payment ready'],
+          resultLabel: 'Guaranteed Result',
+          resultValue: '4.9★ rating'
         }
       ],
       floatingStats: [
@@ -781,6 +775,33 @@ export function ContentProvider({ children }: { children: ReactNode }) {
       if (data && data.content) {
         // Merge database content with defaultContent so new sections appear
         const mergedContent = deepMerge(data.content, defaultContent);
+
+        // Perform migrations for Why Choose problems to ensure all fields are visible in the admin panel
+        if (mergedContent.home?.whyChoose?.problems) {
+          mergedContent.home.whyChoose.problems = mergedContent.home.whyChoose.problems.map((p: any) => {
+            // Already flat format? return as is
+            if (p.problemTitle) return p;
+
+            // Otherwise, migrate from various old structures
+            const problem = p.problem || {};
+            const solution = p.solution || {};
+            const result = solution.result || {};
+
+            return {
+              icon: p.icon || 'MessageSquare',
+              problemTitle: problem.title || p.title || p.problem || '',
+              problemStat: problem.stat || '',
+              problemStatLabel: problem.statLabel || '',
+              solutionLabel: p.solutionLabel || mergedContent.home.whyChoose.solutionLabel || 'Solution',
+              solutionTitle: solution.title || p.solution || '',
+              solutionDescription: solution.description || p.description || '',
+              solutionFeatures: Array.isArray(solution.features) ? solution.features : (p.features || []),
+              resultLabel: p.resultLabel || result.label || mergedContent.home.whyChoose.resultLabel || 'Guaranteed Result',
+              resultValue: result.value || result || ''
+            };
+          });
+        }
+
         setContent(mergedContent);
         setIsLoading(false);
         return true;

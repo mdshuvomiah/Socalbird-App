@@ -307,25 +307,22 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
   const cmsProblems = content?.problems;
   const problems = (Array.isArray(cmsProblems) && cmsProblems.length > 0)
     ? cmsProblems.map((item: any, i: number) => {
-        // Normalize the item structure: handle both nested and flat formats
-        const probObj = (item.problem && typeof item.problem === 'object') ? item.problem : item;
-        const solObj = (item.solution && typeof item.solution === 'object') ? item.solution : item;
-
         return {
-          ...item,
           problem: {
-            title: probObj.title || item.problem || 'Critical Issue',
-            stat: probObj.stat || 'High',
-            statLabel: probObj.statLabel || 'Impact',
+            title: item.problemTitle || item.title || item.problem || 'Critical Issue',
+            stat: item.problemStat || item.stat || 'High',
+            statLabel: item.problemStatLabel || item.statLabel || 'Impact',
             icon: getProblemIcon(item.icon, i),
           },
+          solutionLabel: item.solutionLabel || content.solutionLabel || 'Solution',
+          resultLabel: item.resultLabel || content.resultLabel || 'Guaranteed Result',
           solution: {
-            title: solObj.title || item.solution || 'Smart Solution',
-            description: solObj.description || 'Efficient and reliable resolution for your business needs.',
-            features: Array.isArray(solObj.features) ? solObj.features : [],
+            title: item.solutionTitle || item.solution || 'Smart Solution',
+            description: item.solutionDescription || item.description || 'Efficient and reliable resolution for your business needs.',
+            features: Array.isArray(item.solutionFeatures) ? item.solutionFeatures : (item.features || []),
             result: {
-              label: solObj.result?.label || '',
-              value: solObj.result?.value || solObj.result || 'Standard Success'
+              label: '',
+              value: item.resultValue || item.result?.value || item.result || 'Standard Success'
             }
           },
           gradient: gradientMap[i % gradientMap.length]
@@ -441,8 +438,8 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
               solution={item.solution}
               gradient={item.gradient}
               index={index}
-              solutionLabel={content.solutionLabel}
-              resultLabel={content.resultLabel}
+              solutionLabel={item.solutionLabel}
+              resultLabel={item.resultLabel}
             />
           ))}
         </div>
