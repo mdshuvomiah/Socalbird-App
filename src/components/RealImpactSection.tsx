@@ -56,7 +56,7 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
             { value: '50+', label: 'Active Clients', sublabel: 'Still working with us', icon: Users, bgColor: 'from-blue-500/20 to-purple-500/20', color: 'from-blue-400 to-purple-500' },
             { value: '98%', label: 'Client Retention', sublabel: 'They come back', icon: Star, bgColor: 'from-purple-500/20 to-pink-500/20', color: 'from-purple-400 to-pink-500' },
             { value: '4.9★', label: 'Average Rating', sublabel: 'Client satisfaction', icon: TrendingUp, bgColor: 'from-pink-500/20 to-orange-500/20', color: 'from-pink-400 to-orange-500' }
-          ]).map((stat, i) => {
+          ]).filter(Boolean).map((stat: any, i: number) => {
             const IconComponent = stat.icon || Award;
             return (
             <div
@@ -222,7 +222,7 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                 </div>
 
                 <div className="flex gap-2 mb-6">
-                  {(content.caseStudy2?.tags || ['Next.js', 'Node.js', 'MongoDB']).map((tech: string, i: number) => (
+                  {(Array.isArray(content.caseStudy2?.tags) ? content.caseStudy2.tags : ['Next.js', 'Node.js', 'MongoDB']).filter(Boolean).map((tech: string, i: number) => (
                     <div key={i} className="px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-lg text-xs font-medium text-purple-300">
                       {tech}
                     </div>
@@ -272,7 +272,7 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                 </div>
 
                 <div className="flex gap-2 mb-6">
-                  {(content.caseStudy3?.tags || ['WhatsApp API', 'Auto Orders', 'Delivery Track']).map((tech: string, i: number) => (
+                  {(Array.isArray(content.caseStudy3?.tags) ? content.caseStudy3.tags : ['WhatsApp API', 'Auto Orders', 'Delivery Track']).filter(Boolean).map((tech: string, i: number) => (
                     <div key={i} className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-xs font-medium text-emerald-300">
                       {tech}
                     </div>

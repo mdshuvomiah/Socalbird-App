@@ -113,7 +113,7 @@ function CreativeServiceCard({ icon, title, subtitle, description, features, pop
 
             {/* Features Grid - 2 Columns */}
             <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-8">
-              {features.map((feature, idx) => (
+              {Array.isArray(features) && features.filter(Boolean).map((feature, idx) => (
                 <div 
                   key={idx}
                   className="flex items-start gap-2 opacity-0 animate-slide-in-left"
@@ -241,7 +241,7 @@ export function CreativeServicesSection({ onNavigate }: CreativeServicesSectionP
   const paths = ["/ai-chatbot-solutions", "/web-development", "/app-development"];
   
   const services = (Array.isArray(cmsServices) && cmsServices.length > 0)
-    ? cmsServices.map((item: any, i: number) => ({
+    ? cmsServices.filter(Boolean).map((item: any, i: number) => ({
         ...item,
         features: Array.isArray(item.features) ? item.features : [],
         icon: iconMap[i % iconMap.length],
@@ -301,7 +301,7 @@ export function CreativeServicesSection({ onNavigate }: CreativeServicesSectionP
               { label: 'Projects Delivered', value: '500+', icon: TrendingUp },
               { label: 'Active Clients', value: '200+', icon: Sparkles },
               { label: 'Success Rate', value: '99%', icon: Zap },
-            ].map((stat, idx) => (
+            ].filter(Boolean).map((stat, idx) => (
               <div key={idx} className="group flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl hover:border-cyan-500/30 hover:bg-white/10 transition-all">
                 <div className="w-10 h-10 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl flex items-center justify-center">
                   <stat.icon className="w-5 h-5 text-cyan-400" />
