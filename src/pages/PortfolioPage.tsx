@@ -7,132 +7,31 @@ interface PortfolioPageProps {
   onNavigate: (page: string) => void;
 }
 
+const ensureString = (val: any) => {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'object') return '';
+  return String(val);
+};
+
+const getIconComponent = (iconName: any) => {
+  if (typeof iconName !== 'string') return iconName || Award;
+  const icons: any = { TrendingUp, Award, Target, Zap, CheckCircle, Star, Code, Smartphone, Bot, Layers };
+  return icons[iconName] || Award;
+};
+
 export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
   const [activeFilter, setActiveFilter] = useState('All');
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const { getSectionContent } = useContent();
 
-  const caseStudies = [
-    {
-      id: 1,
-      title: 'Fashion Store Automation',
-      category: 'AI Chatbot',
-      industry: 'Ecommerce',
-      icon: Bot,
-      color: 'from-blue-600 to-cyan-500',
-      accentColor: 'cyan',
-      problem: 'An online fashion retailer was struggling to handle customer inquiries across Facebook Messenger and Instagram. Response times were slow, and many potential customers were being lost due to delayed responses.',
-      solution: 'Implemented AI chatbots on both Facebook Messenger and Instagram DM. The bots handled FAQs, product inquiries, size recommendations, and order tracking. Integrated with their inventory system for real-time product availability.',
-      techStack: ['Facebook Messenger API', 'Instagram Graph API', 'AI/NLP', 'Google Sheets', 'Zapier'],
-      results: [
-        { metric: '300%', label: 'Increase in response rate', icon: TrendingUp },
-        { metric: '24/7', label: 'Customer support coverage', icon: Zap },
-        { metric: '45%', label: 'Reduction in support costs', icon: Target },
-        { metric: '2.5x', label: 'More qualified leads', icon: Award },
-      ],
-      highlights: ['Real-time Inventory Sync', 'Multi-language Support', 'Lead Qualification']
-    },
-    {
-      id: 2,
-      title: 'Project Management SaaS Platform',
-      category: 'Web Development',
-      industry: 'SaaS',
-      icon: Code,
-      color: 'from-purple-600 to-pink-500',
-      accentColor: 'purple',
-      problem: 'A startup needed a scalable project management platform to compete with existing solutions. They required real-time collaboration, task management, and team communication features.',
-      solution: 'Built a full-stack web application using Next.js and Node.js with real-time websocket connections. Implemented drag-and-drop task boards, team chat, file sharing, and comprehensive analytics.',
-      techStack: ['Next.js', 'Node.js', 'PostgreSQL', 'Redis', 'Socket.io', 'AWS'],
-      results: [
-        { metric: '10,000+', label: 'Active users', icon: TrendingUp },
-        { metric: '99.9%', label: 'Uptime', icon: CheckCircle },
-        { metric: '<100ms', label: 'Average response time', icon: Zap },
-        { metric: '$500K', label: 'ARR in year 1', icon: Award },
-      ],
-      highlights: ['Real-time Collaboration', 'Drag & Drop Interface', 'Advanced Analytics']
-    },
-    {
-      id: 3,
-      title: 'Telemedicine Mobile App',
-      category: 'App Development',
-      industry: 'Healthcare',
-      icon: Smartphone,
-      color: 'from-green-600 to-teal-500',
-      accentColor: 'teal',
-      problem: 'A healthcare provider needed a HIPAA-compliant mobile app for virtual consultations. The app needed to support video calls, prescription management, and secure medical records.',
-      solution: 'Developed native iOS and Android apps with video consultation, appointment booking, secure messaging, prescription tracking, and payment processing. Implemented end-to-end encryption for all communications.',
-      techStack: ['Swift', 'Kotlin', 'WebRTC', 'Firebase', 'Stripe', 'AWS'],
-      results: [
-        { metric: '4.8★', label: 'Average app rating', icon: Star },
-        { metric: '50,000+', label: 'Downloads', icon: TrendingUp },
-        { metric: '5,000+', label: 'Monthly consultations', icon: Target },
-        { metric: 'HIPAA', label: 'Compliant', icon: CheckCircle },
-      ],
-      highlights: ['End-to-End Encryption', 'Video Consultations', 'HIPAA Compliant']
-    },
-    {
-      id: 4,
-      title: 'Restaurant WhatsApp Ordering Bot',
-      category: 'AI Chatbot',
-      industry: 'Food & Beverage',
-      icon: Bot,
-      color: 'from-orange-600 to-red-500',
-      accentColor: 'orange',
-      problem: 'A restaurant chain wanted to automate order taking via WhatsApp to reduce phone call volume and streamline the ordering process during peak hours.',
-      solution: 'Built a WhatsApp chatbot that handles menu browsing, order taking, payment collection, and order tracking. Integrated with their POS system for real-time menu updates and order management.',
-      techStack: ['WhatsApp Business API', 'Node.js', 'MongoDB', 'Payment Gateway', 'POS Integration'],
-      results: [
-        { metric: '60%', label: 'Reduction in phone orders', icon: TrendingUp },
-        { metric: '35%', label: 'Increase in average order value', icon: Award },
-        { metric: '90%', label: 'Customer satisfaction', icon: Star },
-        { metric: '200+', label: 'Daily orders via bot', icon: Target },
-      ],
-      highlights: ['POS Integration', 'Payment Processing', 'Order Tracking']
-    },
-    {
-      id: 5,
-      title: 'Real Estate Listing Platform',
-      category: 'Web Development',
-      industry: 'Real Estate',
-      icon: Code,
-      color: 'from-blue-600 to-indigo-500',
-      accentColor: 'indigo',
-      problem: 'A real estate agency needed a modern platform to showcase properties with advanced search, virtual tours, and agent management features.',
-      solution: 'Developed a WordPress-based platform with custom plugins for property management, advanced filtering, Google Maps integration, virtual tour support, and lead capture forms.',
-      techStack: ['WordPress', 'PHP', 'MySQL', 'Google Maps API', 'AWS S3'],
-      results: [
-        { metric: '1,500+', label: 'Property listings', icon: Layers },
-        { metric: '250%', label: 'Increase in leads', icon: TrendingUp },
-        { metric: '80%', label: 'Mobile traffic', icon: Target },
-        { metric: '3.2min', label: 'Avg. session duration', icon: Award },
-      ],
-      highlights: ['Virtual Tours', 'Advanced Search', 'Lead Capture']
-    },
-    {
-      id: 6,
-      title: 'Fitness Tracking Mobile App',
-      category: 'App Development',
-      industry: 'Health & Fitness',
-      icon: Smartphone,
-      color: 'from-pink-600 to-rose-500',
-      accentColor: 'pink',
-      problem: 'A fitness startup wanted to create an app that helps users track workouts, set goals, and connect with personal trainers.',
-      solution: 'Built native iOS and Android apps with workout tracking, progress analytics, social features, trainer marketplace, and video exercise library. Integrated with wearable devices.',
-      techStack: ['React Native', 'Node.js', 'MongoDB', 'HealthKit', 'Google Fit'],
-      results: [
-        { metric: '4.7★', label: 'App store rating', icon: Star },
-        { metric: '100K+', label: 'Active users', icon: TrendingUp },
-        { metric: '85%', label: '30-day retention', icon: Target },
-        { metric: '500+', label: 'Certified trainers', icon: Award },
-      ],
-      highlights: ['Wearable Integration', 'Social Features', 'Video Library']
-    },
-  ];
-
+  const portfolioContent = getSectionContent('portfolio', '');
+  
+  const dynamicProjects = (Array.isArray(portfolioContent?.projects) ? portfolioContent.projects : []).filter(Boolean);
   const filters = ['All', 'Web Development', 'App Development', 'AI Chatbot'];
   
-  const filteredProjects = activeFilter === 'All' 
-    ? caseStudies 
-    : caseStudies.filter(study => study.category === activeFilter);
+  const filteredProjects = (activeFilter === 'All' 
+    ? dynamicProjects 
+    : dynamicProjects.filter((project: any) => ensureString(project.category) === activeFilter)).filter(Boolean);
 
   return (
     <div className="bg-[#0A0E27] text-white">
@@ -228,25 +127,27 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
       <section className="py-24 px-4">
         <div className="container mx-auto max-w-7xl">
           <div className="space-y-12">
-            {filteredProjects.map((study, index) => {
-              const Icon = getIconComponent(study.icon || (study.category === 'AI Chatbot' ? 'Bot' : study.category === 'Web Development' ? 'Code' : 'Smartphone'));
+            {(Array.isArray(filteredProjects) ? filteredProjects : []).filter(Boolean).map((study: any, index: number) => {
+              const currentCategory = ensureString(study.category);
+              const currentIndustry = ensureString(study.industry);
+              const Icon = getIconComponent(study.icon || (currentCategory === 'AI Chatbot' ? 'Bot' : currentCategory === 'Web Development' ? 'Code' : 'Smartphone'));
               const isEven = index % 2 === 0;
-              const accentColorClass = study.accentColor || (study.category === 'AI Chatbot' ? 'cyan' : study.category === 'Web Development' ? 'purple' : 'teal');
-              const gradientColorClass = study.color || (study.category === 'AI Chatbot' ? 'from-blue-600 to-cyan-500' : study.category === 'Web Development' ? 'from-purple-600 to-pink-500' : 'from-green-600 to-teal-500');
+              const accentColorClass = ensureString(study.accentColor || (currentCategory === 'AI Chatbot' ? 'cyan' : currentCategory === 'Web Development' ? 'purple' : 'teal'));
+              const gradientColorClass = ensureString(study.color || (currentCategory === 'AI Chatbot' ? 'from-blue-600 to-cyan-500' : currentCategory === 'Web Development' ? 'from-purple-600 to-pink-500' : 'from-green-600 to-teal-500'));
               
               return (
                 <div
-                  key={study.id}
+                  key={ensureString(study.id || index)}
                   className="group relative rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-cyan-500/30 transition-all duration-500 overflow-hidden"
-                  onMouseEnter={() => setHoveredProject(study.id)}
+                  onMouseEnter={() => setHoveredProject(Number(study.id) || index)}
                   onMouseLeave={() => setHoveredProject(null)}
                 >
                   {/* Top Accent Line */}
-                  <div className={`h-1 bg-gradient-to-r ${study.color}`} />
+                  <div className={`h-1 bg-gradient-to-r ${gradientColorClass}`} />
 
                   {/* Hover Glow */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className={`absolute inset-0 bg-gradient-to-br ${study.color} opacity-5`} />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradientColorClass} opacity-5`} />
                   </div>
 
                   <div className="relative p-8 lg:p-12">
@@ -270,10 +171,10 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
 
                           {/* Highlights */}
                           <div className="flex flex-wrap gap-2">
-                            {Array.isArray(study.highlights) && study.highlights.filter(Boolean).map((highlight: string, i: number) => (
+                            {Array.isArray(study.highlights) && study.highlights.filter(Boolean).map((highlight: any, i: number) => (
                               <div key={i} className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg">
                                 <CheckCircle className="w-3 h-3 text-cyan-400" />
-                                <span className="text-xs text-gray-400">{highlight}</span>
+                                <span className="text-xs text-gray-400">{ensureString(highlight)}</span>
                               </div>
                             ))}
                           </div>
@@ -295,18 +196,13 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                         </div>
 
                         {/* Tech Stack */}
-                        <div>
-                          <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                            <Code className="w-5 h-5 text-cyan-400" />
-                            Tech Stack
-                          </h3>
                           <div className="flex flex-wrap gap-2">
-                            {(Array.isArray(study.techStack) ? study.techStack : Array.isArray(study.technologies) ? study.technologies : []).filter(Boolean).map((tech: string, i: number) => (
+                            {(Array.isArray(study.techStack) ? study.techStack : Array.isArray(study.technologies) ? study.technologies : []).filter(Boolean).map((tech: any, i: number) => (
                               <span
                                 key={i}
                                 className="px-4 py-2 bg-gradient-to-r from-white/5 to-white/[0.02] border border-white/20 rounded-xl text-sm text-gray-300 hover:border-cyan-500/30 transition-colors"
                               >
-                                {tech}
+                                {ensureString(tech)}
                               </span>
                             ))}
                           </div>
@@ -324,9 +220,9 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                             </div>
                           </button>
 
-                          {study.visitUrl && study.visitUrl !== '' && (
+                          {study.visitUrl && ensureString(study.visitUrl) !== '' && (
                             <a
-                              href={study.visitUrl}
+                              href={ensureString(study.visitUrl)}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="group/visit px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/20 rounded-xl font-bold text-white transition-all flex items-center gap-3 hover:border-cyan-500/50"
@@ -426,7 +322,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[
+            {(Array.isArray(portfolioContent?.testimonials) ? portfolioContent.testimonials : [
               {
                 quote: "SocalBird transformed our customer service. The AI chatbot handles 80% of inquiries automatically. Best investment we've made!",
                 author: "Sarah Johnson",
@@ -448,32 +344,32 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                 rating: 5,
                 color: 'from-purple-500 to-pink-500'
               }
-            ].map((testimonial, i) => (
+            ]).filter(Boolean).map((testimonial: any, i: number) => (
               <div
                 key={i}
                 className="relative rounded-3xl p-8 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-cyan-500/30 transition-all duration-300 group"
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${testimonial.color} opacity-5`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${ensureString(testimonial.color || 'from-cyan-500 to-blue-500')} opacity-5`} />
                 </div>
 
                 <div className="relative space-y-6">
                   {/* Stars */}
                   <div className="flex gap-1">
-                    {[...Array(testimonial.rating)].map((_, j) => (
+                    {[...Array(Number(testimonial.rating) || 5)].map((_, j) => (
                       <Star key={j} className="w-5 h-5 fill-yellow-500 text-yellow-500" />
                     ))}
                   </div>
 
                   {/* Quote */}
                   <p className="text-lg text-gray-300 leading-relaxed italic">
-                    "{testimonial.quote}"
+                    "{ensureString(testimonial.quote)}"
                   </p>
 
                   {/* Author */}
                   <div className="pt-4 border-t border-white/10">
-                    <div className="font-bold text-white">{testimonial.author}</div>
-                    <div className="text-sm text-gray-500">{testimonial.role}</div>
+                    <div className="font-bold text-white">{ensureString(testimonial.author)}</div>
+                    <div className="text-sm text-gray-500">{ensureString(testimonial.role)}</div>
                   </div>
                 </div>
               </div>
