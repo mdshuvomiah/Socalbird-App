@@ -1,4 +1,5 @@
-import { TrendingUp, Award, Target, Zap, CheckCircle, Star, Code, Smartphone, Bot, Layers, Users, MessageSquare, MessageCircle, ArrowRight, ExternalLink } from 'lucide-react';
+import { Button } from './ui/button';
+import { TrendingUp, Award, Users, Star, MessageSquare, ChevronRight, Code, MessageCircle, ArrowRight, ExternalLink } from 'lucide-react';
 import { useContent } from '../admin/ContentContext';
 
 interface RealImpactSectionProps {
@@ -7,205 +8,379 @@ interface RealImpactSectionProps {
 
 export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
   const { getSectionContent } = useContent();
-  const rawContent = getSectionContent('home', 'realImpact');
 
-  // Hardened local helper
-  const __s = (val: any) => (val === null || val === undefined || typeof val === 'object') ? '' : String(val);
-
-  const content = rawContent || {
+  const ensureString = (val: any) => {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'object') return '';
+    return String(val);
+  };
+  
+  // Get content from context
+  const content = getSectionContent('home', 'realImpact') || {
     badge: 'Real Results, Real Growth',
     title: 'See What\'s Possible When',
     titleHighlight: 'Technology Meets Strategy',
-    subtitle: 'From startups to growing businesses - we\'ve helped companies 3X their revenue, automate support, and scale faster'
+    subtitle: 'From startups to growing businesses - we\'ve helped companies 3X their revenue, automate support, and scale faster',
+    stats: [],
+    caseStudy1: {},
+    caseStudy2: {},
+    caseStudy3: {},
+    ctaText: "Your Success Story Starts Here",
+    ctaSubtext: "We've helped 50+ businesses grow. Let's write your chapter next."
   };
 
-  const ICON_MAP: any = { TrendingUp, Award, Target, Zap, CheckCircle, Star, Code, Smartphone, Bot, Layers, Users, MessageSquare, MessageCircle, ArrowRight, ExternalLink };
-
-  const defaultStats = [
-    { value: '100+', label: 'Projects Delivered', sublabel: 'Across 6 industries' },
-    { value: '50+', label: 'Active Clients', sublabel: 'Still working with us' },
-    { value: '98%', label: 'Client Retention', sublabel: 'They come back' },
-    { value: '4.9★', label: 'Average Rating', sublabel: 'Client satisfaction' }
-  ];
-
-  const stats = Array.isArray(content.stats) ? content.stats : defaultStats;
-
-  const caseStudies = [
-    {
-      badge: __s(content.caseStudy1?.badge || 'Case Study #1'),
-      title: __s(content.caseStudy1?.title || 'How an E-commerce Store Got'),
-      titleHighlight: __s(content.caseStudy1?.titleHighlight || '3.5X More Revenue in 6 Months'),
-      image: content.caseStudy1?.imageUrl || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80',
-      challenge: __s(content.caseStudy1?.challenge || 'A growing fashion e-commerce brand was losing 67% of customer inquiries because they couldn\'t respond fast enough.'),
-      solution: __s(content.caseStudy1?.solution || 'We deployed a Facebook Messenger + Instagram DM chatbot that handled inquiries and captured leads automatically.'),
-      results: content.caseStudy1?.results || { main: '+385%', mainLabel: 'Growth Guaranteed' },
-      icon: 'TrendingUp'
-    },
-    {
-      badge: __s(content.caseStudy2?.badge || 'Case Study #2'),
-      title: __s(content.caseStudy2?.title || 'Automating Customer Support'),
-      titleHighlight: __s(content.caseStudy2?.titleHighlight || 'for a Scaling SaaS Platform'),
-      image: content.caseStudy2?.imageUrl || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80',
-      challenge: __s(content.caseStudy2?.challenge || 'A technical platform was spending 40+ hours weekly on repetitive tickets, slowing down their development team.'),
-      solution: __s(content.caseStudy2?.solution || 'We integrated an AI support agent that resolved 70% of common issues instantly and triaged complex ones.'),
-      results: content.caseStudy2?.results || { main: '70%', mainLabel: 'Auto-Resolved' },
-      icon: 'Zap'
-    }
-  ];
+  const getIconComponent = (iconName: any) => {
+    if (typeof iconName !== 'string') return iconName || Award;
+    const icons: any = { TrendingUp, Award, Users, Star, MessageSquare, Code, MessageCircle };
+    return icons[iconName] || Award;
+  };
 
   return (
-    <section className="py-24 bg-gradient-to-br from-[#0A0E27] via-[#0D1233] to-[#0A0E27] relative overflow-hidden">
-      {/* Background Orbs */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-cyan-500/20 rounded-full blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/20 rounded-full blur-[120px] animate-pulse"></div>
+    <section className="py-24 px-4 border-t border-white/10 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-cyan-500 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500 rounded-full blur-3xl animate-pulse" />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-full mb-6">
-              <TrendingUp className="text-cyan-400" size={16} />
-              <span className="text-sm font-medium text-gray-300">{__s(content.badge)}</span>
-            </div>
-            
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 tracking-tight text-white leading-tight">
-              {__s(content.title)} <br />
-              <span className="text-cyan-400 italic">
-                {__s(content.titleHighlight)}
-              </span>
-            </h2>
-            
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              {__s(content.subtitle)}
-            </p>
+      <div className="container mx-auto max-w-7xl relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-full mb-6">
+            <TrendingUp className="text-cyan-400" size={18} />
+            <span className="text-sm font-semibold text-cyan-300">{content.badge}</span>
           </div>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            {content.title}
+            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent block mt-2">
+              {content.titleHighlight}
+            </span>
+          </h2>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            {content.subtitle}
+          </p>
+        </div>
 
-          {/* Key Metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-24">
-            {stats.map((stat: any, idx: number) => (
-              <div key={idx} className="p-8 bg-white/5 border border-white/10 rounded-[2rem] hover:border-cyan-500/30 transition-all duration-300 group">
-                <div className="text-4xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">{__s(stat.value)}</div>
-                <div className="text-sm font-bold text-cyan-400 uppercase tracking-widest mb-1">{__s(stat.label)}</div>
-                <div className="text-xs text-gray-500">{__s(stat.sublabel)}</div>
+        {/* Stats Counter - Animated */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+          {(Array.isArray(content.stats) && content.stats.length > 0 ? content.stats : [
+            { value: '100+', label: 'Projects Delivered', sublabel: 'Across 6 industries', icon: Award, bgColor: 'from-cyan-500/20 to-blue-500/20', color: 'from-cyan-400 to-blue-500' },
+            { value: '50+', label: 'Active Clients', sublabel: 'Still working with us', icon: Users, bgColor: 'from-blue-500/20 to-purple-500/20', color: 'from-blue-400 to-purple-500' },
+            { value: '98%', label: 'Client Retention', sublabel: 'They come back', icon: Star, bgColor: 'from-purple-500/20 to-pink-500/20', color: 'from-purple-400 to-pink-500' },
+            { value: '4.9★', label: 'Average Rating', sublabel: 'Client satisfaction', icon: TrendingUp, bgColor: 'from-pink-500/20 to-orange-500/20', color: 'from-pink-400 to-orange-500' }
+          ]).filter(Boolean).map((stat: any, i: number) => {
+            const IconComponent = getIconComponent(stat.icon);
+            return (
+            <div
+              key={i}
+              className="group relative bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 hover:scale-105 transition-all duration-300 hover:border-cyan-500/50"
+            >
+              {/* Glow Effect on Hover */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${stat.bgColor || 'from-cyan-500/20 to-blue-500/20'} opacity-0 group-hover:opacity-100 rounded-3xl blur-xl transition-opacity -z-10`} />
+              
+              <div className={`w-14 h-14 bg-gradient-to-br ${stat.bgColor || 'from-cyan-500/20 to-blue-500/20'} rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-6 transition-transform`}>
+                <IconComponent className="text-white" size={28} />
               </div>
-            ))}
-          </div>
 
-          {/* Featured Case Studies */}
-          <div className="space-y-20">
-            {caseStudies.map((study, idx) => {
-              const Icon = ICON_MAP[study.icon] || TrendingUp;
-              return (
-                <div key={idx} className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 items-center`}>
-                  {/* Image Part */}
-                  <div className="lg:w-1/2 relative group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-blue-600/20 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                    <div className="relative rounded-[2.5rem] overflow-hidden border border-white/10 aspect-video bg-white/5 flex items-center justify-center group-hover:border-white/20 transition-all">
-                      {study.image ? (
-                        <>
-                          <img src={study.image} alt={study.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E27] via-transparent to-transparent opacity-60"></div>
-                        </>
-                      ) : (
-                        <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-xl">
-                          <Icon size={48} className="text-white" />
-                        </div>
-                      )}
-                      
-                      {/* Floating Result Badge */}
-                      <div className="absolute bottom-6 right-6 p-4 px-6 bg-black/60 backdrop-blur-md rounded-2xl border border-white/10">
-                        <div className="text-2xl font-bold text-cyan-400">
-                          {__s(study.results?.main || study.resultValue || study.mainResult || '+385%')}
-                        </div>
-                        <div className="text-xs text-gray-400 uppercase tracking-wider">
-                          {__s(study.results?.mainLabel || study.resultLabel || study.mainLabel || 'Growth Guaranteed')}
-                        </div>
-                      </div>
+              <div className={`text-5xl font-black bg-gradient-to-r ${stat.color || 'from-cyan-400 to-blue-500'} bg-clip-text text-transparent mb-3 tracking-tight`}>
+                {ensureString(stat.value)}
+              </div>
+              <div className="text-base font-bold text-white mb-1">{ensureString(stat.label)}</div>
+              <div className="text-xs text-gray-500">{ensureString(stat.sublabel)}</div>
+            </div>
+          );
+          })}
+        </div>
+
+        {/* Impact Stories - Unique Layout */}
+        <div className="space-y-8">
+          {/* Story 1 - Large Featured */}
+          <div className="group relative bg-gradient-to-br from-cyan-500/5 via-white/5 to-blue-500/5 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden hover:border-cyan-500/40 transition-all">
+            <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-cyan-500 to-blue-600" />
+            
+            <div className="p-8 md:p-12">
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/20 border border-cyan-500/40 rounded-full mb-6">
+                    <MessageSquare className="text-cyan-400" size={16} />
+                    <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">{content.caseStudy1?.badge || 'Case Study #1'}</span>
+                  </div>
+                  
+                  <h3 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                    {ensureString(content.caseStudy1?.title || 'How an E-commerce Store Got')}
+                    <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent block">
+                      {ensureString(content.caseStudy1?.titleHighlight || '3.5X More Revenue in 6 Months')}
+                    </span>
+                  </h3>
+
+                  <div className="mb-6">
+                    <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">The Challenge</div>
+                    <p className="text-lg text-gray-300 leading-relaxed">
+                      {ensureString(content.caseStudy1?.challenge || 'A growing fashion e-commerce brand was losing 67% of customer inquiries because they couldn\'t respond fast enough. Abandoned carts were at an all-time high.')}
+                    </p>
+                  </div>
+
+                  <div className="mb-8">
+                    <div className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Our Solution</div>
+                    <p className="text-lg text-gray-300 leading-relaxed">
+                      {ensureString(content.caseStudy1?.solution || 'We deployed a Facebook Messenger + Instagram DM chatbot that handled product inquiries, captured leads, and sent abandoned cart reminders - all automatically.')}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 mb-8">
+                    <div className="px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-lg text-sm font-medium text-cyan-300">
+                      AI Chatbot
+                    </div>
+                    <div className="px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-lg text-sm font-medium text-blue-300">
+                      Multi-Platform
+                    </div>
+                    <div className="px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-lg text-sm font-medium text-purple-300">
+                      Lead Automation
                     </div>
                   </div>
 
-                  {/* Content Part */}
-                  <div className="lg:w-1/2 space-y-8 lg:pl-6">
-                    <div className="space-y-4">
-                      {study.badge && (
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-lg text-cyan-400 text-xs font-bold uppercase tracking-wider">
-                          {study.badge}
+                  <div className="flex flex-wrap gap-4">
+                    <Button
+                      onClick={() => onNavigate('/portfolio')}
+                      className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+                    >
+                      Read Full Case Study
+                      <ChevronRight className="ml-2" size={18} />
+                    </Button>
+
+                    {content.caseStudy1?.visitUrl && (
+                      <a
+                        href={content.caseStudy1.visitUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/20 rounded-lg font-bold text-white transition-all flex items-center gap-2 hover:border-cyan-500/50"
+                      >
+                        <span>Visit URL</span>
+                        <ExternalLink size={16} className="text-cyan-400" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Results Cards */}
+                  <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-2xl p-6 relative overflow-hidden aspect-square flex items-center justify-center">
+                    {content.caseStudy1?.imageUrl ? (
+                      <img 
+                        src={content.caseStudy1.imageUrl} 
+                        alt="Case Study" 
+                        className="absolute inset-0 w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity duration-500"
+                      />
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between mb-4 absolute top-6 left-6 right-6">
+                          <div className="text-sm font-semibold text-cyan-300 uppercase tracking-wider">Revenue Impact</div>
+                          <TrendingUp className="text-cyan-400" size={20} />
                         </div>
-                      )}
+                        <div className="text-6xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
+                          {content.caseStudy1?.results?.main || '+385%'}
+                        </div>
+                        <p className="text-gray-400 text-sm absolute bottom-6">{content.caseStudy1?.results?.mainLabel || 'Increase in 6 months'}</p>
+                      </>
+                    )}
+                  </div>
 
-                      <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight">
-                        {study.title}
-                        {study.titleHighlight && (
-                          <>
-                            <br />
-                            <span className="text-cyan-400">{study.titleHighlight}</span>
-                          </>
-                        )}
-                      </h3>
-
-                      <p className="text-gray-400 text-lg leading-relaxed">
-                        {study.challenge || study.description || "We partnered with leading innovators to build a high-performance platform that handles millions of monthly active users with sub-second latency."}
-                      </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+                      <div className="text-3xl font-bold text-emerald-400 mb-1">{ensureString(content.caseStudy1?.results?.metrics?.[0]?.value || '95%')}</div>
+                      <p className="text-xs text-gray-500">{ensureString(content.caseStudy1?.results?.metrics?.[0]?.label || 'Response rate')}</p>
                     </div>
-
-                    <div className="grid grid-cols-2 gap-6 pb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
-                        <span className="text-gray-300 font-medium">Performance Optimization</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 rounded-full bg-cyan-500"></div>
-                        <span className="text-gray-300 font-medium">Auto-Scaling Infrastructure</span>
-                      </div>
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+                      <div className="text-3xl font-bold text-purple-400 mb-1">{ensureString(content.caseStudy1?.results?.metrics?.[1]?.value || '3X')}</div>
+                      <p className="text-xs text-gray-500">{ensureString(content.caseStudy1?.results?.metrics?.[1]?.label || 'More leads')}</p>
                     </div>
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+                      <div className="text-3xl font-bold text-orange-400 mb-1">{ensureString(content.caseStudy1?.results?.metrics?.[2]?.value || '<2min')}</div>
+                      <p className="text-xs text-gray-500">{ensureString(content.caseStudy1?.results?.metrics?.[2]?.label || 'Avg response')}</p>
+                    </div>
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+                      <div className="text-3xl font-bold text-pink-400 mb-1">{ensureString(content.caseStudy1?.results?.metrics?.[3]?.value || '24/7')}</div>
+                      <p className="text-xs text-gray-500">{ensureString(content.caseStudy1?.results?.metrics?.[3]?.label || 'Automated')}</p>
+                    </div>
+                  </div>
 
-                    <div className="flex flex-wrap gap-4 mt-8">
-                      <button 
-                        onClick={() => onNavigate('/portfolio')}
-                        className="bg-white text-black hover:bg-gray-200 px-8 py-4 rounded-2xl font-bold transition-all"
-                      >
-                        Read Case Study
-                      </button>
-                      <button 
-                        onClick={() => onNavigate('/portfolio')}
-                        className="text-white hover:text-cyan-400 font-bold flex items-center gap-2 bg-transparent border-none cursor-pointer"
-                      >
-                        View Project Details 
-                        <ArrowRight size={20} />
-                      </button>
+                  <div className="bg-gradient-to-r from-white/5 to-white/10 border border-white/10 rounded-2xl p-6">
+                    <div className="flex gap-3 mb-4">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} size={18} className="fill-cyan-400 text-cyan-400" />
+                      ))}
+                    </div>
+                    <p className="text-gray-300 italic leading-relaxed mb-3">
+                      "{ensureString(content.caseStudy1?.testimonial?.quote || 'Game changer. The chatbot handles 80% of customer questions automatically. Our team can finally focus on growth instead of answering the same questions all day.')}"
+                    </p>
+                    <div className="text-sm">
+                      <div className="font-semibold text-white">{ensureString(content.caseStudy1?.testimonial?.author || 'Sarah M.')}</div>
+                      <div className="text-xs text-gray-500">{ensureString(content.caseStudy1?.testimonial?.role || 'Founder, Fashion E-commerce')}</div>
                     </div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            </div>
           </div>
 
-          {/* CTA Center */}
-          <div className="mt-32 text-center">
-            <div className="max-w-3xl mx-auto p-12 bg-white/5 border border-white/10 rounded-[3rem] backdrop-blur-sm relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          {/* Story 2 & 3 - Side by Side */}
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Story 2 */}
+            <div className="group relative bg-gradient-to-br from-purple-500/5 via-white/5 to-pink-500/5 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden hover:border-purple-500/40 transition-all">
+              <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-purple-500 to-pink-600" />
+              
+              <div className="p-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 border border-purple-500/40 rounded-full mb-6">
+                  <Code className="text-purple-400" size={16} />
+                  <span className="text-xs font-bold text-purple-300 uppercase tracking-wider">{content.caseStudy2?.badge || 'Web Development'}</span>
+                </div>
+
+                <h3 className="text-2xl font-bold mb-4 leading-tight">
+                  {content.caseStudy2?.title || 'SaaS Platform Scaled to'}
+                  <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent block">
+                    {content.caseStudy2?.titleHighlight || '12,000+ Active Users'}
+                  </span>
+                </h3>
+
+                <p className="text-gray-400 leading-relaxed mb-6">
+                  {content.caseStudy2?.description || 'Built a high-performance web app with real-time features using Next.js + Node.js that handles thousands of concurrent users with zero downtime.'}
+                </p>
+
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-purple-400 mb-1">{ensureString(content.caseStudy2?.metrics?.[0]?.value || '12K+')}</div>
+                    <p className="text-xs text-gray-500">{ensureString(content.caseStudy2?.metrics?.[0]?.label || 'Active Users')}</p>
+                  </div>
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-pink-400 mb-1">{ensureString(content.caseStudy2?.metrics?.[1]?.value || '99.9%')}</div>
+                    <p className="text-xs text-gray-500">{ensureString(content.caseStudy2?.metrics?.[1]?.label || 'Uptime')}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mb-6">
+                  {(Array.isArray(content.caseStudy2?.tags) ? content.caseStudy2.tags : ['Next.js', 'Node.js', 'MongoDB']).filter(Boolean).map((tech: string, i: number) => (
+                    <div key={i} className="px-3 py-1 bg-purple-500/10 border border-purple-500/30 rounded-lg text-xs font-medium text-purple-300">
+                      {tech}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    onClick={() => onNavigate('/portfolio')}
+                    className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 flex-1"
+                  >
+                    View Case Study
+                    <ChevronRight className="ml-2" size={18} />
+                  </Button>
+                  
+                  {content.caseStudy2?.visitUrl && (
+                    <a
+                      href={content.caseStudy2.visitUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/20 rounded-lg flex items-center justify-center transition-all hover:border-purple-500/50"
+                      title="Visit Website"
+                    >
+                      <ExternalLink size={18} className="text-purple-400" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Story 3 */}
+            <div className="group relative bg-gradient-to-br from-emerald-500/5 via-white/5 to-green-500/5 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-500/40 transition-all">
+              <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-emerald-500 to-green-600" />
+              
+              <div className="p-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/40 rounded-full mb-6">
+                  <MessageCircle className="text-emerald-400" size={16} />
+                  <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">{content.caseStudy3?.badge || 'WhatsApp Automation'}</span>
+                </div>
+
+                <h3 className="text-2xl font-bold mb-4 leading-tight">
+                  {content.caseStudy3?.title || 'Restaurant Automated'}
+                  <span className="bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent block">
+                    {content.caseStudy3?.titleHighlight || '1,200+ Orders/Month'}
+                  </span>
+                </h3>
+
+                <p className="text-gray-400 leading-relaxed mb-6">
+                  {content.caseStudy3?.description || 'WhatsApp chatbot that takes orders, sends confirmations, and provides delivery updates automatically. Never misses a message, even at 3 AM.'}
+                </p>
+
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-emerald-400 mb-1">{ensureString(content.caseStudy3?.metrics?.[0]?.value || '1.2K')}</div>
+                    <p className="text-xs text-gray-500">{ensureString(content.caseStudy3?.metrics?.[0]?.label || 'Orders/Month')}</p>
+                  </div>
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-center">
+                    <div className="text-3xl font-bold text-green-400 mb-1">{ensureString(content.caseStudy3?.metrics?.[1]?.value || '24/7')}</div>
+                    <p className="text-xs text-gray-500">{ensureString(content.caseStudy3?.metrics?.[1]?.label || 'Availability')}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mb-6">
+                  {(Array.isArray(content.caseStudy3?.tags) ? content.caseStudy3.tags : ['WhatsApp API', 'Auto Orders', 'Delivery Track']).filter(Boolean).map((tech: string, i: number) => (
+                    <div key={i} className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-xs font-medium text-emerald-300">
+                      {tech}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    onClick={() => onNavigate('/portfolio')}
+                    className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 flex-1"
+                  >
+                    View Case Study
+                    <ChevronRight className="ml-2" size={18} />
+                  </Button>
+
+                  {content.caseStudy3?.visitUrl && (
+                    <a
+                      href={content.caseStudy3.visitUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/20 rounded-lg flex items-center justify-center transition-all hover:border-emerald-500/50"
+                      title="Visit Website"
+                    >
+                      <ExternalLink size={18} className="text-emerald-400" />
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom CTA */}
+        <div className="mt-20 text-center">
+          <div className="bg-gradient-to-br from-white/5 to-cyan-500/5 backdrop-blur-lg border border-white/20 rounded-3xl p-12">
+            <div className="max-w-3xl mx-auto">
               <h3 className="text-3xl md:text-4xl font-bold mb-4">
-                {__s(content.ctaTitle) || 'Your Success Story Starts Here'}
+                {content.ctaTitle || 'Your Success Story Starts Here'}
               </h3>
               <p className="text-xl text-gray-400 mb-8">
-                {__s(content.ctaSubtext) || "We've helped 50+ businesses grow. Let's write your chapter next."}
+                {content.ctaSubtext || "We've helped 50+ businesses grow. Let's write your chapter next."}
               </p>
-              <div className="flex flex-wrap gap-4 justify-center relative z-10">
-                <button 
+              <div className="flex flex-wrap gap-4 justify-center">
+                <Button
                   onClick={() => onNavigate('/contact')}
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold transition-all text-white rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-10 py-4 text-lg"
+                  size="lg"
+                  className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 px-10 py-6 text-lg"
                 >
                   Start Your Project
                   <ArrowRight className="ml-2" size={20} />
-                </button>
-                <button 
+                </Button>
+                <Button
                   onClick={() => onNavigate('/portfolio')}
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap font-bold transition-all text-white rounded-xl bg-white/5 hover:bg-white/10 border border-white/20 px-10 py-4 text-lg"
+                  size="lg"
+                  className="bg-white/5 hover:bg-white/10 border border-white/20 px-10 py-6 text-lg"
                 >
                   View All Success Stories
-                </button>
+                </Button>
               </div>
             </div>
           </div>
