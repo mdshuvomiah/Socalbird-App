@@ -23,6 +23,12 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
     ctaSubtext: "We've helped 50+ businesses grow. Let's write your chapter next."
   };
 
+  const getIconComponent = (iconName: any) => {
+    if (typeof iconName !== 'string') return iconName || Award;
+    const icons: any = { TrendingUp, Award, Users, Star, MessageSquare, Code, MessageCircle };
+    return icons[iconName] || Award;
+  };
+
   return (
     <section className="py-24 px-4 border-t border-white/10 relative overflow-hidden">
       {/* Animated Background */}
@@ -57,7 +63,7 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
             { value: '98%', label: 'Client Retention', sublabel: 'They come back', icon: Star, bgColor: 'from-purple-500/20 to-pink-500/20', color: 'from-purple-400 to-pink-500' },
             { value: '4.9★', label: 'Average Rating', sublabel: 'Client satisfaction', icon: TrendingUp, bgColor: 'from-pink-500/20 to-orange-500/20', color: 'from-pink-400 to-orange-500' }
           ]).filter(Boolean).map((stat: any, i: number) => {
-            const IconComponent = stat.icon || Award;
+            const IconComponent = getIconComponent(stat.icon);
             return (
             <div
               key={i}

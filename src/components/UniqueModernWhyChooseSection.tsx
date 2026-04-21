@@ -453,16 +453,16 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
 
         {/* Floating Stats Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-20">
-          {floatingStats.map((stat, i) => (
+          {(Array.isArray(floatingStats) ? floatingStats : []).filter(Boolean).map((stat: any, i: number) => (
             <div key={i} className={`group relative bg-gradient-to-br from-[#0D1128] to-[#0A0E27] border border-white/10 rounded-2xl p-8 ${getStatColorClass(i)} transition-all duration-500 hover:-translate-y-2`}>
               <div className={`absolute inset-0 bg-gradient-to-br ${getStatBgGradient(i)} to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl`} />
               <div className="relative">
                 <div className={`w-12 h-12 ${getStatIconBgClass(i)} rounded-xl flex items-center justify-center mb-4`}>
                   {getStatIcon(stat.icon, i)}
                 </div>
-                <div className={`text-3xl font-black ${getStatTextColorClass(i)} mb-2`}>{stat.value}</div>
-                <div className="text-lg font-bold text-white mb-1">{stat.label}</div>
-                <p className="text-sm text-gray-500">{stat.sublabel}</p>
+                <div className={`text-3xl font-black ${getStatTextColorClass(i)} mb-2`}>{stat.value || ''}</div>
+                <div className="text-lg font-bold text-white mb-1">{stat.label || ''}</div>
+                <p className="text-sm text-gray-500">{stat.sublabel || ''}</p>
               </div>
             </div>
           ))}
@@ -470,12 +470,12 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
 
         {/* Horizontal Stats Bar */}
         <div className="grid md:grid-cols-4 gap-6 mb-20">
-          {horizontalStats.map((stat, i) => (
+          {(Array.isArray(horizontalStats) ? horizontalStats : []).filter(Boolean).map((stat: any, i: number) => (
             <div key={i} className="text-center p-6 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all">
-              <div className={`text-4xl font-black mb-2 bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}>
-                {stat.value}
+              <div className={`text-4xl font-black mb-2 bg-gradient-to-r ${stat.gradient || 'from-cyan-400 to-blue-500'} bg-clip-text text-transparent`}>
+                {stat.value || ''}
               </div>
-              <div className="text-sm text-gray-400">{stat.label}</div>
+              <div className="text-sm text-gray-400">{stat.label || ''}</div>
             </div>
           ))}
         </div>

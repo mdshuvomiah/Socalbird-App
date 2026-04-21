@@ -757,9 +757,14 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     return (item && typeof item === 'object' && !Array.isArray(item));
   };
 
-  const loadFromDatabase = async () => {
+  const loadFromDatabase = async (force = false) => {
+    // Prevent double loading or loops
+    if (isLoading && !force && Object.keys(content || {}).length > Object.keys(defaultContent || {}).length) {
+      return false;
+    }
+
     try {
-      setIsLoading(true);
+      if (!force) setIsLoading(true);
       const { data, error } = await supabase
         .from('site_content')
         .select('content')
@@ -767,7 +772,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         .single();
 
       if (error) {
-        console.log('Using default content (Supabase load failed or empty):', error.message);
+        console.warn('Database content not found or error. Using default content:', error.message);
         setIsLoading(false);
         return false;
       }
