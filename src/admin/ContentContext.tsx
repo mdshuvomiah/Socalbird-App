@@ -71,6 +71,8 @@ const defaultContent: ContentData = {
         badge: 'Case Study #1',
         title: 'How an E-commerce Store Got',
         titleHighlight: '3.5X More Revenue in 6 Months',
+        imageUrl: '',
+        visitUrl: '',
         challenge: 'A growing fashion e-commerce brand was losing 67% of customer inquiries because they couldn\'t respond fast enough. Abandoned carts were at an all-time high.',
         solution: 'We deployed a Facebook Messenger + Instagram DM chatbot that handled product inquiries, captured leads, and sent abandoned cart reminders - all automatically.',
         results: {
@@ -574,52 +576,67 @@ const defaultContent: ContentData = {
     },
     projects: [
       {
+        id: 1,
         title: 'Fashion Store Automation',
         category: 'AI Chatbot',
         industry: 'Ecommerce',
+        imageUrl: '',
+        visitUrl: '',
         description: 'Implemented AI chatbots across Facebook and Instagram, handling FAQs and order tracking.',
+        problem: 'An online fashion retailer was struggling to handle customer inquiries across Facebook Messenger and Instagram. Response times were slow, and many potential customers were being lost due to delayed responses.',
+        solution: 'Implemented AI chatbots on both Facebook Messenger and Instagram DM. The bots handled FAQs, product inquiries, size recommendations, and order tracking. Integrated with their inventory system for real-time product availability.',
         result: '+300% Response Rate',
-        technologies: ['Facebook API', 'WhatsApp Business', 'AI/ML', 'CRM Integration']
+        technologies: ['Facebook API', 'WhatsApp Business', 'AI/ML', 'CRM Integration'],
+        techStack: ['Facebook Messenger API', 'Instagram Graph API', 'AI/NLP', 'Google Sheets', 'Zapier'],
+        results: [
+          { metric: '300%', label: 'Increase in response rate', icon: 'TrendingUp' },
+          { metric: '24/7', label: 'Customer support coverage', icon: 'Zap' },
+          { metric: '45%', label: 'Reduction in support costs', icon: 'Target' },
+          { metric: '2.5x', label: 'More qualified leads', icon: 'Award' }
+        ],
+        highlights: ['Real-time Inventory Sync', 'Multi-language Support', 'Lead Qualification']
       },
       {
+        id: 2,
         title: 'Project Management SaaS',
         category: 'Web Development',
         industry: 'SaaS',
+        imageUrl: '',
+        visitUrl: '',
         description: 'Built scalable project management platform with real-time collaboration features.',
+        problem: 'A startup needed a scalable project management platform to compete with existing solutions. They required real-time collaboration, task management, and team communication features.',
+        solution: 'Built a full-stack web application using Next.js and Node.js with real-time websocket connections. Implemented drag-and-drop task boards, team chat, file sharing, and comprehensive analytics.',
         result: '10K+ Active Users',
-        technologies: ['React', 'Node.js', 'MongoDB', 'WebSocket']
+        technologies: ['React', 'Node.js', 'MongoDB', 'WebSocket'],
+        techStack: ['Next.js', 'Node.js', 'PostgreSQL', 'Redis', 'Socket.io', 'AWS'],
+        results: [
+          { metric: '10,000+', label: 'Active users', icon: 'TrendingUp' },
+          { metric: '99.9%', label: 'Uptime', icon: 'CheckCircle' },
+          { metric: '<100ms', label: 'Average response time', icon: 'Zap' },
+          { metric: '$500K', label: 'ARR in year 1', icon: 'Award' }
+        ],
+        highlights: ['Real-time Collaboration', 'Drag & Drop Interface', 'Advanced Analytics']
       },
       {
+        id: 3,
         title: 'Healthcare Mobile App',
         category: 'Mobile App',
         industry: 'Healthcare',
+        imageUrl: '',
+        visitUrl: '',
         description: 'iOS & Android app for patient management and telemedicine consultations.',
+        problem: 'A healthcare provider needed a HIPAA-compliant mobile app for virtual consultations. The app needed to support video calls, prescription management, and secure medical records.',
+        solution: 'Developed native iOS and Android apps with video consultation, appointment booking, secure messaging, prescription tracking, and payment processing. Implemented end-to-end encryption for all communications.',
         result: '4.9★ Rating',
-        technologies: ['React Native', 'Firebase', 'Video SDK', 'Push Notifications']
-      },
-      {
-        title: 'Restaurant Ordering System',
-        category: 'Web + Mobile',
-        industry: 'Food & Beverage',
-        description: 'Complete ordering system with web dashboard and customer mobile apps.',
-        result: '+250% Orders',
-        technologies: ['Next.js', 'Flutter', 'Stripe', 'Real-time Orders']
-      },
-      {
-        title: 'E-learning Platform',
-        category: 'Web Development',
-        industry: 'Education',
-        description: 'Online course platform with video streaming and progress tracking.',
-        result: '5K+ Students',
-        technologies: ['Laravel', 'Vue.js', 'Vimeo API', 'Payment Gateway']
-      },
-      {
-        title: 'Real Estate Portal',
-        category: 'Web Development',
-        industry: 'Real Estate',
-        description: 'Property listing platform with advanced search and virtual tours.',
-        result: '2K+ Properties',
-        technologies: ['WordPress', 'Custom Plugin', 'Google Maps', '360° View']
+        technologies: ['React Native', 'Firebase', 'Video SDK', 'Push Notifications'],
+        techStack: ['Swift', 'Kotlin', 'WebRTC', 'Firebase', 'Stripe', 'AWS'],
+        results: [
+          { metric: '4.8★', label: 'Average app rating', icon: 'Star' },
+          { metric: '50,000+', label: 'Downloads', icon: 'TrendingUp' },
+          { metric: '5,000+', label: 'Monthly consultations', icon: 'Target' },
+          { metric: 'HIPAA', label: 'Compliant', icon: 'CheckCircle' }
+        ],
+        highlights: ['End-to-End Encryption', 'Video Consultations', 'HIPAA Compliant']
       }
     ],
     stats: {

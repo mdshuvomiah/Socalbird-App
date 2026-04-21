@@ -1,6 +1,7 @@
 import { ArrowRight, ExternalLink, Code, Smartphone, Bot, Sparkles, TrendingUp, Award, Target, Zap, CheckCircle, Filter, X, Eye, ChevronRight, Play, Star, Layers } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { useState } from 'react';
+import { useContent } from '../admin/ContentContext';
 
 interface PortfolioPageProps {
   onNavigate: (page: string) => void;
@@ -228,8 +229,10 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
         <div className="container mx-auto max-w-7xl">
           <div className="space-y-12">
             {filteredProjects.map((study, index) => {
-              const Icon = study.icon;
+              const Icon = getIconComponent(study.icon || (study.category === 'AI Chatbot' ? 'Bot' : study.category === 'Web Development' ? 'Code' : 'Smartphone'));
               const isEven = index % 2 === 0;
+              const accentColorClass = study.accentColor || (study.category === 'AI Chatbot' ? 'cyan' : study.category === 'Web Development' ? 'purple' : 'teal');
+              const gradientColorClass = study.color || (study.category === 'AI Chatbot' ? 'from-blue-600 to-cyan-500' : study.category === 'Web Development' ? 'from-purple-600 to-pink-500' : 'from-green-600 to-teal-500');
               
               return (
                 <div
@@ -253,21 +256,21 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                         {/* Header */}
                         <div className="space-y-4">
                           <div className="flex flex-wrap gap-2">
-                            <div className={`px-4 py-1.5 bg-gradient-to-r ${study.color} bg-opacity-20 border border-${study.accentColor}-500/30 rounded-full text-${study.accentColor}-400 text-xs font-bold`}>
-                              {study.category}
+                            <div className={`px-4 py-1.5 bg-gradient-to-r ${gradientColorClass} bg-opacity-20 border border-${accentColorClass}-500/30 rounded-full text-${accentColorClass}-400 text-xs font-bold`}>
+                              {ensureString(study.category)}
                             </div>
                             <div className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-full text-gray-400 text-xs font-medium">
-                              {study.industry}
+                              {ensureString(study.industry)}
                             </div>
                           </div>
 
                           <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
-                            {study.title}
+                            {ensureString(study.title)}
                           </h2>
 
                           {/* Highlights */}
                           <div className="flex flex-wrap gap-2">
-                            {study.highlights.map((highlight, i) => (
+                            {Array.isArray(study.highlights) && study.highlights.filter(Boolean).map((highlight: string, i: number) => (
                               <div key={i} className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg">
                                 <CheckCircle className="w-3 h-3 text-cyan-400" />
                                 <span className="text-xs text-gray-400">{highlight}</span>
@@ -281,13 +284,13 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                           <div className="relative pl-6 border-l-2 border-cyan-500/30">
                             <div className="absolute -left-2 top-0 w-4 h-4 bg-cyan-500 rounded-full" />
                             <h3 className="text-lg font-bold text-white mb-2">The Challenge</h3>
-                            <p className="text-gray-400 leading-relaxed">{study.problem}</p>
+                            <p className="text-gray-400 leading-relaxed">{ensureString(study.problem || study.description)}</p>
                           </div>
                           
                           <div className="relative pl-6 border-l-2 border-blue-500/30">
                             <div className="absolute -left-2 top-0 w-4 h-4 bg-blue-500 rounded-full" />
                             <h3 className="text-lg font-bold text-white mb-2">Our Solution</h3>
-                            <p className="text-gray-400 leading-relaxed">{study.solution}</p>
+                            <p className="text-gray-400 leading-relaxed">{ensureString(study.solution || study.description)}</p>
                           </div>
                         </div>
 
@@ -298,7 +301,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                             Tech Stack
                           </h3>
                           <div className="flex flex-wrap gap-2">
-                            {study.techStack.map((tech, i) => (
+                            {(Array.isArray(study.techStack) ? study.techStack : Array.isArray(study.technologies) ? study.technologies : []).filter(Boolean).map((tech: string, i: number) => (
                               <span
                                 key={i}
                                 className="px-4 py-2 bg-gradient-to-r from-white/5 to-white/[0.02] border border-white/20 rounded-xl text-sm text-gray-300 hover:border-cyan-500/30 transition-colors"
@@ -309,28 +312,51 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                           </div>
                         </div>
 
-                        {/* CTA */}
-                        <button
-                          onClick={() => onNavigate('/contact')}
-                          className={`group/btn relative px-8 py-4 bg-gradient-to-r ${study.color} text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
-                        >
-                          <div className="relative flex items-center gap-3">
-                            <span>Start Similar Project</span>
-                            <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                          </div>
-                        </button>
+                        {/* CTA Buttons */}
+                        <div className="flex flex-wrap gap-4">
+                          <button
+                            onClick={() => onNavigate('/contact')}
+                            className={`group/btn relative px-8 py-4 bg-gradient-to-r ${gradientColorClass} text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl`}
+                          >
+                            <div className="relative flex items-center gap-3">
+                              <span>Start Similar Project</span>
+                              <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                            </div>
+                          </button>
+
+                          {study.visitUrl && study.visitUrl !== '' && (
+                            <a
+                              href={study.visitUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="group/visit px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/20 rounded-xl font-bold text-white transition-all flex items-center gap-3 hover:border-cyan-500/50"
+                            >
+                              <span>Visit URL</span>
+                              <ExternalLink className="w-5 h-5 group-hover/visit:translate-y-[-2px] group-hover/visit:translate-x-[2px] transition-transform text-cyan-400" />
+                            </a>
+                          )}
+                        </div>
                       </div>
 
                       {/* Right: Visual + Results (5 cols) */}
                       <div className={`lg:col-span-5 space-y-6 ${isEven ? '' : 'lg:col-start-1 lg:row-start-1'}`}>
                         {/* Icon Display */}
-                        <div className="relative rounded-2xl p-12 bg-gradient-to-br from-white/10 to-white/5 border border-white/10 overflow-hidden group/visual">
-                          <div className={`absolute inset-0 bg-gradient-to-br ${study.color} opacity-10`} />
+                        <div className="relative rounded-2xl p-1 px-1 bg-gradient-to-br from-white/10 to-white/5 border border-white/10 overflow-hidden group/visual aspect-square flex items-center justify-center">
+                          <div className={`absolute inset-0 bg-gradient-to-br ${gradientColorClass} opacity-10`} />
                           
-                          <div className="relative flex items-center justify-center">
-                            <div className={`w-32 h-32 bg-gradient-to-br ${study.color} rounded-3xl flex items-center justify-center shadow-2xl transform group-hover/visual:scale-110 group-hover/visual:rotate-6 transition-all duration-500`}>
-                              <Icon className="w-16 h-16 text-white" />
-                            </div>
+                          <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-xl">
+                            {study.imageUrl ? (
+                              <img 
+                                src={study.imageUrl} 
+                                alt={study.title} 
+                                className="w-full h-full object-cover transform group-hover/visual:scale-110 transition-transform duration-700"
+                                style={{ aspectRatio: '1/1' }}
+                              />
+                            ) : (
+                              <div className={`w-32 h-32 bg-gradient-to-br ${gradientColorClass} rounded-3xl flex items-center justify-center shadow-2xl transform group-hover/visual:scale-110 group-hover/visual:rotate-6 transition-all duration-500`}>
+                                <Icon className="w-16 h-16 text-white" />
+                              </div>
+                            )}
                           </div>
 
                           {/* Floating Elements */}
@@ -345,22 +371,22 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                             Key Results
                           </h3>
                           <div className="grid grid-cols-2 gap-4">
-                            {study.results.map((result, i) => {
-                              const ResultIcon = result.icon;
+                            {Array.isArray(study.results) && study.results.filter(Boolean).map((result: any, i: number) => {
+                              const ResultIcon = getIconComponent(result.icon);
                               return (
                                 <div
                                   key={i}
                                   className="relative rounded-2xl p-6 bg-white/5 backdrop-blur-xl border border-white/10 hover:border-cyan-500/30 transition-all group/result"
                                 >
                                   <div className="space-y-3">
-                                    <div className={`w-10 h-10 bg-gradient-to-br ${study.color} rounded-xl flex items-center justify-center group-hover/result:scale-110 transition-transform`}>
+                                    <div className={`w-10 h-10 bg-gradient-to-br ${gradientColorClass} rounded-xl flex items-center justify-center group-hover/result:scale-110 transition-transform`}>
                                       <ResultIcon className="w-5 h-5 text-white" />
                                     </div>
                                     <div>
-                                      <div className={`text-2xl font-bold bg-gradient-to-r ${study.color} bg-clip-text text-transparent`}>
-                                        {result.metric}
+                                      <div className={`text-2xl font-bold bg-gradient-to-r ${gradientColorClass} bg-clip-text text-transparent`}>
+                                        {ensureString(result.metric || result.value)}
                                       </div>
-                                      <div className="text-xs text-gray-500 mt-1">{result.label}</div>
+                                      <div className="text-xs text-gray-500 mt-1">{ensureString(result.label)}</div>
                                     </div>
                                   </div>
                                 </div>

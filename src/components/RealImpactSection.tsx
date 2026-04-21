@@ -1,5 +1,5 @@
 import { Button } from './ui/button';
-import { TrendingUp, Award, Users, Star, MessageSquare, ChevronRight, Code, MessageCircle, ArrowRight } from 'lucide-react';
+import { TrendingUp, Award, Users, Star, MessageSquare, ChevronRight, Code, MessageCircle, ArrowRight, ExternalLink } from 'lucide-react';
 import { useContent } from '../admin/ContentContext';
 
 interface RealImpactSectionProps {
@@ -139,26 +139,50 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                     </div>
                   </div>
 
-                  <Button
-                    onClick={() => onNavigate('/portfolio')}
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
-                  >
-                    Read Full Case Study
-                    <ChevronRight className="ml-2" size={18} />
-                  </Button>
+                  <div className="flex flex-wrap gap-4">
+                    <Button
+                      onClick={() => onNavigate('/portfolio')}
+                      className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+                    >
+                      Read Full Case Study
+                      <ChevronRight className="ml-2" size={18} />
+                    </Button>
+
+                    {content.caseStudy1?.visitUrl && (
+                      <a
+                        href={content.caseStudy1.visitUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-6 py-2 bg-white/5 hover:bg-white/10 border border-white/20 rounded-lg font-bold text-white transition-all flex items-center gap-2 hover:border-cyan-500/50"
+                      >
+                        <span>Visit URL</span>
+                        <ExternalLink size={16} className="text-cyan-400" />
+                      </a>
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-6">
                   {/* Results Cards */}
-                  <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-2xl p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="text-sm font-semibold text-cyan-300 uppercase tracking-wider">Revenue Impact</div>
-                      <TrendingUp className="text-cyan-400" size={20} />
-                    </div>
-                    <div className="text-6xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
-                      {content.caseStudy1?.results?.main || '+385%'}
-                    </div>
-                    <p className="text-gray-400 text-sm">{content.caseStudy1?.results?.mainLabel || 'Increase in 6 months'}</p>
+                  <div className="bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded-2xl p-6 relative overflow-hidden aspect-square flex items-center justify-center">
+                    {content.caseStudy1?.imageUrl ? (
+                      <img 
+                        src={content.caseStudy1.imageUrl} 
+                        alt="Case Study" 
+                        className="absolute inset-0 w-full h-full object-cover opacity-60 hover:opacity-100 transition-opacity duration-500"
+                      />
+                    ) : (
+                      <>
+                        <div className="flex items-center justify-between mb-4 absolute top-6 left-6 right-6">
+                          <div className="text-sm font-semibold text-cyan-300 uppercase tracking-wider">Revenue Impact</div>
+                          <TrendingUp className="text-cyan-400" size={20} />
+                        </div>
+                        <div className="text-6xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-2">
+                          {content.caseStudy1?.results?.main || '+385%'}
+                        </div>
+                        <p className="text-gray-400 text-sm absolute bottom-6">{content.caseStudy1?.results?.mainLabel || 'Increase in 6 months'}</p>
+                      </>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -241,13 +265,27 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                   ))}
                 </div>
 
-                <Button
-                  onClick={() => onNavigate('/portfolio')}
-                  className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 w-full"
-                >
-                  View Case Study
-                  <ChevronRight className="ml-2" size={18} />
-                </Button>
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    onClick={() => onNavigate('/portfolio')}
+                    className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 flex-1"
+                  >
+                    View Case Study
+                    <ChevronRight className="ml-2" size={18} />
+                  </Button>
+                  
+                  {content.caseStudy2?.visitUrl && (
+                    <a
+                      href={content.caseStudy2.visitUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/20 rounded-lg flex items-center justify-center transition-all hover:border-purple-500/50"
+                      title="Visit Website"
+                    >
+                      <ExternalLink size={18} className="text-purple-400" />
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -291,13 +329,27 @@ export function RealImpactSection({ onNavigate }: RealImpactSectionProps) {
                   ))}
                 </div>
 
-                <Button
-                  onClick={() => onNavigate('/portfolio')}
-                  className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 w-full"
-                >
-                  View Case Study
-                  <ChevronRight className="ml-2" size={18} />
-                </Button>
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    onClick={() => onNavigate('/portfolio')}
+                    className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 flex-1"
+                  >
+                    View Case Study
+                    <ChevronRight className="ml-2" size={18} />
+                  </Button>
+
+                  {content.caseStudy3?.visitUrl && (
+                    <a
+                      href={content.caseStudy3.visitUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/20 rounded-lg flex items-center justify-center transition-all hover:border-emerald-500/50"
+                      title="Visit Website"
+                    >
+                      <ExternalLink size={18} className="text-emerald-400" />
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           </div>

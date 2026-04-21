@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import {
   ArrowLeft, Save, Eye, EyeOff, RotateCcw, Download, Upload,
   CheckCircle, AlertCircle, Sparkles, Edit, Type, Image as ImageIcon,
-  List, Plus, Trash2, GripVertical, Loader2
+  List, Plus, Trash2, GripVertical, Loader2, Link as LinkIcon
 } from 'lucide-react';
 import { useContent } from './ContentContext';
 import { supabase } from '../lib/supabase';
@@ -255,6 +255,26 @@ export function ContentEditorPage({ pageId, pageName, onBack }: ContentEditorPag
               />
             )}
           </div>
+        </div>
+      );
+    }
+    // Handling for URL fields (except images)
+    if (typeof fieldValue === 'string' && fieldKey.toLowerCase().includes('url') && !fieldKey.toLowerCase().includes('image')) {
+      return (
+        <div key={fullPath} className="space-y-2">
+          <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
+            <LinkIcon className="w-4 h-4 text-cyan-400" />
+            {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1)} (Link)
+          </label>
+          <input
+            type="text"
+            value={fieldValue}
+            onChange={(e) => handleFieldChange(sectionId, fieldPath, e.target.value)}
+            onFocus={() => setEditingField(fullPath)}
+            onBlur={() => setEditingField('')}
+            placeholder="e.g., https://example.com"
+            className={`w-full px-4 py-3 bg-white/5 border ${isEditing ? 'border-cyan-500/50' : 'border-white/20'} rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 focus:bg-white/10 transition-all`}
+          />
         </div>
       );
     }
