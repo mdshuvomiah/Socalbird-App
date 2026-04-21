@@ -163,22 +163,26 @@ function InteractiveCard({ problem, solution, gradient, index, solutionLabel, re
                 ))}
               </div>
 
-              {/* Result Card with Highlight */}
+              {/* Result Card with Highlight - PREMIUM TYPOGRAPHY */}
               <div 
-                className="relative p-6 rounded-2xl border-2 overflow-hidden"
+                className="relative p-8 rounded-3xl border-2 overflow-hidden shadow-2xl"
                 style={{
-                  background: `linear-gradient(135deg, ${gradient.from}15, ${gradient.to}15)`,
+                  background: `linear-gradient(135deg, ${gradient.from}20, ${gradient.to}20)`,
                   borderColor: `${gradient.from}40`
                 }}
               >
-                <div className="absolute top-0 right-0 w-32 h-32 opacity-20 blur-2xl uppercase tracking-widest" style={{ background: gradient.to }} />
-                <div className="relative flex items-center justify-between">
-                  <div>
-                    <p className="text-base font-extrabold text-white uppercase tracking-[0.2em] mb-1">{solution.result?.label || resultLabel || 'Guaranteed Result'}</p>
-                    <p className="text-3xl font-black text-white">{solution.result.value}</p>
+                <div className="absolute top-0 right-0 w-48 h-48 opacity-20 blur-3xl" style={{ background: gradient.to }} />
+                <div className="relative flex items-center justify-between gap-8">
+                  <div className="space-y-1">
+                    <p className="text-xl font-black text-white uppercase tracking-[0.25em] drop-shadow-lg">
+                      {solution.result?.label || resultLabel || 'Guaranteed Result'}
+                    </p>
+                    <p className="text-4xl md:text-5xl font-black text-white tracking-tighter">
+                      {solution.result.value}
+                    </p>
                   </div>
-                  <div className="w-16 h-16 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
-                    <Zap className="w-8 h-8 text-yellow-400" fill="currentColor" />
+                  <div className="w-20 h-20 bg-yellow-500/20 rounded-2xl flex items-center justify-center border border-yellow-500/30 group-hover:scale-110 transition-transform duration-500 shadow-lg shadow-yellow-500/20">
+                    <Zap className="w-10 h-10 text-yellow-400" fill="currentColor" />
                   </div>
                 </div>
               </div>
