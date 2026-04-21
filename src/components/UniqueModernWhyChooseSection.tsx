@@ -147,7 +147,7 @@ function InteractiveCard({ problem, solution, gradient, index, solutionLabel, re
 
               {/* Features Grid with Stagger Animation */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {solution.features.map((feature, i) => (
+                {Array.isArray(solution.features) && solution.features.map((feature, i) => (
                   <div 
                     key={i} 
                     className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-xl transition-all duration-300 hover:bg-white/10"
@@ -307,6 +307,10 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
   const cmsProblems = content?.problems;
   const problems = (Array.isArray(cmsProblems) && cmsProblems.length > 0)
     ? cmsProblems.map((item: any, i: number) => {
+        const features = Array.isArray(item.solutionFeatures) 
+          ? item.solutionFeatures 
+          : (Array.isArray(item.features) ? item.features : []);
+
         return {
           problem: {
             title: item.problemTitle || item.title || item.problem || 'Critical Issue',
@@ -319,10 +323,10 @@ export function UniqueModernWhyChooseSection({ onNavigate }: UniqueModernWhyChoo
           solution: {
             title: item.solutionTitle || item.solution || 'Smart Solution',
             description: item.solutionDescription || item.description || 'Efficient and reliable resolution for your business needs.',
-            features: Array.isArray(item.solutionFeatures) ? item.solutionFeatures : (item.features || []),
+            features: features,
             result: {
               label: '',
-              value: item.resultValue || item.result?.value || item.result || 'Standard Success'
+              value: item.resultValue || (item.result && typeof item.result === 'object' ? item.result.value : (typeof item.result === 'string' ? item.result : 'Standard Success'))
             }
           },
           gradient: gradientMap[i % gradientMap.length]

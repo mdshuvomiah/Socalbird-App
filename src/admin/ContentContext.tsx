@@ -792,11 +792,11 @@ export function ContentProvider({ children }: { children: ReactNode }) {
               problemTitle: problem.title || p.title || p.problem || '',
               problemStat: problem.stat || '',
               problemStatLabel: problem.statLabel || '',
-              solutionLabel: p.solutionLabel || mergedContent.home.whyChoose.solutionLabel || 'Solution',
+              solutionLabel: p.solutionLabel || mergedContent.home?.whyChoose?.solutionLabel || 'Solution',
               solutionTitle: solution.title || p.solution || '',
               solutionDescription: solution.description || p.description || '',
-              solutionFeatures: Array.isArray(solution.features) ? solution.features : (p.features || []),
-              resultLabel: p.resultLabel || result.label || mergedContent.home.whyChoose.resultLabel || 'Guaranteed Result',
+              solutionFeatures: Array.isArray(solution.features) ? solution.features : (Array.isArray(p.features) ? p.features : []),
+              resultLabel: p.resultLabel || result.label || mergedContent.home?.whyChoose?.resultLabel || 'Guaranteed Result',
               resultValue: result.value || result || ''
             };
           });
